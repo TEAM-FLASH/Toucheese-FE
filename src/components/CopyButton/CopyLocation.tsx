@@ -1,21 +1,15 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import variables from '@styles/Variables';
-import { useState } from 'react';
+import useClipboard from '@hooks/useClipboard';
 
 interface CopyButtonProps {
   text: string;
   buttonLabel?: string;
 }
 
-const CopyButton = ({ text, buttonLabel }: CopyButtonProps) => {
-  const [isCopied, setIsCopied] = useState(false);
-
-  const handleCopy = async () => {
-    await navigator.clipboard.writeText(text);
-    setIsCopied(true);
-    setTimeout(() => setIsCopied(false), 1500);
-  };
+const CopyLocation = ({ text, buttonLabel }: CopyButtonProps) => {
+  const { isCopied, copyToClipboard } = useClipboard(text);
 
   return (
     <div css={containerStyle}>
@@ -24,7 +18,7 @@ const CopyButton = ({ text, buttonLabel }: CopyButtonProps) => {
         <span css={textStyle}>{text}</span>
       </div>
       <div css={buttonRowStyle}>
-        <button css={buttonStyle} onClick={handleCopy}>
+        <button css={buttonStyle} onClick={copyToClipboard}>
           <img src="/img/icon-content_copy.svg" alt="주소 복사 아이콘" css={iconStyle} />
           {buttonLabel}
         </button>
@@ -34,7 +28,7 @@ const CopyButton = ({ text, buttonLabel }: CopyButtonProps) => {
   );
 };
 
-export default CopyButton;
+export default CopyLocation;
 
 const containerStyle = css`
   display: flex;

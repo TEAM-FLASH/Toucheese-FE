@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import CopyButton from '@components/CopyButton/CopyButton';
+import CopyLocation from '@components/CopyButton/CopyLocation';
 import { css } from '@emotion/react';
 import { useEffect, useState } from 'react';
 import { Map, MapMarker, useKakaoLoader } from 'react-kakao-maps-sdk';
@@ -68,7 +68,7 @@ const KakaoMap = ({ addressSi, addressGu, address }: KakaoMapProps) => {
           />
         </Map>
       </div>
-      <CopyButton text={fullAddress} buttonLabel="주소복사" />
+      <CopyLocation text={fullAddress} buttonLabel="주소복사" />
     </>
   );
 };
