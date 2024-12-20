@@ -19,7 +19,8 @@ const BottomSheet = () => {
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : '';
     document.body.style.position = isOpen ? 'fixed' : '';
-    document.body.style.width = isOpen ? '100%' : '';
+    document.body.style.left = isOpen ? '0' : '';
+    document.body.style.right = isOpen ? '0' : '';
 
     //바텀시트 닫을때 이전 드래그 Y위치값이 저장되어 다음에 열릴 때 초기 위치에서 시작하도록 하는 코드
     if (!isOpen) {
@@ -29,7 +30,8 @@ const BottomSheet = () => {
     return () => {
       document.body.style.overflow = '';
       document.body.style.position = '';
-      document.body.style.width = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
     };
   }, [isOpen]);
 
