@@ -31,8 +31,6 @@ const StudioMenuDetailInfo = ({
   //   console.log('최종 결제 금액:', totalPrice);
   // };
 
-  console.log(infoItem);
-
   return (
     <>
       <div css={MenuInfoWrapperStyle}>
@@ -68,7 +66,7 @@ const StudioMenuDetailInfo = ({
             {infoItem.additionalOptions.map((item) => (
               <fieldset key={item.id}>
                 <div css={AddOptionItemStyle}>
-                  <input type="checkbox" id={`${item.price}`} name={`${item.price}`} value="OptionPrice" onChange={(e) => handleOptionClick(item.price, item.id, e)} checked={checkState[item.id]} />
+                  <input type="checkbox" id={`${item.price}`} name={`${item.price}`} value="OptionPrice" onChange={(e) => handleOptionClick(item.price, item.id, e)} checked={!!checkState[item.id]} />
                   <label htmlFor={`${item.price}`}>
                     <span>{item.name}</span>
                   </label>

@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import StudioNavigator from '@components/Navigator/StudioNavigator';
-import StudioMenuItem from './StudioMenuItem';
+import StudioMenuItem from './components/StudioMenuItem';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { IMenuListRes } from 'types/types';
