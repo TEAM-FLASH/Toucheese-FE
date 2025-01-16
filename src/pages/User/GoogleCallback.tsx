@@ -12,7 +12,7 @@ const GoogleCallback = () => {
     // api 작업 중
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_TOUCHEESE_API}/oauth2/authorization/google`,
+        `${import.meta.env.VITE_TOUCHEESE_API}/user/auth/google/callback`,
         {
           method: 'POST',
           headers: {
