@@ -94,6 +94,7 @@ const StudioReview = () => {
       />
       {reviewLists.map((review: Review, index: number) => (
         <StudioReviewItem
+          showMenuName={true}
           key={review.id}
           review={review}
           isLast={index === reviewLists.length - 1}

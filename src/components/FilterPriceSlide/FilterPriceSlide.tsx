@@ -157,7 +157,7 @@ const FilterPriceRangeMin = styled.input`
   pointer-events: none;
   top: 0;
   height: 7px;
-  width: 100%;
+  width: 99%;
   appearance: none;
   background: none;
   z-index: 1;
