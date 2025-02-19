@@ -28,6 +28,8 @@ const ReservationNpayCallback = () => {
       return;
     }
 
+    sessionStorage.setItem('skipLoading', 'true');
+
     if (resultCode === 'UserCancel' || resultCode === 'TimeExpired') {
       window.location.href = FaildReturnUrl;
     } else {
