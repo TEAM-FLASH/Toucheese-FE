@@ -101,3 +101,27 @@ export const Hidden = css`
   overflow: hidden;
   clip: rect(1px 1px 1px 1px);
 `;
+
+// layout
+export const PCLayout = css`
+  max-width: ${variables.maxWidth};
+  margin-left: auto;
+  margin-right: auto;
+`;
+
+// 화면 가득 차는 배경
+export const bg100vw = (bg: string) => css`
+  position: relative;
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 100vw;
+    height: 100%;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background: ${bg};
+    z-index: -1;
+  }
+`;

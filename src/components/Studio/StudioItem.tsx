@@ -1,8 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import Bookmark from '@components/Bookmark/Bookmark';
+import NoPic from '@components/NoPic/NoPic';
 import ImageSwiper from '@components/Swiper/ImageSwiper';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { breakPoints, mqMin } from '@styles/BreakPoint';
 import { TypoTitleSmS } from '@styles/Common';
 import variables from '@styles/Variables';
 import { useNavigate } from 'react-router-dom';
@@ -37,14 +39,24 @@ const StudioItem = ({
 
   return (
     <DivStyle isFirst={isFirst} isLast={isLast} onClick={handleClick}>
-      <ImageSwiper
-        images={item.portfolios}
-        imageStyle={css`
-          width: 100%;
-          aspect-ratio: 94 / 118;
-          object-fit: cover;
-        `}
-      />
+      <ItemImageStyle>
+        {item.portfolios.length >= 4 ? (
+          <ImageSwiper
+            images={item.portfolios}
+            imageStyle={css`
+              width: 100%;
+              aspect-ratio: 94 / 118;
+              object-fit: cover;
+
+              ${mqMin(breakPoints.pc)} {
+                aspect-ratio: 141 / 177;
+              }
+            `}
+          />
+        ) : (
+          <NoPic />
+        )}
+      </ItemImageStyle>
 
       <ItemContentStyle>
         <ItemInfoStyle>
@@ -93,6 +105,19 @@ const DivStyle = styled.div<{ isFirst: boolean; isLast: boolean }>`
 
   &:hover {
     cursor: pointer;
+  }
+
+  ${mqMin(breakPoints.pc)} {
+    padding: 3.4rem 0;
+    border-bottom: unset;
+  }
+`;
+
+const ItemImageStyle = styled.div`
+  margin-bottom: 1.4rem;
+
+  ${mqMin(breakPoints.pc)} {
+    margin-bottom: 1rem;
   }
 `;
 

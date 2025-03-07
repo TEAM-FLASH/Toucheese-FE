@@ -3,7 +3,7 @@
 import Calendar from '@components/Calendar/Calendar';
 import Header from '@components/Header/Header';
 import SelectTime from '@pages/Home/components/SelectTime';
-import { DividerStyle, Hidden } from '@styles/Common';
+import { Hidden } from '@styles/Common';
 import { css } from '@emotion/react';
 import variables from '@styles/Variables';
 import { convertToDateFormat, getDay, today, useSelectDateStore } from '@store/useSelectDateStore';
@@ -22,7 +22,7 @@ const ReservationSchedule = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  const { data: availableDate, isFetching, isSuccess } = useGetAvailableDate(_id, new Date(date));
+  const { data: availableDate } = useGetAvailableDate(_id, new Date(date));
 
   // 필터링 시 날짜, 시간 초기화
   useEffect(() => {
@@ -42,16 +42,10 @@ const ReservationSchedule = () => {
       <Header title="예약하기" />
 
       <div css={contentBox}>
-        <Calendar
-          style={DividerStyle}
-          type="reservation"
-          disableDates={availableDate?.disableDates}
-        />
+        <Calendar type="reservation" disableDates={availableDate?.disableDates} />
         <SelectTime
           type="reservation"
           availableTimeWithDates={availableDate?.availableTimeWithDates}
-          isSuccess={isSuccess}
-          isFetching={isFetching}
         />
       </div>
 
@@ -107,7 +101,7 @@ const finalDate = css`
 
   dl {
     padding-left: 2rem;
-    background: url(/img/icon-calendar-black.svg) no-repeat center left / 1.4rem;
+    background: url(/img/icon-calendar-black.svg) no-repeat center left / 1.2rem 1.3rem;
 
     &.timeBox {
       background-image: url(/img/icon-clock-black.svg);

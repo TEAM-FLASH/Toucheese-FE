@@ -60,7 +60,7 @@ const RecentSearches = () => {
                 css={deleteButtonStyle}
                 aria-label={`${search} 삭제`}
               >
-                <img src="/img/icon-delete.svg" alt="최근검색어삭제버튼" />
+                <img src="/img/icon-close-gray700.svg" alt="최근검색어삭제버튼" />
               </button>
             </div>
           ))
@@ -102,7 +102,7 @@ const searchListStyle = css`
 
 const searchItemStyle = css`
   margin-right: 1rem;
-  padding: 0.4rem 1rem;
+  padding: 0.4rem 0.5rem 0.4rem 0.9rem;
   border: 0.1rem solid ${variables.colors.gray400};
   border-radius: 0.6rem;
   display: flex;
@@ -117,4 +117,13 @@ const searchItemStyle = css`
 const deleteButtonStyle = css`
   display: flex;
   align-items: center;
+  justify-content: center;
+
+  width: 1.6rem;
+  height: 1.6rem;
+
+  & > img {
+    width: 0.9rem;
+    height: 0.9rem;
+  }
 `;

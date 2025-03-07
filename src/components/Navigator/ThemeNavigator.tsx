@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import styled from '@emotion/styled';
+import { breakPoints, mqMin } from '@styles/BreakPoint';
 import { TypoTitleXsB, TypoTitleXsM } from '@styles/Common';
 import variables from '@styles/Variables';
 import { useEffect, useState } from 'react';
@@ -47,9 +48,13 @@ export default ThemeNavigator;
 
 const NavStyle = styled.nav`
   width: 100%;
-  box-sizing: border-box;
   background-color: ${variables.colors.black};
-  padding: 1.4rem;
+  padding: 1.1rem 1rem;
+
+  ${mqMin(breakPoints.pc)} {
+    width: unset;
+    margin: 0.3rem 0;
+  }
 `;
 
 const ThemeListStyle = styled.ul`
@@ -58,6 +63,11 @@ const ThemeListStyle = styled.ul`
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
+
+  ${mqMin(breakPoints.pc)} {
+    gap: 0.85rem;
+    justify-content: center;
+  }
 `;
 
 // ThemeNavigator test 코드와 연관되어 있음
@@ -66,16 +76,16 @@ const ThemeButtonStyle = styled.button<{ isActive: boolean }>`
   color: ${(props) =>
     props.isActive ? `${variables.colors.white}` : `${variables.colors.gray500}`};
   position: relative;
+  padding: ${(props) => (props.isActive ? '0.3rem 0.9rem 0.3rem 0.8rem' : '0.3rem 0.4rem')};
 
   &::after {
     content: '';
     display: ${(props) => (props.isActive ? 'block' : 'none')};
-    width: 4px;
-    height: 4px;
-    background-color: ${variables.colors.primary};
     position: absolute;
-    left: 110%;
-    bottom: 1.8rem;
-    transform: translateX(-50%) rotate(45deg);
+    width: 0.6rem;
+    height: 0.6rem;
+    background: url('/img/icon-nav-badge.svg') no-repeat center / contain;
+    top: 0.3rem;
+    right: 0.4rem;
   }
 `;

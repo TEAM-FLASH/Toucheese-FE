@@ -26,7 +26,7 @@ const Dropdown = ({ options, selectedOption, onSelect }: DropdownProps) => {
       <FilterDropdown onClick={handleToggleDropdown}>
         <SelectedText>{selectedOption}</SelectedText>
         <DropdownIcon isOpen={isOpen}>
-          <img src="/img/icon-arrow-down.svg" alt="드롭다운 화살표" />
+          <img src="/img/icon-arrowdown.svg" alt="드롭다운 화살표" />
         </DropdownIcon>
       </FilterDropdown>
       {isOpen && (
@@ -59,6 +59,8 @@ const DropdownIcon = styled.span<{ isOpen: boolean }>`
   align-items: center;
   transform: ${({ isOpen }) => (isOpen ? 'rotate(180deg)' : 'rotate(0deg)')};
   transition: transform 0.3s ease-in-out;
+  width: 1.2rem;
+  height: 0.7rem;
 `;
 
 const OptionList = styled.ul`

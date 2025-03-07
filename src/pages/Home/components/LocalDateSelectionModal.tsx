@@ -46,18 +46,21 @@ const LocalDateSelectionModal = ({ modalId }: { modalId: number }) => {
   ];
 
   const setParams = () => {
+    const newParams = new URLSearchParams(searchParams);
+
     // 시간을 다중 선택한 경우, times=시간1&times=시간2 형태로 데이터 요청
-    const times = [...time].map((time) => `times=${time}`).join('&');
-    const timesToParams = time.length ? `&${times}` : '';
+    newParams.delete('times');
+    if (time.length) time.forEach((t) => newParams.append('times', t));
 
     // 날짜를 초기화한 경우, 파라미터 요청 X
-    const dateToParams = date ? `&date=${date}` : '';
+    if (date) newParams.set('date', date);
+    else newParams.delete('date');
 
     // 주소를 '전체보기'로 선택한 경우, 파라미터 요청 X
-    const addressToParams = selectedLocation === '서울전체' ? '' : `&addressGu=${selectedLocation}`;
+    if (selectedLocation === '서울전체') newParams.delete('addressGu');
+    else newParams.set('addressGu', selectedLocation + '');
 
-    const params = new URLSearchParams(`${addressToParams}${dateToParams}${timesToParams}`);
-    navigate(`?${params.toString()}`);
+    navigate(`?${newParams.toString()}`);
   };
 
   const handleOpenLocation = () =>
@@ -72,7 +75,12 @@ const LocalDateSelectionModal = ({ modalId }: { modalId: number }) => {
 
   return (
     <>
-      <Modal title="지역, 날짜 선택" buttons={dateLocationButtons} type="fullscreen">
+      <Modal
+        title="지역, 날짜 선택"
+        buttons={dateLocationButtons}
+        type="fullscreen"
+        isCloseBtn={true}
+      >
         <>
           <InputBoxStyle>
             <button type="button" onClick={handleOpenLocation}>

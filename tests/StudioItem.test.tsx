@@ -142,7 +142,7 @@ const mockStudio: IStudioItem = {
   options: [],
   created_at: '2024-12-20T16:00:39',
   updated_at: '2024-12-27T13:54:40.999963',
-  day_of_week: 'MON',
+  dayOfWeek: 'MON',
   bookmark: true,
 };
 

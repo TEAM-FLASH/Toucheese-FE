@@ -157,9 +157,9 @@ const ReservationCheck = () => {
             css={checkboxStyle}
             onChange={(e) => setIsDifferentVisitor(e.target.checked)}
           />
-          <label htmlFor="visitorCheckbox" css={labelStyle}>
+          <label htmlFor="visitorCheckbox" css={[TypoCapSmM, labelStyle]}>
             <img src="/img/icon-check-gray.svg" alt="체크 아이콘" />
-            실제 방문자가 달라요
+            <p>실제 방문자가 달라요</p>
           </label>
         </div>
       </section>
@@ -427,9 +427,13 @@ const textWrapperStyle = css`
 
 //예약자정보
 const checkboxWrapperStyle = css`
+  width: 13rem;
+  height: 3rem;
+  box-sizing: border-box;
   position: relative;
   display: flex;
   margin-top: 0.5rem;
+
   input {
     display: none;
   }
@@ -447,7 +451,7 @@ const checkboxStyle = css`
 const labelStyle = css`
   display: flex;
   align-items: center;
-  padding: 0.5rem 0.6rem;
+  padding: 0.7rem 0.9rem 0.7rem 0.5rem;
   font-size: 1.2rem;
   line-height: 1.2rem;
   color: ${variables.colors.gray900};
@@ -455,6 +459,12 @@ const labelStyle = css`
   border-radius: 0.6rem;
   cursor: pointer;
   gap: 0.1rem;
+
+  & img {
+    margin: 0 0.24rem;
+    width: 1.1rem;
+    height: 0.8rem;
+  }
 `;
 
 const visitorTitleStyle = css`
@@ -493,9 +503,21 @@ const visitorInputStyle = css`
   position: relative;
 
   button {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     position: absolute;
-    right: 1rem;
-    bottom: 1.4rem;
+    right: 1.1rem;
+    top: 50%;
+    transform: translateY(-50%);
+
+    & > img {
+      width: 1.7rem;
+      height: 1.7rem;
+    }
   }
 `;
 
@@ -523,7 +545,6 @@ const textRequestsStyle = css`
   border-radius: 0.6rem;
   padding: 1rem 1.2rem;
   height: 9.6rem;
-  }
 
   &:focus {
     outline: none;
@@ -578,7 +599,7 @@ const totalPriceStyle = css`
 
 //결제수단
 const radioGroupStyle = css`
-  fontsize: 1.8rem;
+  font-size: 1.8rem;
   display: flex;
   flex-direction: column;
   gap: 1.2rem;

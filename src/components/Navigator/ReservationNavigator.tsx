@@ -7,8 +7,8 @@ import { Dispatch, SetStateAction } from 'react';
 
 const STATUS: ResStatus[] = [
   { statusKor: '이용 예정', statusEng: 'DEFAULT' },
-  { statusKor: '이용 완료', statusEng: 'COMPLETE' },
-  { statusKor: '예약 취소', statusEng: 'CANCEL' },
+  { statusKor: '이용 완료', statusEng: 'COMPLETED' },
+  { statusKor: '예약 취소', statusEng: 'CANCELED' },
 ];
 
 const ReservationNavigator = ({
@@ -60,6 +60,7 @@ const LiStyle = styled.li<{ length: number }>`
   color: ${variables.colors.gray600};
 
   & > span {
+    display: inline-block;
     position: relative;
   }
 
@@ -90,12 +91,11 @@ const LiStyle = styled.li<{ length: number }>`
   &.active > span::after {
     content: '';
     position: absolute;
-    right: calc(-4 * sqrt(2) * 0.1rem);
-    top: calc(-2 * sqrt(2) * 0.1rem);
-    width: 0.4rem;
-    height: 0.4rem;
-    background-color: ${variables.colors.primary};
-    transform: translateX(-25%) rotate(45deg);
+    right: -0.55rem;
+    top: 0rem;
+    width: 0.6rem;
+    height: 0.6rem;
+    background: url('/img/icon-nav-badge.svg') no-repeat center / contain;
   }
 `;
 

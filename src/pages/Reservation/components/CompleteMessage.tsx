@@ -91,7 +91,7 @@ const CompleteMessage = ({
           <div className="content-style">
             <div className="content-item">
               <p css={TypoBodyMdM} className="content-item-title">
-                사진관
+                매장명
               </p>
               <div css={TypoBodyMdR} className="content-item-desc">
                 <p>{data.studio}</p>
@@ -253,7 +253,7 @@ const ReservationInfoStyle = styled.div`
       height: 1.6rem;
       background: url('/img/icon-calendar-black.svg') no-repeat;
       background-position: center;
-      background-size: contain;
+      background-size: 1.2rem 1.3rem;
     }
   }
 

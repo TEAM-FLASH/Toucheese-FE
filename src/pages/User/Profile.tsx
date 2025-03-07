@@ -2,13 +2,13 @@
 import BackButton from '@components/BackButton/BackButton';
 import Button from '@components/Button/Button';
 import { css } from '@emotion/react';
-import { useUserStore } from '@store/useUserStore';
 import { TypoBodyMdR, TypoTitleXsB, TypoTitleXsM } from '@styles/Common';
 import variables from '@styles/Variables';
 import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
   const data = localStorage.getItem('userState');
+
   const navigate = useNavigate();
 
   const handleProfileEditPage = () => {
@@ -17,11 +17,6 @@ const Profile = () => {
 
   const handlePasswordEditPage = () => {
     navigate('/user/profile/passwordConfirm');
-  };
-  const logout = useUserStore((state) => state.resetUser);
-  const handleLogout = () => {
-    logout();
-    navigate('/');
   };
 
   return (
@@ -70,11 +65,13 @@ const Profile = () => {
             </div>
           </dl>
         </div>
-        {data && JSON.parse(data).state.registration === 'EMAIL' ? (
-          <div>
-            <div css={infoTitleStyle}>
-              <p>계정정보</p>
-              {/* 이메일 회원에게만 버튼 노출 */}
+
+        <div>
+          <div css={infoTitleStyle}>
+            <p>계정정보</p>
+            {/* 이메일 회원에게만 버튼 노출 */}
+
+            {data && JSON.parse(data).state.registration === 'EMAIL' ? (
               <Button
                 text="비밀번호 변경하기"
                 size="small"
@@ -82,39 +79,39 @@ const Profile = () => {
                 variant="white"
                 onClick={handlePasswordEditPage}
               />
-            </div>
-
-            <hr
-              css={css`
-                border: none;
-                border-bottom: 0.1rem solid ${variables.colors.gray300};
-                margin: 0.4rem;
-              `}
-            />
-
-            <dl css={infoDataBoxStyle}>
-              <div>
-                <dt>아이디(이메일)</dt>
-                <dd>{data ? JSON.parse(data).state.email : '이메일(아이디) 없음'}</dd>
-              </div>
-              <div>
-                <dt>로그인 방식</dt>
-                <dd>{data && JSON.parse(data).state.registration === 'EMAIL' ? 'Email' : '-'}</dd>
-              </div>
-            </dl>
+            ) : (
+              ''
+            )}
           </div>
-        ) : (
-          ''
-        )}
+
+          <hr
+            css={css`
+              border: none;
+              border-bottom: 0.1rem solid ${variables.colors.gray300};
+              margin: 0.4rem;
+            `}
+          />
+
+          <dl css={infoDataBoxStyle}>
+            <div>
+              <dt>아이디(이메일)</dt>
+              <dd>{data ? JSON.parse(data).state.email : '이메일(아이디) 없음'}</dd>
+            </div>
+            <div>
+              <dt>로그인 방식</dt>
+              <dd>
+                {data && JSON.parse(data).state.registration === 'EMAIL'
+                  ? 'Email'
+                  : data && `${JSON.parse(data).state.registration}`}
+              </dd>
+            </div>
+          </dl>
+        </div>
       </div>
 
-      <div css={accoutStyle}>
-        <button type="button" onClick={handleLogout}>
-          로그아웃
-        </button>
-        <li>|</li>
-        <button type="button">회원 탈퇴</button>
-      </div>
+      <button css={accoutStyle} type="button">
+        회원 탈퇴
+      </button>
     </>
   );
 };
@@ -158,13 +155,8 @@ const infoDataBoxStyle = css`
 `;
 
 const accoutStyle = css`
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  text-align: center;
   ${TypoBodyMdR}
   color: ${variables.colors.gray600};
-
   position: absolute;
   bottom: 4rem;
   left: 50%;

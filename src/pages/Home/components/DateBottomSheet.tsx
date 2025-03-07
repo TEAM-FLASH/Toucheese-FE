@@ -1,10 +1,13 @@
+/** @jsxImportSource @emotion/react */
+
 import Calendar from '@components/Calendar/Calendar';
 import Modal from '@components/Modal/Modal';
 import useModal from '@hooks/useModal';
 import { useSelectDateStore } from '@store/useSelectDateStore';
 import { useSelectTimeStore } from '@store/useSelectTimeStore';
-import { DividerStyle } from '@styles/Common';
 import SelectTime from './SelectTime';
+import { css } from '@emotion/react';
+import { breakPoints, mqMin } from '@styles/BreakPoint';
 
 const DateBottomSheet = ({}: {}) => {
   const dateTimeModal = useModal(2);
@@ -31,12 +34,19 @@ const DateBottomSheet = ({}: {}) => {
 
   return (
     <Modal type="fullscreen" title="날짜, 시간 선택" modalId={2} buttons={dateTimeButtons}>
-      <>
-        <Calendar style={DividerStyle} />
+      <div css={modalInner}>
+        <Calendar />
         <SelectTime type="filter" />
-      </>
+      </div>
     </Modal>
   );
 };
 
 export default DateBottomSheet;
+
+const modalInner = css`
+  ${mqMin(breakPoints.pc)} {
+    max-width: 44.4rem;
+    margin: 0 auto;
+  }
+`;

@@ -1,4 +1,6 @@
+/** @jsxImportSource @emotion/react */
 import styled from '@emotion/styled';
+import { TypoTitleXsM } from '@styles/Common';
 import variables from '@styles/Variables';
 import { NavLink } from 'react-router-dom';
 
@@ -7,23 +9,39 @@ const StudioNavigator = ({ _id }: { _id: string }) => {
     <NavStyle>
       <UlStyle>
         <LiStyle>
-          <NavLinkStyle to={`/studio/${_id}`} className={({ isActive }) => (isActive ? 'active' : '')} end>
-            <span>홈</span>
+          <NavLinkStyle
+            to={`/studio/${_id}`}
+            className={({ isActive }) => (isActive ? 'active' : '')}
+            end
+          >
+            <span css={TypoTitleXsM}>홈</span>
           </NavLinkStyle>
         </LiStyle>
         <LiStyle>
-          <NavLinkStyle to={`/studio/${_id}/menu`} className={({ isActive }) => (isActive ? 'active' : '')} end>
-            <span>메뉴</span>
+          <NavLinkStyle
+            to={`/studio/${_id}/menu`}
+            className={({ isActive }) => (isActive ? 'active' : '')}
+            end
+          >
+            <span css={TypoTitleXsM}>메뉴</span>
           </NavLinkStyle>
         </LiStyle>
         <LiStyle>
-          <NavLinkStyle to={`/studio/${_id}/portfolio`} className={({ isActive }) => (isActive ? 'active' : '')} end>
-            <span>포트폴리오</span>
+          <NavLinkStyle
+            to={`/studio/${_id}/portfolio`}
+            className={({ isActive }) => (isActive ? 'active' : '')}
+            end
+          >
+            <span css={TypoTitleXsM}>포트폴리오</span>
           </NavLinkStyle>
         </LiStyle>
         <LiStyle>
-          <NavLinkStyle to={`/studio/${_id}/review`} className={({ isActive }) => (isActive ? 'active' : '')} end>
-            <span>리뷰</span>
+          <NavLinkStyle
+            to={`/studio/${_id}/review`}
+            className={({ isActive }) => (isActive ? 'active' : '')}
+            end
+          >
+            <span css={TypoTitleXsM}>리뷰</span>
           </NavLinkStyle>
         </LiStyle>
       </UlStyle>
@@ -31,7 +49,17 @@ const StudioNavigator = ({ _id }: { _id: string }) => {
   );
 };
 
-const NavStyle = styled.nav``;
+const NavStyle = styled.nav`
+
+  position: sticky;
+  top: 5.6rem;
+  width: calc(100% + 3.2rem);
+    margin: 0 calc(-1 * ${variables.layoutPadding});
+  margin-left: -1.6rem;
+  padding: 0 1.6rem;
+  background-color: white;
+  z-index: 5
+`;
 
 const UlStyle = styled.ul`
   display: flex;
@@ -53,10 +81,8 @@ const NavLinkStyle = styled(NavLink)`
   color: ${variables.colors.gray600};
 
   & > span {
+    display: inline-block;
     position: relative;
-    font-size: 1.6rem;
-    font-weight: 500;
-    line-height: 2.4rem;
   }
 
   &::before {
@@ -86,12 +112,11 @@ const NavLinkStyle = styled(NavLink)`
   &.active > span::after {
     content: '';
     position: absolute;
-    right: calc(-4 * sqrt(2) * 0.1rem);
-    top: calc(-2 * sqrt(2) * 0.1rem);
-    width: 0.4rem;
-    height: 0.4rem;
-    background-color: ${variables.colors.primary};
-    transform: translateX(-25%) rotate(45deg);
+    right: -0.55rem;
+    top: 0rem;
+    width: 0.6rem;
+    height: 0.6rem;
+    background: url('/img/icon-nav-badge.svg') no-repeat center / contain;
   }
 `;
 

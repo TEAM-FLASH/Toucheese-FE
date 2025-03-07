@@ -60,11 +60,10 @@ const Payment = ({
 
   const baseUrl = import.meta.env.VITE_BASE_URL;
   const returnUrl = `${baseUrl}/studio/${_id}/reservation/complete`;
-  const npayReturnUrl = `${baseUrl}/studio/${_id}/reservation/npay/callback`;
 
   const optionIds = options.map((option) => option.option_id);
 
-  const { username, phone } = useUserStore();
+  const { username, phone, email } = useUserStore();
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.IMP) {
@@ -125,7 +124,7 @@ const Payment = ({
         merchant_uid: 'order_' + new Date().getTime(), // 고유 주문번호
         name: menuName,
         amount: totalPrice,
-        buyer_email: 'test@portone.io', // 구매자 이메일
+        buyer_email: email || 'test@portone.io',
         buyer_name: username,
         buyer_tel: phone,
         m_redirect_url: returnUrl,
@@ -133,6 +132,7 @@ const Payment = ({
       (rsp: PaymentResponse) => {
         if (rsp.success) {
           console.log('결제 성공:', rsp);
+          // console.log('보낼 바디 값:', JSON.stringify(requestBody, null, 2));
 
           fetch(`${import.meta.env.VITE_TOUCHEESE_API}/reservation/action`, {
             method: 'POST',
@@ -143,7 +143,7 @@ const Payment = ({
               imp_uid: rsp.imp_uid, // 포트원 결제 고유 ID
               merchant_uid: rsp.merchant_uid, // 상점에서 생성한 주문번호
               studioId: _id,
-              menuID: menuId,
+              menuId: menuId,
               additionalOptionId: optionIds,
               visitingCustomerName: visitorName,
               visitingCustomerPhone: visitorPhone,
@@ -181,11 +181,9 @@ const Payment = ({
         merchant_uid: 'order_' + new Date().getTime(),
         name: menuName,
         amount: totalPrice,
-        buyer_email: 'test@portone.io',
+        buyer_email: email || 'test@portone.io',
         buyer_name: username,
         buyer_tel: phone,
-        buyer_addr: '서울특별시 강남구 삼성동',
-        buyer_postcode: '123-456',
         m_redirect_url: returnUrl,
       },
       (rsp: PaymentResponse) => {
@@ -200,7 +198,7 @@ const Payment = ({
               imp_uid: rsp.imp_uid, // 포트원 결제 고유 ID
               merchant_uid: rsp.merchant_uid, // 상점에서 생성한 주문번호
               studioId: _id,
-              menuID: menuId,
+              menuId: menuId,
               additionalOptionId: optionIds,
               visitingCustomerName: visitorName,
               visitingCustomerPhone: visitorPhone,
@@ -238,25 +236,6 @@ const Payment = ({
       return;
     }
 
-    if (!userId) {
-      console.error('사용자의 id 정보가 없습니다.');
-      return;
-    }
-
-    const queryParams = new URLSearchParams({
-      merchantUserKey: userId.toString(),
-      studioId: _id || '',
-      menuID: menuId?.toString() || '',
-      optionIds: optionIds.join(','),
-      visitorName: visitorName || '',
-      visitorPhone: visitorPhone || '',
-      requests: requests || '',
-      totalPrice: totalPrice.toString(),
-      paymentMethod: paymentMethod || '',
-      date: date || '',
-      startTime: time || '',
-    }).toString();
-
     const oPay = window.Naver.Pay.create({
       mode: 'development', //  또는 "production"
       clientId: import.meta.env.VITE_NAVERPAY_CLIENT_ID,
@@ -270,7 +249,49 @@ const Payment = ({
       totalPayAmount: totalPrice, // 결제 금액
       taxScopeAmount: totalPrice,
       taxExScopeAmount: 0,
-      returnUrl: `${npayReturnUrl}?${queryParams}`,
+      returnUrl,
+    });
+    // 결제 성공 후 처리
+    window.addEventListener('message', (event) => {
+      if (event.origin !== baseUrl) {
+        return;
+      }
+
+      const data = event.data;
+      if (data.success) {
+        fetch(`${import.meta.env.VITE_TOUCHEESE_API}/reservation/action`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+
+          body: JSON.stringify({
+            merchant_uid: data.merchantPayKey,
+            studioId: _id,
+            menuId: menuId,
+            additionalOptionId: optionIds,
+            visitingCustomerName: visitorName,
+            visitingCustomerPhone: visitorPhone,
+            note: requests,
+            totalPrice,
+            paymentMethod,
+            date,
+            startTime: time,
+          }),
+        })
+          .then((response) => {
+            if (response.ok) {
+              console.log('결제 검증 성공');
+            } else {
+              console.error('결제 검증 실패');
+            }
+          })
+          .catch((error) => {
+            console.error('결제 검증 요청 중 오류 발생:', error);
+          });
+      } else {
+        console.error('네이버페이 결제 실패:', data.message);
+      }
     });
   };
 

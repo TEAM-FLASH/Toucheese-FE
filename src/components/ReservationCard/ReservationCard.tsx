@@ -16,21 +16,35 @@ type ReservationCardType = {
 const ReservationCard = ({ isMyPage = false, data }: ReservationCardType) => {
   const navigate = useNavigate();
 
+  //방문 날짜 계산 함수
+  const getDaysDifference = (ResDay: string) => {
+    const startDate = new Date().toISOString().split('T')[0];
+    const endDate = new Date(ResDay).toISOString().split('T')[0];
+
+    let diffDays =
+      (new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24);
+
+    return diffDays;
+  };
+
   return (
     <>
       {data ? (
-        <article css={CardStyle(isMyPage)}>
+        <article
+          css={CardStyle(isMyPage)}
+          onClick={() => navigate(`/reservation/${data?.reservationId}`)}
+        >
           {isMyPage && (
             <div css={AlarmStyle}>
               <img src="/img/icon-calendar-yellow.svg" alt="일정 d-day 아이콘" />
-              <p>방문 1일전</p>
+              <p>방문 {getDaysDifference(data?.date)}일전</p>
             </div>
           )}
           <div css={ReservationInfoStyle}>
             <div className="cardInfo">
               <StatusChip state={data.status} />
               <p className="cardName">
-                <span>{data.studioName}</span> | <span>{data.menuName}</span>
+                {data.studioName} <span>|</span> {data.menuName}
               </p>
               <p className="cardDate">{`${convertToDateFormat(new Date(data.date))} (${getDay(new Date(data.date))}) ${data.startTime.split(':').slice(0, 2).join(':')}`}</p>
             </div>
@@ -39,7 +53,7 @@ const ReservationCard = ({ isMyPage = false, data }: ReservationCardType) => {
               <img src={data.menuImgUrl} alt="메뉴 사진" />
             </div>
           </div>
-          {data.status === 'COMPLETE' && (
+          {data.status === 'COMPLETED' && (
             <RatingReview ratingValue={data.review && data.review.rating} />
           )}
         </article>
@@ -61,6 +75,7 @@ const ReservationCard = ({ isMyPage = false, data }: ReservationCardType) => {
 export default ReservationCard;
 
 const CardStyle = (isMyPage: boolean | undefined) => css`
+  cursor: pointer;
   display: flex;
   flex-direction: column;
   background-color: ${variables.colors.white};
@@ -83,12 +98,17 @@ const ReservationInfoStyle = css`
     flex-direction: column;
     align-items: flex-start;
     gap: 0.4rem;
+    flex-grow: 1;
 
     .cardName {
       ${TypoBodySmR}
       display: flex;
       gap: 0.6rem;
       color: ${variables.colors.gray800};
+
+      & span {
+        color: ${variables.colors.gray400};
+      }
     }
 
     .cardDate {
@@ -97,10 +117,13 @@ const ReservationInfoStyle = css`
   }
 
   .cardCover {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 6rem;
-    aspect-ratio: 60 / 72;
-
+    flex-shrink: 0;
     & img {
+      aspect-ratio: 60 / 72;
       object-fit: cover;
     }
   }

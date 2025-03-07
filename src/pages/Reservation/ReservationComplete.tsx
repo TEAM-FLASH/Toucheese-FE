@@ -7,6 +7,7 @@ import {
 } from '@store/useSelectDateStore';
 import { useSelectTimeStore } from '@store/useSelectTimeStore';
 import CompleteMessage from './components/CompleteMessage';
+import { useLocation } from 'react-router-dom';
 
 const ReservationComplete = () => {
   const {
@@ -32,6 +33,16 @@ const ReservationComplete = () => {
     setDate(convertToDateFormat(today));
     setTime('reset');
   };
+
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const resultCode = query.get('resultCode');
+
+  if (resultCode === 'UserCancel') {
+    window.history.go(-2);
+    sessionStorage.setItem('skipLoading', 'true');
+    return null;
+  }
 
   return (
     <CompleteMessage type="reserved" data={reservationData} resetInfo={resetReservationInfo} />

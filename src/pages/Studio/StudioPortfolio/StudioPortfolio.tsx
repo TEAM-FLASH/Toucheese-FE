@@ -15,6 +15,7 @@ import DimmedModal from '../components/DimmedModal';
 import PortfolioSwiper from './PortfolioSwiper';
 import { Hidden } from '@styles/Common';
 import { Helmet } from 'react-helmet-async';
+import variables from '@styles/Variables';
 
 interface IPortfolioResponse {
   menuIdList: number[];
@@ -45,23 +46,21 @@ const StudioPortfolio = () => {
     const base = `${import.meta.env.VITE_TOUCHEESE_API}/studio/detail/${_id}/portfolio`;
     const finalURL = `${base}${params ? `?${params.toString()}` : ''}`;
 
-    try {
-      const response = await fetch(finalURL, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      return await response.json();
-    } catch (err) {
-      console.error('Failed to fetch data');
-    }
+    const response = await fetch(finalURL, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) throw new Error('Failed to fetch data');
+    return await response.json();
   };
 
   const { data: portfolios, isSuccess } = useQuery<IPortfolioResponse>({
     queryKey: ['portfolio', _id, params.toString()],
     queryFn: fetchPortfolio,
     staleTime: 1000 * 60 * 10, // 10분
+    throwOnError: true,
   });
 
   return (
@@ -78,40 +77,40 @@ const StudioPortfolio = () => {
       <Header title={isSuccess ? portfolios.studioName : ''} />
       <StudioNavigator _id={_id} />
 
-      <h2 css={Hidden}>
-        포트폴리오 - {selectedMenu ? portfolios?.menuNameList[+selectedMenu - 1] : '전체'} 보기
-      </h2>
-      <h3 css={Hidden}>총 {portfolios?.portfolioDtos.content.length}개</h3>
+      <div css={studioPaddingTop}>
+        <h2 css={Hidden}>
+          포트폴리오 - {selectedMenu ? portfolios?.menuNameList[+selectedMenu - 1] : '전체'} 보기
+        </h2>
+        <h3 css={Hidden}>총 {portfolios?.portfolioDtos.content.length}개</h3>
 
-      <ul css={filterBoxStyle}>
-        <li>
-          <Button
-            text="전체"
-            width="fit"
-            size="small"
-            variant="white"
-            active={!params.size}
-            onClick={() => changeParams('all')}
-          />
-        </li>
-        {isSuccess &&
-          portfolios.menuNameList.map((menu, idx) => (
-            <li key={menu}>
-              <Button
-                text={menu}
-                width="fit"
-                size="small"
-                variant="white"
-                active={params.toString().includes(`${portfolios.menuIdList[idx]}`)}
-                onClick={() => changeParams(portfolios.menuIdList[idx])}
-              />
-            </li>
-          ))}
-      </ul>
+        <ul css={filterBoxStyle}>
+          <li>
+            <Button
+              text="전체"
+              width="fit"
+              size="small"
+              variant="white"
+              active={!params.size}
+              onClick={() => changeParams('all')}
+            />
+          </li>
+          {isSuccess &&
+            portfolios.menuNameList.map((menu, idx) => (
+              <li key={menu}>
+                <Button
+                  text={menu}
+                  width="fit"
+                  size="small"
+                  variant="white"
+                  active={params.toString().includes(`${portfolios.menuIdList[idx]}`)}
+                  onClick={() => changeParams(portfolios.menuIdList[idx])}
+                />
+              </li>
+            ))}
+        </ul>
 
-      <div css={listStyle}>
-        {isSuccess ? (
-          portfolios.portfolioDtos.content.length ? (
+        <div css={listStyle}>
+          {portfolios && portfolios.portfolioDtos.content.length ? (
             <MasonryList>
               {portfolios.portfolioDtos.content.map(({ url, studio, id }) => (
                 <div key={`${studio}-${id}`} onClick={() => handleClick(id)}>
@@ -121,13 +120,9 @@ const StudioPortfolio = () => {
             </MasonryList>
           ) : (
             <EmptyMessage message="포트폴리오가 없습니다." />
-          )
-        ) : (
-          <EmptyMessage message="문제가 발생했습니다. 잠시 후 다시 시도해주세요." />
-        )}
-      </div>
+          )}
+        </div>
 
-      {
         <DimmedModal>
           {isSuccess && (
             <PortfolioSwiper
@@ -136,7 +131,7 @@ const StudioPortfolio = () => {
             />
           )}
         </DimmedModal>
-      }
+      </div>
     </>
   );
 };
@@ -151,4 +146,8 @@ const filterBoxStyle = css`
 
 const listStyle = css`
   min-height: 50vh;
+`;
+
+const studioPaddingTop = css`
+  padding-top: ${variables.headerHeight};
 `;

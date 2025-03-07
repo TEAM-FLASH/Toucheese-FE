@@ -1,7 +1,14 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import variables from '@styles/Variables';
-import { TypoBodyMdM, TypoBodyMdR, TypoBodyMdSb, TypoTitleXsB, TypoTitleXsM } from '@styles/Common';
+import {
+  DividerStyle,
+  TypoBodyMdM,
+  TypoBodyMdR,
+  TypoBodyMdSb,
+  TypoTitleXsB,
+  TypoTitleXsM,
+} from '@styles/Common';
 import { IMenuListRes } from 'types/types';
 import useReservationStore, { ReservationOption } from '@store/useReservationStore';
 
@@ -39,7 +46,7 @@ const StudioMenuDetailInfo = ({ infoItem }: { infoItem: IMenuListRes }) => {
           </div>
         </section>
 
-        <section css={TotalPriceStyle}>
+        <section css={[TotalPriceStyle, DividerStyle]}>
           <h3>기본 가격</h3>
           <p>{infoItem.price.toLocaleString('ko-KR')}원</p>
         </section>
@@ -79,7 +86,6 @@ export default StudioMenuDetailInfo;
 const MenuInfoWrapperStyle = css`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
   margin-top: 1.8rem;
 `;
 
@@ -122,7 +128,6 @@ const TotalPriceStyle = css`
   justify-content: space-between;
   gap: 1rem;
   padding: 1.8rem 0;
-  position: relative;
 
   & h3 {
     ${TypoTitleXsM}
@@ -130,23 +135,12 @@ const TotalPriceStyle = css`
   & p {
     ${TypoTitleXsB}
   }
-
-  &::before {
-    content: '';
-    display: block;
-    position: absolute;
-    left: -1.6rem;
-    right: -1.6rem;
-    bottom: -1rem;
-    height: 1rem;
-    background-color: ${variables.colors.gray300};
-  }
 `;
 
 const AddOptionsWrapperStyle = css`
   display: flex;
   flex-direction: column;
-  margin: 1rem 0 2rem;
+  margin-bottom: 2rem;
 
   & h3 {
     padding: 1.8rem 0;

@@ -44,7 +44,7 @@ const LocationBottomSheet = ({
 
   const handleApply = () => {
     if (selectedIndex) {
-      setSelectedLocation(`${selectedIndex}구`);
+      setSelectedLocation(selectedIndex === '서울전체' ? selectedIndex : `${selectedIndex}구`);
       closeBottomSheet();
     }
   };
@@ -65,6 +65,8 @@ const LocationBottomSheet = ({
     </>
   );
 };
+
+export default LocationBottomSheet;
 
 const ButtonBox = styled.div`
   display: flex;
@@ -95,5 +97,3 @@ const ListItem = styled.button<{ isSelected: boolean }>`
       border: 0.1rem solid ${variables.colors.primary600};
   `}
 `;
-
-export default LocationBottomSheet;

@@ -49,13 +49,14 @@ const containerStyle = css`
 
 const contentRowStyle = css`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.4rem;
 `;
 
 const iconStyle = css`
   width: 1.6rem;
   height: 1.6rem;
+  flex-shrink: 0;
 `;
 
 const buttonStyle = css`

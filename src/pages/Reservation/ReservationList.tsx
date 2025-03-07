@@ -12,7 +12,7 @@ import { IResvItem } from 'types/types';
 
 export interface ResStatus {
   statusKor: '이용 예정' | '이용 완료' | '예약 취소';
-  statusEng: 'DEFAULT' | 'COMPLETE' | 'CANCEL';
+  statusEng: 'DEFAULT' | 'COMPLETED' | 'CANCELED';
 }
 
 const ReservationList = () => {
@@ -24,7 +24,6 @@ const ReservationList = () => {
 
   // resStatus 변경 시 api 호출
   const { data } = useGetReservationList(resStatus.statusEng);
-  console.log(data);
 
   // resStatus 변경 시 아이템 초기화
   useEffect(() => {
@@ -88,14 +87,13 @@ const HeaderContainerStyle = styled.div`
   top: 0;
   left: 0;
   right: 0;
-  padding-top: 4rem;
 `;
 
 const SectionStyle = styled.section`
   margin: 0 calc(-1 * ${variables.layoutPadding}) -8.8rem;
   background-color: ${variables.colors.gray100};
-  padding: 11.6rem ${variables.layoutPadding} calc(4rem + ${variables.headerHeight});
-  height: calc(100vh - 4rem);
+  padding: 10rem ${variables.layoutPadding} calc(4rem + ${variables.headerHeight});
+  height: calc(100vh);
   overflow-y: auto;
 
   &.empty {
@@ -126,16 +124,16 @@ const SectionStyle = styled.section`
 `;
 
 const ContentStyle = styled.div`
+  padding-top: 1.6rem;
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
 `;
-
 const headerStyle = css`
+  position: unset;
   display: flex;
   align-items: center;
   padding: 1.6rem;
-  padding-top: unset;
 `;
 
 export default ReservationList;

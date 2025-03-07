@@ -5,21 +5,32 @@ import TextArea from '@components/TextArea/TextArea';
 import { css } from '@emotion/react';
 import useModal from '@hooks/useModal';
 import { TypoTitleSmS, TypoTitleXsR } from '@styles/Common';
+import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
-const CancelModal = () => {
-  const cancelReasonModal = useModal(1);
+const CancelModal = ({ modalId }: { modalId: number }) => {
+  const cancelReasonModal = useModal(modalId);
   const cancelConfirmModal = useModal(2);
   const [textareaValue, setTextareaValue] = useState('');
+  const [selectedReason, setSelectedReason] = useState(false);
+
+  const { mutate } = useMutation({
+    // mutationFn:  ,
+  });
 
   const handleCancel = () => {
     console.log('취소 API 작업');
     console.log(textareaValue); // 빌드 오류 방지
+    mutate();
   };
 
   const cancelReasonButton = [
     {
       text: '예약 취소하기',
+      variant: 'deepGray' as 'deepGray',
+      active: selectedReason,
+      disabled: !selectedReason,
+      type: 'submit' as 'submit',
       event: () => {
         cancelConfirmModal.open();
       },
@@ -45,9 +56,11 @@ const CancelModal = () => {
     },
   ];
 
+  const handleChangeReason = () => setSelectedReason(true);
+
   return (
     <>
-      <Modal type="fullscreen" title="예약취소" buttons={cancelReasonButton}>
+      <Modal type="fullscreen" title="예약취소" buttons={cancelReasonButton} modalId={modalId}>
         <>
           <section>
             <h3 css={cancelTitle}>
@@ -55,7 +68,13 @@ const CancelModal = () => {
             </h3>
             <ul css={cancelList}>
               <li>
-                <input type="radio" name="cancelReason" id="scheduleChange" value="일정 변경" />
+                <input
+                  type="radio"
+                  name="cancelReason"
+                  id="scheduleChange"
+                  value="일정 변경"
+                  onChange={() => handleChangeReason()}
+                />
                 <label htmlFor="scheduleChange">일정 변경</label>
               </li>
               <li>
@@ -68,15 +87,28 @@ const CancelModal = () => {
                   name="cancelReason"
                   id="useAnotherStudio"
                   value="다른 사진관 이용"
+                  onChange={() => handleChangeReason()}
                 />
                 <label htmlFor="useAnotherStudio">다른 사진관 이용</label>
               </li>
               <li>
-                <input type="radio" name="cancelReason" id="changeOfMind" value="단순 변심" />
+                <input
+                  type="radio"
+                  name="cancelReason"
+                  id="changeOfMind"
+                  value="단순 변심"
+                  onChange={() => handleChangeReason()}
+                />
                 <label htmlFor="changeOfMind">단순 변심</label>
               </li>
               <li>
-                <input type="radio" name="cancelReason" id="etc" value="기타" />
+                <input
+                  type="radio"
+                  name="cancelReason"
+                  id="etc"
+                  value="기타"
+                  onChange={() => handleChangeReason()}
+                />
                 <label htmlFor="etc">기타</label>
               </li>
             </ul>

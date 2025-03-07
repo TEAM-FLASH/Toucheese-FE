@@ -3,7 +3,7 @@ import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { getLocalStorageItem } from '@utils/getLocalStorageItem';
 import { IResvRes, IUser } from 'types/types';
 
-export type ResStatus = 'DEFAULT' | 'RESERVED' | 'COMPLETE' | 'CANCEL';
+export type ResStatus = 'DEFAULT' | 'RESERVED' | 'COMPLETED' | 'CANCELED';
 
 // 예약 상태 별 예약 내역을 불러오는 hook
 const fetchReservationList = async (status: ResStatus): Promise<IResvRes> => {
@@ -22,7 +22,7 @@ const fetchReservationList = async (status: ResStatus): Promise<IResvRes> => {
   );
 
   if (!response.ok) {
-    console.error('Failed to fetch data');
+    throw new Error('Failed to fetch data');
   }
 
   return response.json();
@@ -35,5 +35,6 @@ export const useGetReservationList = (resStatus: ResStatus): UseQueryResult<IRes
     staleTime: 1000 * 60 * 1,
     refetchOnWindowFocus: false,
     retry: 3,
+    throwOnError: true,
   });
 };

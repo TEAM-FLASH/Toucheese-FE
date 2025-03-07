@@ -5,12 +5,14 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import StudioReviewImageList from './components/StudioReviewImageList';
 import StudioNavigator from '@components/Navigator/StudioNavigator';
 import StudioReviewItem from './components/StudioReviewItem';
+import { css } from '@emotion/react';
 import StudioReviewCategories from './components/StudioReviewCategories';
 import { IReviewImages } from 'types/types';
 import { useStudioReviews } from '@hooks/useStudioReviews';
 import Header from '@components/Header/Header';
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
+import variables from '@styles/Variables';
 // 리뷰 데이터의 타입 정의
 interface Review {
   content: string;
@@ -31,10 +33,9 @@ interface Review {
 const StudioReview = () => {
   const { _id } = useParams();
   const [selectedMenuId, setSelectedMenuId] = useState<number | null>(null);
-  const { data, isLoading, error } = useStudioReviews(_id, selectedMenuId);
+  const { data } = useStudioReviews(_id, selectedMenuId);
   const [_, setSearchParams] = useSearchParams();
-  if (isLoading) return <div>로딩중...</div>;
-  if (error) return <div>에러가 발생했습니다</div>;
+
   if (!data) return null;
 
   const {
@@ -77,28 +78,34 @@ const StudioReview = () => {
 
       <Header title="리뷰" />
       <StudioNavigator _id={_id || ''} />
-      <ReviewPhotosWrapperStyle>
-        <ReviewTitleWrapperStyle>
-          <h1 css={TypoTitleXsM}>리뷰 사진 모아보기</h1>
-          <p css={TypoCapSmR}>{totalImageNum}개</p>
-        </ReviewTitleWrapperStyle>
-        <StudioReviewImageList pageId={_id} samplePhotoList={samplePhotoList} />
-      </ReviewPhotosWrapperStyle>
+      <div css={studioPaddingTop}>
+        <ReviewPhotosWrapperStyle>
+          <ReviewTitleWrapperStyle>
+            <h1 css={TypoTitleXsM}>리뷰 사진 모아보기</h1>
+            <p css={TypoCapSmR}>{totalImageNum}개</p>
+          </ReviewTitleWrapperStyle>
+          {/* 리뷰 이미지 모아보기 컴포넌트 */}
 
-      <StudioReviewCategories
-        avgRating={Number(processedAvgRating)}
-        totalReviewNum={totalReviewNum}
-        menuNameList={menuNameList}
-        menuIdList={menuIdList || []}
-        onFilterChange={handleFilterChange}
-      />
-      {reviewLists.map((review: Review, index: number) => (
-        <StudioReviewItem
-          key={review.id}
-          review={review}
-          isLast={index === reviewLists.length - 1}
+          <StudioReviewImageList pageId={_id} samplePhotoList={samplePhotoList} />
+        </ReviewPhotosWrapperStyle>
+        {/* 스튜디오 리뷰 카테고리 */}
+        <StudioReviewCategories
+          avgRating={Number(processedAvgRating)}
+          totalReviewNum={totalReviewNum}
+          menuNameList={menuNameList}
+          menuIdList={menuIdList || []}
+          onFilterChange={handleFilterChange}
         />
-      ))}
+        {/* 리뷰 리스트 렌더링  */}
+        {reviewLists.map((review: Review, index: number) => (
+          <StudioReviewItem
+            showMenuName={true}
+            key={review.id}
+            review={review}
+            isLast={index === reviewLists.length - 1}
+          />
+        ))}
+      </div>
     </>
   );
 };
@@ -119,4 +126,7 @@ const ReviewTitleWrapperStyle = styled.div`
     justify-content: center;
     align-items: center;
   }
+`;
+const studioPaddingTop = css`
+  padding-top: ${variables.headerHeight};
 `;

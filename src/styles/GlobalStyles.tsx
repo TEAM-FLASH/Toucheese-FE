@@ -2,6 +2,7 @@
 import { css } from '@emotion/react';
 import variables from './Variables';
 import { TypoBodyMdR } from './Common';
+import { breakPoints } from './BreakPoint';
 
 const GlobalStyles = css`
   @font-face {
@@ -16,6 +17,23 @@ const GlobalStyles = css`
     min-width: 320px;
     min-height: 100svh;
     background: ${variables.colors.white};
+
+    --breakPointPC: 500px;
+
+    --layoutPadding: 1.6rem;
+    --headerHeight: 5.6rem;
+    --maxWidth: 100%;
+
+    @media (min-width: ${breakPoints.pc}) {
+      --layoutPadding: 2.4rem;
+      --headerHeight: 8rem;
+      --maxWidth: 1280px;
+
+      overflow-x: clip;
+      max-width: calc(var(--maxWidth) + calc(var(--layoutPadding) * 2));
+      max-width: var(--maxWidth);
+      margin: 0 auto;
+    }
   }
 
   body {
@@ -23,7 +41,11 @@ const GlobalStyles = css`
     color: ${variables.colors.black};
     font-family: 'Pretendard', sans-serif; /* Pretendard 폰트 적용 */
     font-size: ${variables.size.medium};
-    padding: 4rem ${variables.layoutPadding} calc(4rem + ${variables.headerHeight});
+    padding: 0 ${variables.layoutPadding} calc(4rem + ${variables.headerHeight});
+
+    @media (min-width: ${breakPoints.pc}) {
+      padding-bottom: 0;
+    }
   }
 
   html,
@@ -174,6 +196,7 @@ const GlobalStyles = css`
 
   img {
     max-width: 100%;
+    vertical-align: top;
   }
 
   label {
@@ -285,6 +308,13 @@ const GlobalStyles = css`
     ${TypoBodyMdR}
   }
 
+  .mo {
+    display: block;
+  }
+  .pc {
+    display: none;
+  }
+
   @media (max-width: 350px) {
     :root {
       font-size: 9px;
@@ -303,7 +333,7 @@ const GlobalStyles = css`
     }
   }
 
-  @media (max-width: 1023px) {
+  @media (max-width: ${breakPoints.moMax}) {
     :root {
       width: 100%;
       overflow-x: clip;
@@ -311,7 +341,16 @@ const GlobalStyles = css`
   }
 
   /* PC */
-  @media (min-width: 1024px) and (max-width: 1439px) {
+  @media (min-width: ${breakPoints.pc}) {
+    .mo {
+      display: none;
+    }
+    .pc {
+      display: block;
+    }
+  }
+
+  @media (min-width: ${breakPoints.pc}) and (max-width: 1439px) {
     :root {
       font-size: 9px;
     }

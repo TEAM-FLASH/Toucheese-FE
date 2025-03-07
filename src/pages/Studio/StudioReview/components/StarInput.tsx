@@ -48,7 +48,10 @@ const StarInput = ({ onRatingChange }: StarInputProps) => {
   return (
     <div
       css={css`
+        margin: 1rem 0rem;
+        gap: 0.4rem;
         display: flex;
+        justify-content: flex-start;
         align-items: center;
       `}
     >

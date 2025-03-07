@@ -12,6 +12,8 @@ import { Helmet } from 'react-helmet-async';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { IReviewImages } from 'types/types';
 import ReviewSwiper from './components/ReviewSwiper';
+import variables from '@styles/Variables';
+import { css } from '@emotion/react';
 
 interface IReviewImagesResponse {
   totalElements: number;
@@ -21,6 +23,7 @@ interface IReviewImagesResponse {
   menuIdList: number[];
 }
 
+/** 리뷰 사진 모아보기 페이지 */
 const StudioReviewPhotos = () => {
   const { _id } = useParams(); // 스튜디오 아이디
   const [selectedMenuId, setSelectedMenuId] = useState<number | null>(null);
@@ -51,7 +54,7 @@ const StudioReviewPhotos = () => {
     return response.json();
   };
 
-  const { data: reviewImages, error } = useQuery<IReviewImagesResponse>({
+  const { data: reviewImages } = useQuery<IReviewImagesResponse>({
     queryKey: ['reviewImages', _id, selectedMenuId],
     queryFn: fetchReviewImage,
     enabled: !!_id,
@@ -60,7 +63,6 @@ const StudioReviewPhotos = () => {
     retry: 3,
   });
 
-  if (error) return <div>에러가 발생했습니다</div>;
   if (!reviewImages) return null;
 
   return (
@@ -73,44 +75,46 @@ const StudioReviewPhotos = () => {
       )}
 
       <Header title="리뷰 사진 모아보기" />
-      <StudioReviewPhotosContainerStyle>
-        <ButtonWrapperStyle>
-          <Button
-            text="전체"
-            variant="white"
-            active={selectedMenuId === null}
-            size="small"
-            width="fit"
-            onClick={() => setSelectedMenuId(null)}
-          />
-          {reviewImages.menuNameList.map((menu, index) => (
+      <div css={studioPaddingTop}>
+        <StudioReviewPhotosContainerStyle>
+          <ButtonWrapperStyle>
             <Button
-              key={menu}
-              text={menu}
+              text="전체"
               variant="white"
-              active={selectedMenuId === reviewImages.menuIdList[index]}
+              active={selectedMenuId === null}
               size="small"
               width="fit"
-              onClick={() => setSelectedMenuId(reviewImages.menuIdList[index])}
+              onClick={() => setSelectedMenuId(null)}
             />
-          ))}
-        </ButtonWrapperStyle>
+            {reviewImages.menuNameList.map((menu, index) => (
+              <Button
+                key={menu}
+                text={menu}
+                variant="white"
+                active={selectedMenuId === reviewImages.menuIdList[index]}
+                size="small"
+                width="fit"
+                onClick={() => setSelectedMenuId(reviewImages.menuIdList[index])}
+              />
+            ))}
+          </ButtonWrapperStyle>
 
-        <MasonryList>
-          {reviewImages.imageDtos.map(({ id, url }) => (
-            <div key={id} onClick={() => handleClick(id)}>
-              <picture>
-                <source srcSet={url.replace(/\.(jpg|jpeg|png)$/, '.webp')} type="image/webp" />
-                <img src={url} alt={`리뷰 이미지 ${id}`} />
-              </picture>
-            </div>
-          ))}
-        </MasonryList>
+          <MasonryList>
+            {reviewImages.imageDtos.map(({ id, url }) => (
+              <div key={id} onClick={() => handleClick(id)}>
+                <picture>
+                  <source srcSet={url.replace(/\.(jpg|jpeg|png)$/, '.webp')} type="image/webp" />
+                  <img src={url} alt={`리뷰 이미지 ${id}`} />
+                </picture>
+              </div>
+            ))}
+          </MasonryList>
 
-        <DimmedModal>
-          <ReviewSwiper data={reviewImages.imageDtos} />
-        </DimmedModal>
-      </StudioReviewPhotosContainerStyle>
+          <DimmedModal>
+            <ReviewSwiper data={reviewImages.imageDtos} />
+          </DimmedModal>
+        </StudioReviewPhotosContainerStyle>
+      </div>
     </>
   );
 };
@@ -125,4 +129,7 @@ const ButtonWrapperStyle = styled.div`
   gap: 0.8rem;
   padding: 1.2rem 0;
   width: 100%;
+`;
+const studioPaddingTop = css`
+  padding-top: ${variables.headerHeight};
 `;

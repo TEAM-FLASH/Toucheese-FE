@@ -4,9 +4,10 @@ import Button from '@components/Button/Button';
 import EmptyMessage from '@components/Message/EmptyMessage';
 import { css } from '@emotion/react';
 import { filterTimes } from '@hooks/useGetAvailableDate';
+import useToast from '@hooks/useToast';
 import { useSelectDateStore } from '@store/useSelectDateStore';
 import { useSelectTimeStore } from '@store/useSelectTimeStore';
-import { Hidden, TypoBodyMdM, TypoBodySmR } from '@styles/Common';
+import { DividerStyle, Hidden, TypoBodyMdM, TypoBodySmR } from '@styles/Common';
 import variables from '@styles/Variables';
 import { useMemo } from 'react';
 
@@ -21,14 +22,12 @@ interface ITimeProp {
     date: string;
     availableTimeDto: ITimes[];
   }[];
-  isSuccess?: boolean;
-  isFetching?: boolean;
 }
 
-const SelectTime = ({ type, availableTimeWithDates, isSuccess, isFetching }: ITimeProp) => {
+const SelectTime = ({ type, availableTimeWithDates }: ITimeProp) => {
   const { time: selectedTime, setTime } = useSelectTimeStore();
   const { date } = useSelectDateStore();
-
+  const openToast = useToast();
   const times =
     type === 'filter'
       ? filterTimes
@@ -39,17 +38,11 @@ const SelectTime = ({ type, availableTimeWithDates, isSuccess, isFetching }: ITi
   const afternoonTimes = useMemo(() => times?.filter((times) => times.time >= '12:00'), [times]);
 
   const handleTImeClick = (value: string) => {
+    if (!date) return openToast('날짜를 먼저 선택해주세요.');
     setTime(value, type);
   };
 
   if (type === 'reservation') {
-    if (isFetching) return null;
-    if (!isSuccess)
-      return (
-        <div css={emptyMessageBox}>
-          <EmptyMessage message="오류가 발생했습니다. 잠시 후 다시 시도해주세요." />
-        </div>
-      );
     if (!times)
       return (
         <div css={emptyMessageBox}>
@@ -60,7 +53,7 @@ const SelectTime = ({ type, availableTimeWithDates, isSuccess, isFetching }: ITi
 
   return (
     <>
-      <section css={SelectTimeStyle}>
+      <section css={[SelectTimeStyle, DividerStyle]}>
         <h2 css={Hidden}>시간 선택</h2>
 
         <div css={articleBox}>
@@ -129,8 +122,12 @@ const SelectTime = ({ type, availableTimeWithDates, isSuccess, isFetching }: ITi
 export default SelectTime;
 
 const SelectTimeStyle = css`
-  padding-top: 2rem;
-  border-top: 1px solid ${variables.colors.gray300};
+  padding-top: 3rem;
+
+  &::after {
+    bottom: auto;
+    top: 0;
+  }
 
   ul {
     display: grid;

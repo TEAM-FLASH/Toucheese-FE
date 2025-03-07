@@ -2,8 +2,16 @@
 import { css } from '@emotion/react';
 import StudioReviewItem, { Review } from '../StudioReview/components/StudioReviewItem';
 
-const StudioMenuDetailReview = ({ reviewItem = [], rating = 0 }: { reviewItem: Review[]; rating: number }) => {
-  const reviewList = reviewItem.map((item) => <StudioReviewItem key={item.id} review={item} />);
+const StudioMenuDetailReview = ({
+  reviewItem = [],
+  rating = 0,
+}: {
+  reviewItem: Review[];
+  rating: number;
+}) => {
+  const reviewList = reviewItem.map((item) => (
+    <StudioReviewItem key={item.id} review={item} showMenuName={false} />
+  ));
 
   return (
     <>

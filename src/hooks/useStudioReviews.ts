@@ -45,7 +45,8 @@ export const useStudioReviews = (studioId: string | undefined, menuId: number | 
     queryFn: fetchStudioReviews,
     staleTime: 1000 * 60 * 5, // 5분
     gcTime: 1000 * 60 * 30, // 30분
-    retry: 3,
+    retry: 2,
     enabled: !!studioId,
+    throwOnError: true,
   });
 };

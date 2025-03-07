@@ -1,3 +1,6 @@
+/** @jsxImportSource @emotion/react */
+
+import BookingButton from '@components/BookingSearchContainer/BookingButton';
 import BookingSearchContainer from '@components/BookingSearchContainer/BookingSearchContainer';
 import BottomSheet from '@components/BottomSheet/BottomSheet';
 import Button from '@components/Button/Button';
@@ -7,14 +10,20 @@ import FilterPriceSlideComponent from '@components/FilterPriceSlide/FilterPriceS
 import ThemeNavigator from '@components/Navigator/ThemeNavigator';
 import ServiceAvailability from '@components/ServiceAvailability/ServiceAvailability';
 import StudioList from '@components/Studio/StudioList';
-import { keyframes } from '@emotion/react';
+import { css, keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
+import useGetWindowWidth from '@hooks/useGetWindowWidth';
 import useBottomSheetState from '@store/useBottomSheetStateStore';
+import { breakPoints, mqMin } from '@styles/BreakPoint';
+import { bg100vw, PCLayout, TypoBodyMdSb } from '@styles/Common';
 import variables from '@styles/Variables';
 import { decodeSearchParamsToString } from '@utils/decodeSearchParams';
+import { remToPx } from '@utils/remToPx';
 import { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import LocalDateSelectionModal from './components/LocalDateSelectionModal';
+import PCFilterWrapper from './components/PCFilterWrapper';
 
 interface IFixedProps {
   isFixed: boolean;
@@ -46,6 +55,7 @@ const Home = () => {
   const [isAnimating, setIsAnimating] = useState(false);
   const homeRef = useRef<HTMLTableSectionElement | null>(null);
   const navigate = useNavigate();
+  const windowWidth = useGetWindowWidth();
 
   // 로그인 완료 후 예약페이지로 돌아가기
   const lastPage = window.sessionStorage.getItem('lastPage');
@@ -56,17 +66,15 @@ const Home = () => {
     const handleScroll = () => {
       if (homeRef.current) {
         const rect = homeRef.current.getBoundingClientRect();
-        if (rect.top <= -78) {
-          setIsFixed(true);
-        } else {
-          setIsFixed(false);
-        }
+        const threshold = windowWidth >= 1024 ? remToPx(0) : -1 * remToPx(8.8);
+
+        setIsFixed(rect.top <= threshold);
       }
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [windowWidth]);
 
   const { openBottomSheet } = useBottomSheetState();
 
@@ -126,64 +134,103 @@ const Home = () => {
         />
         <meta property="og:description" content="터치즈에서 원하는 스튜디오를 검색해보세요!" />
       </Helmet>
+
+      <NavigatorStyle isFixed={isFixed}>
+        <div
+          css={css`
+            ${mqMin(breakPoints.pc)} {
+              ${PCLayout}
+              ${bg100vw(variables.colors.black)}
+              display: flex;
+              align-items: center;
+              gap: 5.2rem;
+              padding: 0 ${variables.layoutPadding};
+            }
+          `}
+        >
+          <BookingButton type="pc" />
+          <ThemeNavigator />
+        </div>
+
+        {/* 모바일 필터 영역 */}
+        <FilterBoxStyle className="mo">
+          <ButtonWrapperStyle onClick={handleReset} className={isAnimating ? 'rotateIcon' : ''}>
+            <Button
+              text=""
+              type="reset"
+              variant="gray"
+              icon={
+                <RotateIconStyle
+                  className={isAnimating ? 'rotateIcon' : ''}
+                  src="/img/icon-reset.svg"
+                  alt="필터 초기화"
+                />
+              }
+              onClick={handleReset}
+            />
+          </ButtonWrapperStyle>
+          <div className="filterScroll">
+            <Filter
+              params={window.location.search}
+              text="인기순"
+              paramsKeyword={sortBy}
+              paramsName="sortBy"
+              onClick={handleFilterByPopularity}
+            />
+            <Filter
+              params={window.location.search}
+              paramsName={'minPrice'}
+              text="가격대"
+              onClick={handleFilterByPriceRange}
+            />
+            <Filter
+              params={window.location.search}
+              text="매장정보"
+              paramsKeyword={options}
+              paramsName="options"
+              onClick={handleFilterByStoreInfo}
+            />
+          </div>
+        </FilterBoxStyle>
+      </NavigatorStyle>
+
       <SectionStyle ref={homeRef}>
+        {/* 모바일 지역, 날짜 선택 버튼 */}
         <BookingSearchContainer />
 
-        <NavigatorStyle isFixed={isFixed}>
-          <ThemeNavigator />
-          <FilterBoxStyle>
-            <ButtonWrapperStyle onClick={handleReset} className={isAnimating ? 'rotateIcon' : ''}>
-              <Button
-                text=""
-                type="reset"
-                variant="gray"
-                icon={
-                  <RotateIconStyle
-                    className={isAnimating ? 'rotateIcon' : ''}
-                    src="/img/icon-reset.svg"
-                    alt="필터 초기화"
-                  />
-                }
-                onClick={handleReset}
-              />
-            </ButtonWrapperStyle>
-            <div className="filterScroll">
-              <Filter
-                params={window.location.search}
-                text="인기순"
-                paramsKeyword={sortBy}
-                paramsName="sortBy"
-                onClick={handleFilterByPopularity}
-              />
-              <Filter
-                params={window.location.search}
-                paramsName={'minPrice'}
-                text="가격대"
-                onClick={handleFilterByPriceRange}
-              />
-              <Filter
-                params={window.location.search}
-                text="매장정보"
-                paramsKeyword={options}
-                paramsName="options"
-                onClick={handleFilterByStoreInfo}
-              />
-            </div>
-          </FilterBoxStyle>
-        </NavigatorStyle>
-
-        <ListStyle>
-          <StudioList mode="filter" searchParams={searchParams} />
-        </ListStyle>
+        {/* PC 버전 컨텐츠 */}
+        <div
+          css={css`
+            ${mqMin(breakPoints.pc)} {
+              display: flex;
+              gap: 1.6rem;
+              position: relative;
+            }
+          `}
+        >
+          {/* PC 필터 영역 */}
+          <FilterSectionStyle className="pc" isFixed={isFixed}>
+            <FilterContentStyle>
+              <PCFilterWrapper />
+            </FilterContentStyle>
+          </FilterSectionStyle>
+          <ListStyle>
+            <StudioList mode="filter" searchParams={searchParams} />
+          </ListStyle>
+        </div>
       </SectionStyle>
       <BottomSheet />
+      <LocalDateSelectionModal modalId={1} />
     </>
   );
 };
 
 const SectionStyle = styled.section`
-  margin-top: -4rem;
   padding-top: 2rem;
+
+  ${mqMin(breakPoints.pc)} {
+    padding-top: 5.8rem;
+  }
 `;
 
 const NavigatorStyle = styled.div<IFixedProps>`
@@ -192,6 +239,10 @@ const NavigatorStyle = styled.div<IFixedProps>`
   left: 0;
   right: 0;
   z-index: 9;
+
+  ${mqMin(breakPoints.pc)} {
+    top: ${(props) => (props.isFixed ? '0' : '8rem')};
+  }
 `;
 
 const ButtonWrapperStyle = styled.div`
@@ -271,10 +322,51 @@ const FilterBoxStyle = styled.div`
 
     background-color: ${variables.colors.white};
   }
+
+  ${mqMin(breakPoints.pc)} {
+    display: none;
+  }
+`;
+
+const FilterSectionStyle = styled.div<IFixedProps>`
+  flex-shrink: 0;
+  padding-top: 3rem;
+  position: sticky;
+  top: ${(props) => (props.isFixed ? '5.8rem' : '0')};
+  left: 0;
+  width: 19.2rem;
+  height: ${(props) => (props.isFixed ? 'calc(100vh - 5.8rem)' : 'calc(100vh - 13.8rem)')};
+`;
+
+const FilterContentStyle = styled.div`
+  .filter-sort,
+  .filter-price,
+  .filter-options {
+    > p {
+      ${TypoBodyMdSb}
+      color: ${variables.colors.gray800};
+      margin-bottom: 0.8rem;
+    }
+  }
+
+  .filter-sort {
+    padding-bottom: 2rem;
+    border-bottom: 0.1rem solid ${variables.colors.gray300};
+  }
+
+  .filter-price {
+    margin-top: 2rem;
+    margin-bottom: 3.4rem;
+  }
 `;
 
 const ListStyle = styled.div`
-  padding-top: 9.6rem;
+  padding-top: 10.8rem;
+
+  ${mqMin(breakPoints.pc)} {
+    padding: 0 1.6rem 3rem;
+    flex-grow: 1;
+  }
 `;
 
 export default Home;

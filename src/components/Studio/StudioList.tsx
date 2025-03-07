@@ -1,11 +1,11 @@
-import EmptyMessage from '@components/Message/EmptyMessage';
+import Loading from '@components/Loading/Loading';
+import NoResult from '@components/NoResult/NoResult';
 import { useGetStudios } from '@hooks/useGetStudios';
 import { decodeSearchParamsToString } from '@utils/decodeSearchParams';
 import { useEffect, useState } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 import { IStudioItem } from 'types/types';
 import StudioItem from './StudioItem';
-import Loading from '@components/Loading/Loading';
 
 const StudioList = ({
   mode,
@@ -50,8 +50,8 @@ const StudioList = ({
       ) : (
         <>
           {data?.content.length === 0 ? (
-            <EmptyMessage
-              message={`${mode === 'filter' ? '스튜디오 조회' : '검색'} 결과가 없습니다.`}
+            <NoResult
+              message={`스튜디오 ${mode === 'filter' ? '조회' : '검색'} 결과가 없습니다.`}
             />
           ) : (
             <Virtuoso

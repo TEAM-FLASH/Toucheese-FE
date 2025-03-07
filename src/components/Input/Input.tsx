@@ -8,7 +8,7 @@ import React, { useState } from 'react';
 
 interface InputProps {
   labelName: string;
-  type: string;
+  type?: string;
   value?: string;
   placeholder: string;
   error?: string;
@@ -18,7 +18,9 @@ interface InputProps {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   checkButtonText?: string;
   inputWidth?: string;
+  defaultValue?: string;
   isValid?: boolean;
+  borderRadius?: string;
 }
 
 const Input = ({
@@ -32,14 +34,44 @@ const Input = ({
   checkButtonText = '중복확인',
   inputWidth = '100%',
   isValid,
+  defaultValue,
+  borderRadius = '0.6rem',
+  onChange,
 }: InputProps) => {
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState(defaultValue || '');
   const [showPassword, setShowPassword] = useState(false);
   const [isActive, setIsActive] = useState(false);
 
+  /** 머니 포맷터 */
+  const formatMoney = (value: string) => {
+    // 숫자가 아닌 문자 제거
+    const numbers = value.replace(/[^\d]/g, '');
+    // 천 단위 쉼표 추가
+    return numbers.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  };
+
+  /** 인풋 타입이 money 인 경우 값을 쉼표 단위로 변경해주는 함수 */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-    register?.onChange?.(e);
+    if (initialType === 'money') {
+      const formattedValue = formatMoney(e.target.value);
+      setInputValue(formattedValue);
+
+      if (onChange) {
+        const event = {
+          ...e,
+          target: { ...e.target, value: formattedValue },
+        } as React.ChangeEvent<HTMLInputElement>;
+        onChange(event);
+      }
+
+      if (register?.onChange) {
+        register.onChange(e);
+      }
+    } else {
+      setInputValue(e.target.value);
+      onChange?.(e);
+      register?.onChange?.(e);
+    }
   };
 
   const handleClear = () => {
@@ -71,7 +103,7 @@ const Input = ({
         <div css={inputContainerStyle}>
           <div css={inputWrapperStyle}>
             <input
-              css={inputStyle(error, isValid)}
+              css={inputStyle(error, isValid, borderRadius)}
               type={type}
               placeholder={placeholder}
               autoComplete="off"
@@ -130,7 +162,7 @@ const labelStyle = css`
   ${TypoBodySmM}
 `;
 
-const inputStyle = (error?: string, isValid?: boolean) => css`
+const inputStyle = (error?: string, isValid?: boolean, borderRadius?: string) => css`
   && {
     margin-top: 0.4rem;
     margin-bottom: 0.4rem;
@@ -139,7 +171,7 @@ const inputStyle = (error?: string, isValid?: boolean) => css`
     box-sizing: border-box;
     padding: 1rem 6rem 1rem 1rem;
     border: 1px solid ${error ? 'red' : isValid ? 'green' : variables.colors.gray300};
-    border-radius: 0.6rem;
+    border-radius: ${borderRadius};
     background-color: ${variables.colors.white};
     font-size: 1.6rem;
     letter-spacing: normal;
@@ -172,9 +204,10 @@ const errorContainerStyle = css`
 `;
 
 const errorIconStyle = css`
-  width: 1.6rem;
-  height: 1.6rem;
+  width: 1.2rem;
+  height: 1.2rem;
 `;
+
 const errorStyle = (error?: string, isValid?: boolean) => css`
   color: ${error ? 'red' : isValid ? 'green' : variables.colors.gray600};
 `;

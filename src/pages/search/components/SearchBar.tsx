@@ -58,10 +58,10 @@ const SearchBar = () => {
         onKeyUp={handleKeyUp}
         placeholder="스튜디오를 검색해보세요."
       />
-      <img src="/img/icon-search2.svg" alt="검색모양아이콘" css={searchIconStyle} />
+      <img src="/img/icon-search-gray500.svg" alt="검색모양아이콘" css={searchIconStyle} />
       {inputValue && (
         <button onClick={handleClear} css={clearButtonStyle}>
-          <img src="/img/icon-xcircle.svg" alt="모두지우기버튼" css={clearIconStyle} />
+          <img src="/img/icon-cancel.svg" alt="모두지우기버튼" css={clearIconStyle} />
         </button>
       )}
     </div>

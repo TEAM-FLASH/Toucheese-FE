@@ -157,17 +157,18 @@ const FilterPriceRangeMin = styled.input`
   pointer-events: none;
   top: 0;
   height: 7px;
-  width: 100%;
+  width: 99%;
   appearance: none;
   background: none;
   z-index: 1;
 
   &::-webkit-slider-thumb {
-    height: 2.6rem;
+    height: 2.7rem;
     pointer-events: auto;
-    width: 2.6rem;
+    width: 2.7rem;
     border-radius: 50%;
-    border: 0.1rem solid ${variables.colors.primary};
+    border: 0.2rem solid ${variables.colors.primary};
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     background-color: #fff8e1;
     -webkit-appearance: none;
     z-index: 99;
@@ -183,7 +184,7 @@ const PriceRangeTrack = styled.div`
   left: 0;
   right: 0;
   transform: translateY(-50%);
-  width: 100%;
+  width: 99%;
   height: 0.8rem;
   background-color: ${variables.colors.gray200};
   border-radius: ${variables.borderRadius};
@@ -191,7 +192,7 @@ const PriceRangeTrack = styled.div`
 
 const TrackFilled = styled.div`
   position: absolute;
-  height: 0.8rem;
+  height: 0.9rem;
   background-color: ${variables.colors.primary700};
 `;
 

@@ -4,12 +4,14 @@ import Button from '@components/Button/Button';
 import styled from '@emotion/styled';
 import useModal from '@hooks/useModal';
 import { useModalStore } from '@store/useModalStore';
+import { breakPoints, mqMax, mqMin } from '@styles/BreakPoint';
 import { Hidden, TypoBodyMdR, TypoTitleSmS } from '@styles/Common';
 import variables from '@styles/Variables';
 import { useEffect } from 'react';
 
 interface ModalProp {
   type: 'default' | 'dimmed' | 'fullscreen';
+  isCloseBtn?: boolean;
   title?: string;
   children: JSX.Element | string;
   modalId?: number;
@@ -17,8 +19,10 @@ interface ModalProp {
   buttons?: {
     text: string;
     event: () => void;
-    variant?: 'black' | 'gray';
+    variant?: 'black' | 'gray' | 'deepGray';
+    active?: boolean;
     width?: 'max' | 'fit';
+    type?: 'button' | 'submit';
   }[];
 }
 
@@ -49,6 +53,7 @@ interface IContentStyle {
 const Modal = ({
   modalId = 1,
   type = 'default',
+  isCloseBtn = false,
   title,
   children,
   withBtn = true,
@@ -56,19 +61,26 @@ const Modal = ({
 }: ModalProp) => {
   const modals = useModalStore((state) => state.modals);
   const isOpen = modals[modalId];
+  const isModalOpen = Object.values(modals).filter((boolean) => boolean).length;
   const { close } = useModal(modalId);
   const handleClose = () => close();
+
+  const handleDimClick = (e: React.MouseEvent) => {
+    const eventTarget = e.target as HTMLElement;
+    if (!eventTarget.classList.contains('modal-box')) return;
+    close();
+  };
 
   useEffect(() => {
     // 모달이 활성화되면 html에 생기는 전체 스크롤 방지
     const htmlStyle = window.document.documentElement.style;
-    if (isOpen) htmlStyle.overflow = 'hidden';
-    else htmlStyle.overflow = 'auto';
+    if (isModalOpen) htmlStyle.overflowY = 'hidden';
+    else htmlStyle.overflowY = 'auto';
   }, [isOpen]);
 
   return (
     isOpen && (
-      <ModalStyle type={type}>
+      <ModalStyle type={type} className="modal-box" onClick={(e) => handleDimClick(e)}>
         <ModalInner type={type}>
           {/* default 모달 헤더 */}
           {type === 'default' && <TitleStyleDefault>{title}</TitleStyleDefault>}
@@ -77,9 +89,15 @@ const Modal = ({
           {type === 'fullscreen' && (
             <TitleStyle type="fullscreen">
               {isOpen}
-              <CloseBtnStyle type="button" mode="fullscreen" onClick={handleClose}>
-                <span css={Hidden}>모달 닫기</span>
-              </CloseBtnStyle>
+              {isCloseBtn ? (
+                <CloseXBtnStyle type="button" onClick={handleClose}>
+                  <span css={Hidden}>모달 닫기</span>
+                </CloseXBtnStyle>
+              ) : (
+                <CloseBtnStyle type="button" mode="fullscreen" onClick={handleClose}>
+                  <span css={Hidden}>모달 닫기</span>
+                </CloseBtnStyle>
+              )}
               {title && <h2 css={TypoTitleSmS}>{title}</h2>}
             </TitleStyle>
           )}
@@ -100,16 +118,27 @@ const Modal = ({
           {/* Buttons */}
           {withBtn && (
             <ButtonBoxStyle type={type}>
-              {buttons?.map(({ text, variant = 'black', event, width = 'max' }) => (
-                <Button
-                  key={text}
-                  variant={variant}
-                  onClick={event}
-                  text={text}
-                  disabled={false}
-                  width={width}
-                />
-              ))}
+              {buttons?.map(
+                ({
+                  text,
+                  variant = 'black',
+                  event,
+                  width = 'max',
+                  active = true,
+                  type = 'button',
+                }) => (
+                  <Button
+                    key={text}
+                    variant={variant}
+                    onClick={event}
+                    text={text}
+                    // disabled={false}
+                    active={active}
+                    width={width}
+                    type={type}
+                  />
+                ),
+              )}
             </ButtonBoxStyle>
           )}
         </ModalInner>
@@ -125,50 +154,83 @@ const ModalStyle = styled.section<IModalStyle>`
   z-index: 99;
   inset: 0;
   overflow: hidden auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: ${(props) => (props.type !== 'fullscreen' ? '' : 'space-between')};
-  background: ${(props) =>
-    props.type !== 'fullscreen' ? 'rgba(0,0,0,0.85)' : variables.colors.white};
-  padding: ${(props) => props.type !== 'default' && `5.2rem 2rem 10rem`};
-  ${(prop) =>
-    prop.type === 'fullscreen' &&
-    `
-    margin-top: -5.2rem;
-  `}
+
+  ${mqMax(breakPoints.moMax)} {
+    background: ${(props) =>
+      props.type === 'fullscreen' ? variables.colors.white : ' rgba(0, 0, 0, 0.85)'};
+    padding: 0 ${variables.layoutPadding} 10rem;
+    padding-top: ${(props) => props.type === 'dimmed' && variables.headerHeight};
+    display: flex;
+    flex-direction: column;
+    justify-content: ${(props) => (props.type !== 'fullscreen' ? '' : 'space-between')};
+  }
+
+  ${mqMin(breakPoints.pc)} {
+    &:last-of-type {
+      background: rgba(0, 0, 0, 0.6);
+    }
+  }
 `;
 
 const ModalInner = styled.div<IModalStyle>`
   ${(props) =>
     props.type === 'default' &&
     `
+  width: calc(100% - 6rem);
+  margin: auto;
+  max-width: 30rem;
+  min-height: 18rem;
+  padding: 3rem 2rem 2rem;
+  border-radius: 1.4rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+  `}
+
+  ${mqMax(breakPoints.moMax)} {
+    background: ${(props) => props.type !== 'dimmed' && '#fff'};
+    height: ${(props) => props.type !== 'default' && '100%'};
+  }
+
+  ${mqMin(breakPoints.pc)} {
     background: #fff;
-    width: calc(100% - 6rem);
-    margin: auto;
-    max-width: 30rem;
-    min-height: 18rem;
-    padding: 3rem 2rem 2rem;
-    border-radius: 1.4rem;
-    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
-    gap: .6rem;
-  `}
+    width: 100%;
+    max-width: ${(props) => (props.type === 'default' ? '45rem' : '54rem')};
+    min-height: ${(props) => (props.type === 'default' ? '20rem' : '45.6rem')};
+    max-height: calc(100vh - 8rem);
+    border-radius: 2rem;
+  }
 `;
 
 const TitleStyle = styled.div<ITitleStyle>`
-  padding: ${(props) => (props.type === 'fullscreen' ? '1.4rem 0' : '2.8rem 0')};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: ${(props) => props.type === 'fullscreen' && variables.colors.white};
   color: ${(props) => props.type === 'dimmed' && variables.colors.white};
-  min-height: 5.2rem;
-  position: ${(props) => (props.type === 'fullscreen' ? 'sticky' : 'fixed')};
-  left: 2rem;
-  right: 2rem;
-  top: 0;
-  z-index: 1;
+
+  ${mqMax(breakPoints.moMax)} {
+    position: ${(props) => (props.type === 'fullscreen' ? 'sticky' : 'fixed')};
+    padding: ${(props) => (props.type === 'fullscreen' ? '1.4rem 0' : '2.8rem 0')};
+    min-height: 5.2rem;
+    left: 2rem;
+    right: 2rem;
+    top: 0;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: ${(props) => props.type === 'fullscreen' && variables.colors.white};
+  }
+
+  ${mqMin(breakPoints.pc)} {
+    padding: 2rem ${variables.layoutPadding};
+    border-bottom: 1px solid ${variables.colors.gray300};
+    color: ${variables.colors.gray800};
+  }
 `;
 
 const TitleStyleDefault = styled.h2`
@@ -178,14 +240,38 @@ const TitleStyleDefault = styled.h2`
 const CloseBtnStyle = styled.button<ICloseBtnStyle>`
   width: 2.4rem;
   aspect-ratio: 1/1;
-  background: ${(props) =>
-    props.mode === 'fullscreen'
-      ? 'url(/img/icon-arrow-gray800.svg) no-repeat center / 1.1rem 1.9rem'
-      : 'url(/img/icon-close-white.svg) no-repeat center / 1.2rem'};
   position: absolute;
-  left: ${(props) => props.mode === 'fullscreen' && 0};
-  right: ${(props) => props.mode === 'dimmed' && 0};
   z-index: 9;
+
+  ${mqMax(breakPoints.moMax)} {
+    background: ${(props) =>
+      props.mode === 'fullscreen'
+        ? 'url(/img/icon-arrowback.svg) no-repeat center / 1.1rem 1.9rem'
+        : 'url(/img/icon-close-white.svg) no-repeat center / 1.2rem'};
+    left: ${(props) => props.mode === 'fullscreen' && 0};
+    right: ${(props) => props.mode === 'dimmed' && 0};
+  }
+
+  ${mqMin(breakPoints.pc)} {
+    background: url(/img/icon-close-gray800.svg) no-repeat center / 1.6rem;
+    right: ${variables.layoutPadding};
+  }
+`;
+
+const CloseXBtnStyle = styled.button`
+  width: 2.4rem;
+  aspect-ratio: 1/1;
+  background: url(/img/icon-close-gray800.svg) no-repeat center / 1.6rem;
+  position: absolute;
+  z-index: 9;
+
+  ${mqMax(breakPoints.moMax)} {
+    right: 0;
+  }
+
+  ${mqMin(breakPoints.pc)} {
+    right: ${variables.layoutPadding};
+  }
 `;
 
 const ContentsStyle = styled.div<IContentStyle>`
@@ -194,23 +280,15 @@ const ContentsStyle = styled.div<IContentStyle>`
 
   ${(props) => props.type === 'default' && TypoBodyMdR}
   ${(props) => props.type === 'default' && `color: ${variables.colors.gray800}`}
+
+  ${mqMin(breakPoints.pc)} {
+    overflow: hidden auto;
+    padding: 1.6rem ${variables.layoutPadding};
+  }
 `;
 
 const ButtonBoxStyle = styled.div<IModalStyle>`
   display: flex;
-
-  ${(props) =>
-    props.type !== 'default' &&
-    `
-    padding: 2rem 1.6rem 3rem;
-    justify-content: space-between;
-    gap: 0.8rem;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;  
-    background: #fff;
-  `}
 
   ${(props) =>
     props.type === 'default' &&
@@ -218,4 +296,26 @@ const ButtonBoxStyle = styled.div<IModalStyle>`
     gap: 1.4rem;
     margin-top: 1rem;
     `}
+
+  ${mqMax(breakPoints.moMax)} {
+    ${(props) =>
+      props.type !== 'default' &&
+      `
+      padding: 2rem 1.6rem 3rem;
+      justify-content: space-between;
+      gap: 0.8rem;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;  
+      background: #fff;
+    `}
+  }
+
+  ${mqMin(breakPoints.pc)} {
+    padding: ${(props) =>
+      props.type === 'default' ? `1.8rem 0 0` : `1.8rem ${variables.layoutPadding} 3rem`};
+    border-top: ${(props) => props.type !== 'default' && `1px solid ${variables.colors.gray300}`};
+    gap: 0.8rem;
+  }
 `;

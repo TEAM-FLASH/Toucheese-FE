@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 
-import { css, CSSObject } from '@emotion/react';
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { convertToDateFormat, lessThan10Add0, useSelectDateStore } from '@store/useSelectDateStore';
 import { Hidden } from '@styles/Common';
@@ -10,7 +10,6 @@ import createCalendar from './createCalendar';
 import { useSelectTimeStore } from '@store/useSelectTimeStore';
 
 interface CalendarProp {
-  style?: CSSObject;
   type?: string;
   disableDates?: string[] | null;
 }
@@ -21,10 +20,12 @@ interface Day {
   date: number;
 }
 
-const Calendar = ({ style, type = 'filter', disableDates }: CalendarProp) => {
+const Calendar = ({ type = 'filter', disableDates }: CalendarProp) => {
   const { date: activeDay, setDate: setActiveDay } = useSelectDateStore();
-  const [baseDate, setBaseDate] = useState(new Date());
+  const [baseDate, setBaseDate] = useState(activeDay ? new Date(activeDay) : new Date());
   const [calendar, setCalendar] = useState<Day[]>();
+  const [startClientX, setStartClientX] = useState(0);
+  const [endClientX, setEndClientX] = useState(0);
   const { time, setTime } = useSelectTimeStore();
 
   const baseYear = baseDate.getFullYear();
@@ -41,7 +42,6 @@ const Calendar = ({ style, type = 'filter', disableDates }: CalendarProp) => {
     );
     if (time) resetTime();
     setBaseDate(firstOfChangedMonth);
-    setActiveDay(convertToDateFormat(firstOfChangedMonth));
   };
 
   const moveToToday = () => {
@@ -76,8 +76,15 @@ const Calendar = ({ style, type = 'filter', disableDates }: CalendarProp) => {
     if (activeDay === convertToDateFormat(today)) moveToToday();
   }, [activeDay]);
 
+  useEffect(() => {
+    // 달력 위에서 스와이프 했을 때 월 변경
+    if (startClientX === endClientX) return;
+    if (startClientX > endClientX) changeMonth(1);
+    else changeMonth(-1);
+  }, [endClientX]);
+
   return (
-    <CalendarWrStyle css={style}>
+    <CalendarWrStyle>
       <h2 css={Hidden}>날짜 선택</h2>
 
       <TopStyle>
@@ -85,18 +92,18 @@ const Calendar = ({ style, type = 'filter', disableDates }: CalendarProp) => {
           오늘 <span css={Hidden}>날짜로 이동</span>
         </TodayStyle>
         <TitleStyle>
-          <button onClick={() => changeMonth(-1)}>
+          <button
+            onClick={() => changeMonth(-1)}
+            css={css`
+              transform: rotate(180deg);
+            `}
+          >
             <span css={Hidden}>이전 달로 이동</span>
           </button>
           <div>
             {baseYear}년 {baseMonth + 1}월
           </div>
-          <button
-            css={css`
-              transform: rotate(180deg);
-            `}
-            onClick={() => changeMonth(1)}
-          >
+          <button onClick={() => changeMonth(1)}>
             <span css={Hidden}>다음 달로 이동</span>
           </button>
         </TitleStyle>
@@ -111,7 +118,10 @@ const Calendar = ({ style, type = 'filter', disableDates }: CalendarProp) => {
           <li>금</li>
           <li>토</li>
         </DayOfWeekStyle>
-        <ul>
+        <ul
+          onTouchStart={(e) => setStartClientX(e.touches[0].clientX)}
+          onTouchEnd={(e) => setEndClientX(e.changedTouches[0].clientX)}
+        >
           {calendar &&
             calendar.map(({ year, month, date }) => {
               const isActive =
@@ -151,12 +161,7 @@ export default Calendar;
 const CalendarWrStyle = styled.article`
   max-width: 500px;
   width: 100%;
-  aspect-ratio: 1/1.045;
-  margin: 0 auto;
-
-  @media (min-width: 1024px) {
-    aspect-ratio: 1/0.9;
-  }
+  margin: 0 auto 1rem;
 `;
 
 const TopStyle = styled.div`
@@ -186,7 +191,7 @@ const TitleStyle = styled.div`
   button {
     width: 2.4rem;
     aspect-ratio: 1/1;
-    background: url(/img/icon-arrow-gray.svg) no-repeat center;
+    background: url(/img/icon-chevronright.svg) no-repeat center;
   }
 `;
 

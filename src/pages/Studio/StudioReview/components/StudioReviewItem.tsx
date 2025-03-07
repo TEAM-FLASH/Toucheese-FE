@@ -21,20 +21,27 @@ export interface Review {
   rating: number;
   reviewImages: IReviewImages[];
   updated_at: string;
-
   userId: number;
   userName: string;
 }
 
 /** 리뷰 아이템 컴포넌트 */
-const StudioReviewItem = ({ review, isLast }: { review: Review; isLast?: boolean }) => {
+const StudioReviewItem = ({
+  review,
+  isLast,
+  showMenuName,
+}: {
+  review: Review;
+  isLast?: boolean;
+  showMenuName?: boolean;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
       <StudioReviewItemContainerStyle key={review.id} isOpen={isOpen} isLast={isLast}>
         <TitleWrapper>
-          <MainTitle css={TypoTitleXsM}>{review.menuName || '메뉴 이름 없음'}</MainTitle>
+          {showMenuName && <MainTitle css={TypoTitleXsM}>{review.menuName || ''}</MainTitle>}
           <SubTitle css={TypoCapSmR}>컷 추가 수정 | 포즈 추가 촬영</SubTitle>
         </TitleWrapper>
         <StarRating rating={review.rating} />
@@ -105,9 +112,11 @@ const MainTitle = styled.h3`
     display: block;
     width: 1.6rem;
     height: 1.6rem;
-    background-image: url('/img/icon-arrow-16.svg');
+    box-sizing: border-box;
+    background-image: url('/img/icon-chevronright.svg');
     background-repeat: no-repeat;
     background-position: center;
+    background-size: 0.6rem 1.1rem;
   }
 `;
 

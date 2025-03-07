@@ -50,13 +50,20 @@ const MenuItemWrapperStyle = css`
 `;
 
 const MenuCoverStyle = css`
-  max-width: 9.4rem;
-  width: 100%;
-  aspect-ratio: 1 / 1.2;
-  background: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 9.4rem;
+  flex-shrink: 0;
+
+  & img {
+    aspect-ratio: 94 / 118;
+    object-fit: cover;
+  }
 `;
 
 const MenuDescStyle = css`
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -76,17 +83,19 @@ const MenuHeadStyle = css`
       width: 1.6rem;
       height: 1.6rem;
       background-image: url(/img/icon-chevronright.svg);
+
       background-position: center;
       background-repeat: no-repeat;
+      background-size: 0.6rem 1.1rem;
     }
   }
 
   & p {
     display: -webkit-box;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    -webkit-line-clamp: 2;
     ${TypoCapSmR}
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
     color: ${variables.colors.gray800};
   }
 `;

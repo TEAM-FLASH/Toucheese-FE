@@ -2,7 +2,6 @@
 
 import Bookmark from '@components/Bookmark/Bookmark';
 import Button from '@components/Button/Button';
-import Header from '@components/Header/Header';
 import KakaoMap from '@components/Kakao/KakaoMap';
 import StudioNavigator from '@components/Navigator/StudioNavigator';
 import ShareButton from '@components/Share/ShareButton';
@@ -22,14 +21,38 @@ import variables from '@styles/Variables';
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router-dom';
+import Header from '@components/Header/Header';
 
 const StudioMain = () => {
   const { _id } = useParams();
   const { data, error } = useGetStudioDetail(`${_id}`);
   const [isOpened, setIsOpened] = useState(false);
   const [isWebPSupported, setIsWebPSupported] = useState(false);
+  const [imageLoadError, setImageLoadError] = useState(false);
+  const [scrollY, setScrollY] = useState(false);
   const navigate = useNavigate();
   const handleClick = () => navigate(`/studio/${_id}/menu`);
+
+  /** 스튜디오 소개 텍스트 길이 */
+  const hasMore: boolean | undefined = data && data.description.length > 100;
+
+  /** 스크롤 이벤트 핸들러 */
+  const handleScroll = () => {
+    // 스크롤이 200px 이상일 때 scrollY를 true로 설정
+    if (window.scrollY >= 150) {
+      setScrollY(true);
+    } else {
+      setScrollY(false);
+    }
+  };
+
+  /** 스크롤 이벤트 리스너 */
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   /** webP 지원 여부 확인 후 상태값 저장 */
   useEffect(() => {
@@ -56,18 +79,41 @@ const StudioMain = () => {
     return <div>로딩</div>;
   }
 
-  /**이미지 5개 이하일때 대체할 이미지 */
-  const placeHolderImage = '/img/img-nopic.png';
-  const missingImgCount = data.portfolios.length < 5 ? 5 - data.portfolios.length : 0;
+  /** 이미지 5개 이하일 때 대체할 이미지 */
+  const placeHolderImageList = [
+    '/img/img-replace-01.svg',
+    '/img/img-replace-02.svg',
+    '/img/img-replace-03.svg',
+    '/img/img-replace-04.svg',
+    '/img/img-replace-05.svg',
+  ];
+
+  /** 대체이미지 개수 정하기 */
+  const missingImgCount = Math.max(5 - data.portfolios.length, 0);
+
+  /** placeHolderImageList의 뒤에서부터 배열 채우기 */
   const portfolioWithPlaceHolders = [
     ...data.portfolios,
-    ...Array(missingImgCount).fill({ url: placeHolderImage }),
+    ...placeHolderImageList.slice(-missingImgCount).map((url) => ({ url })),
   ];
 
   /** 환경별 이미지 조건부 렌더링 */
-  const getImageUrl = (url: string) => (isWebPSupported ? url.replace(/\.jpeg$/, '.webp') : url);
+  const getImageUrl = (url: string) => {
+    const webpUrl = isWebPSupported ? url.replace(/\.jpeg$/, '.webp') : url;
+
+    const img = new Image();
+    img.onerror = () => {
+      console.error('WebP 이미지 로드 실패:', webpUrl);
+      setImageLoadError(true);
+    };
+    img.src = webpUrl;
+
+    return imageLoadError ? url : webpUrl;
+  };
 
   let today = new Date();
+  const dayIndex = today.getDay() === 0 ? 6 : today.getDay() - 1;
+
   const day = {
     MONDAY: '월요일',
     TUESDAY: '화요일',
@@ -107,7 +153,7 @@ const StudioMain = () => {
         <meta property="og:description" content="스튜디오의 영업시간과 정보" />
       </Helmet>
 
-      <Header customStyle={HeaderStyle} />
+      <Header title={scrollY ? data?.name : ''} customStyle={HeaderCustomStyle(scrollY)} />
 
       {/* 이미지 */}
       <div css={portfolioPreviewStyle} onClick={() => navigate(`/studio/${_id}/portfolio`)}>
@@ -162,8 +208,8 @@ const StudioMain = () => {
                   <>
                     <p>영업중</p>
                     <time>
-                      {data.openingHours[today.getDay() - 1].openTime.slice(0, 5)} -{' '}
-                      {data.openingHours[today.getDay() - 1].closeTime.slice(0, 5)}
+                      {data.openingHours[dayIndex].openTime.slice(0, 5)} -{' '}
+                      {data.openingHours[dayIndex].closeTime.slice(0, 5)}
                     </time>
                   </>
                 ) : (
@@ -187,7 +233,7 @@ const StudioMain = () => {
           </div>
           <div>
             <dt>
-              <img src="/img/icon-call.svg" alt="연락처" />
+              <img src="/img/icon-call-gray700.svg" alt="연락처" />
             </dt>
             <dd>
               <p>{`${data.phone}`}</p>
@@ -196,16 +242,19 @@ const StudioMain = () => {
         </dl>
       </div>
 
-      {/* 네비게이션 바 */}
-      <StudioNavigator _id={_id || ''} />
+      <div css={stickyNavStyle}>
+        <StudioNavigator _id={_id || ''} />
+      </div>
 
       {/* 홈 기본 정보  - 매장소개 */}
-      <div css={descriptionStyle(isOpened)}>
+      <div css={descriptionStyle(isOpened, hasMore)}>
         <p className="descriptionTitle">매장 소개</p>
         <p className="textDisplay">{`${data.description}`}</p>
-        <span className="textMore" onClick={() => setIsOpened(!isOpened)}>
-          {isOpened ? '접기' : '더보기'}
-        </span>
+        {hasMore && (
+          <span className="textMore" onClick={() => setIsOpened(!isOpened)}>
+            {isOpened ? '접기' : '더보기'}
+          </span>
+        )}
       </div>
 
       {/* 홈 기본 정보  - 영업 정보 */}
@@ -232,24 +281,27 @@ const StudioMain = () => {
             </dl>
           ))
         )}
-
-        <div css={holidayStyle}>
-          {data.openingHours.length !== 0 ? <p className="holidayTitle"> 정기휴무</p> : ''}
-          <div className="holidayMonth">
-            {data.holidays.map((holiday) => (
-              <p key={holiday.id}>
-                {holiday.weekOfMonth === 1
-                  ? '첫'
-                  : holiday.weekOfMonth === 2
-                    ? '둘'
-                    : holiday.weekOfMonth === 3
-                      ? '셋'
-                      : '넷'}
-                째 주 {day[holiday.dayOfWeek as keyof typeof day]}
-              </p>
-            ))}
+        {data.openingHours.length !== 0 ? (
+          <div css={holidayStyle}>
+            <p className="holidayTitle"> 정기휴무</p>
+            <div className="holidayMonth">
+              {data.holidays.map((holiday) => (
+                <p key={holiday.id}>
+                  {holiday.weekOfMonth === 1
+                    ? '첫'
+                    : holiday.weekOfMonth === 2
+                      ? '둘'
+                      : holiday.weekOfMonth === 3
+                        ? '셋'
+                        : '넷'}
+                  째 주 {day[holiday.dayOfWeek as keyof typeof day]}
+                </p>
+              ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          ''
+        )}
       </div>
 
       {/* 홈 기본정보 - 위치 정보 */}
@@ -288,10 +340,27 @@ const StudioMain = () => {
 
 export default StudioMain;
 
-const HeaderStyle = css`
-  position: absolute;
-  z-index: 1;
-  padding-top: 1.8rem;
+const stickyNavStyle = css`
+  position: sticky;
+  background-color: ${variables.colors.white};
+  top: 5.6rem;
+  opacity: 0;
+  z-index: 6;
+  transform: translateY(-10px);
+  animation: slideDown 0.3s ease forwards;
+  padding: 0;
+
+  @keyframes slideDown {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+`;
+
+const HeaderCustomStyle = (scrollY: boolean) => css`
+  ${scrollY && 'background-color: #fff; box-shadow: 0 0.4rem .5rem rgba(0, 0, 0, 0.1);'};
+  transition: all 0.4s;
 `;
 
 const portfolioPreviewStyle = css`
@@ -436,7 +505,7 @@ const SocialActionsStyle = css`
   color: ${variables.colors.gray700};
 `;
 
-const descriptionStyle = (isOpened: boolean) => css`
+const descriptionStyle = (isOpened: boolean, hasMore: boolean | undefined) => css`
   padding: 2rem 0;
   border-bottom: 0.1rem solid ${variables.colors.gray300};
 
@@ -464,6 +533,7 @@ const descriptionStyle = (isOpened: boolean) => css`
     ${TypoBodyMdR};
     border-bottom: 0.1rem solid ${variables.colors.gray600};
     cursor: pointer;
+    display: ${hasMore ? 'inline' : 'none'};
   }
 `;
 
@@ -554,6 +624,7 @@ const optionsStyle = css`
 `;
 
 const reservationStyle = css`
+  border-top: 1px solid ${variables.colors.gray300};
   background-color: ${variables.colors.white};
   padding: 1rem 1.6rem 3rem 1.6rem;
   position: fixed;

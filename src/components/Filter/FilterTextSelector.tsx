@@ -11,6 +11,7 @@ const FilterTextSelector = () => {
   const { closeBottomSheet } = useBottomSheetState();
 
   const handleClick = (item: string) => {
+    console.log(selectedIndex);
     setSelectedIndex(item);
     let Nav: 'POPULARITY' | 'VIEW_COUNT' | 'RATING' | 'REVIEW_COUNT';
     if (item === '인기순') {

@@ -39,11 +39,12 @@ const variables = {
     min: '1rem',
   },
 
-  layoutPadding: '1.6rem',
+  layoutPadding: 'var(--layoutPadding)',
   TransitionDuration: '0.3s',
   borderRadius: '.8rem',
   borderRadiusLarge: '2rem',
-  headerHeight: '4.8rem',
+  headerHeight: 'var(--headerHeight)',
+  maxWidth: 'var(--maxWidth)',
 };
 
 export default variables;

@@ -51,7 +51,7 @@ const StudioMenu = () => {
           <meta property="og:description" content="스튜디오 메뉴 목록" />
         </Helmet>
       )}
-      <Header title={`${data ? data[0].studioName : ''}`} />
+      <Header title={`${data ? data[0].studioName : ''}`} backTo="/" />
       <StudioNavigator _id={_id || ''} />
       <div css={ItemLIstStyle}>{StudioMenuList}</div>
     </>
@@ -63,5 +63,5 @@ export default StudioMenu;
 const ItemLIstStyle = css`
   display: flex;
   flex-direction: column;
-  margin-top: 0.4rem;
+  margin: 5.8rem 0 1.8rem;
 `;

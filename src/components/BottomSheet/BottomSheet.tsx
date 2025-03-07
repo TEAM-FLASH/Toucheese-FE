@@ -19,6 +19,8 @@ const BottomSheet = () => {
   useEffect(() => {
     document.documentElement.style.overscrollBehavior = isOpen ? 'none' : '';
 
+    // if(content.current)
+
     //바텀시트 닫을때 이전 드래그 Y위치값이 저장되어 다음에 열릴 때 초기 위치에서 시작하도록 하는 코드
     if (!isOpen) {
       setTranslateY(0);
@@ -47,6 +49,11 @@ const BottomSheet = () => {
     //터치&마우스 이벤트 구분하는 코드
     const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
     const target = e.target as HTMLElement;
+
+    //컨텐츠 영역 터치 시 드래그 막기
+    if (content.current && content.current.contains(target)) {
+      return;
+    }
 
     // 바텀 시트 영역 내에서만 드래그 가능
     if (sheet.current && sheet.current.contains(target)) {

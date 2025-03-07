@@ -146,7 +146,7 @@ const mockedStudios: IStudioRes<IStudioItem> = {
       options: [],
       created_at: null,
       updated_at: null,
-      day_of_week: 'MON',
+      dayOfWeek: 'MON',
       bookmark: true,
     },
     {
@@ -191,7 +191,7 @@ const mockedStudios: IStudioRes<IStudioItem> = {
       options: [],
       created_at: null,
       updated_at: null,
-      day_of_week: 'THU',
+      dayOfWeek: 'THU',
       bookmark: false,
     },
   ],
@@ -226,7 +226,15 @@ const mockedStudios: IStudioRes<IStudioItem> = {
 global.fetch = vi.fn();
 
 // useGetStudios를 호출하는 테스트 컴포넌트
-const TestComponent = ({ pageNum, mode, params }: { pageNum: number; mode: 'filter' | 'search/result'; params: string }) => {
+const TestComponent = ({
+  pageNum,
+  mode,
+  params,
+}: {
+  pageNum: number;
+  mode: 'filter' | 'search/result';
+  params: string;
+}) => {
   const { data, isError, isLoading } = useGetStudios(pageNum, mode, params);
 
   if (isLoading) return <div>Loading...</div>;
@@ -236,7 +244,9 @@ const TestComponent = ({ pageNum, mode, params }: { pageNum: number; mode: 'filt
 
 describe('useGetStudios Hook', () => {
   const queryClient = new QueryClient();
-  const wrapper = ({ children }: { children: React.ReactNode }) => <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+  const wrapper = ({ children }: { children: React.ReactNode }) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
 
   // 각 테스트 후 Mock 초기화
   afterEach(() => {
@@ -281,6 +291,9 @@ describe('useGetStudios Hook', () => {
 
     // 결과 확인
     expect(result.current.data).toEqual(mockedStudios);
-    expect(fetch).toHaveBeenCalledWith(expect.stringContaining('vibeName=시크'), expect.objectContaining({ method: 'GET' }));
+    expect(fetch).toHaveBeenCalledWith(
+      expect.stringContaining('vibeName=시크'),
+      expect.objectContaining({ method: 'GET' }),
+    );
   });
 });

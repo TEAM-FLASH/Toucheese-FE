@@ -45,7 +45,7 @@ export interface IOptions {
 
 export interface IOpeningHours {
   closeTime: string;
-  closed: false;
+  closed: boolean;
   dayOfWeek: string;
   id: number;
   openTime: string;
@@ -87,7 +87,7 @@ export interface IStudioItem extends IStudioInfo {
   menus: IMenus[];
   created_at: null | string;
   updated_at: null | string;
-  day_of_week: string;
+  dayOfWeek: string;
   bookmark: boolean;
 }
 
@@ -194,7 +194,7 @@ export interface IResvItem {
   menuId: number;
   menuName: string;
   menuImgUrl: string;
-  status: 'WAITING' | 'RESERVED' | 'COMPLETE' | 'CANCEL';
+  status: 'WAITING' | 'RESERVED' | 'COMPLETED' | 'CANCELED';
   date: string;
   startTime: string;
   // 임시
