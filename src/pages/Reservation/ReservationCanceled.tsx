@@ -1,13 +1,16 @@
 import { changeformatDateForUi, convertToDateFormat, today } from '@store/useSelectDateStore';
+import { useParams } from 'react-router-dom';
 import CompleteMessage from './components/CompleteMessage';
 
 const ReservationCanceled = () => {
-  // 임시 데이터
+  const { _id } = useParams() as { _id: string };
+
+  // 임시 데이터 => _id를 이용해 조회하도록 변경
   const date = convertToDateFormat(today);
   const time = ['13:00'];
 
   const reservationData = {
-    id: 1,
+    id: Number(_id),
     studio: '그믐달 스튜디오',
     reservedDateTime: changeformatDateForUi({ date, time }),
     reservedMenu: '프로필 A 반신 촬영',

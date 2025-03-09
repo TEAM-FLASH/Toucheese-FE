@@ -135,7 +135,6 @@ const router = createBrowserRouter([
               { path: 'photos', element: <StudioReviewPhotos /> },
             ],
           },
-
           {
             path: 'reservation',
             children: [
