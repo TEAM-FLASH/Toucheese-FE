@@ -56,7 +56,8 @@ const MyPage = () => {
         >
           {(data?.length ? data : [null]).map((item, i) => (
             <SwiperSlide key={`${item ? item.reservationId : i}`}>
-              <ReservationCard isMyPage={pathname.includes('mypage')} data={item} />
+              {/* <ReservationCard isMyPage={pathname.includes('mypage')} data={item} /> */}
+              <ReservationCard isReviewWritePage={true} data={item} />
             </SwiperSlide>
           ))}
         </Swiper>
