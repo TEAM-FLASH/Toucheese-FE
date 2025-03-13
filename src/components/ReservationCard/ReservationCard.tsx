@@ -54,7 +54,10 @@ const ReservationCard = ({ isMyPage = false, data }: ReservationCardType) => {
             </div>
           </div>
           {data.status === 'COMPLETED' && (
-            <RatingReview ratingValue={data.review && data.review.rating} />
+            <RatingReview
+              ratingValue={data.review && data.review.rating}
+              reservaionData={data && data}
+            />
           )}
         </article>
       ) : (
