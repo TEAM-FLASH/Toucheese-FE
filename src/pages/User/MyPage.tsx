@@ -96,7 +96,6 @@ const MyInfoStyle = css`
   gap: 0.4rem;
   padding: 1.6rem 0;
   align-items: flex-start;
-  margin-top: 5.4rem;
 
   & a {
     ${TypoTitleMdSb}
