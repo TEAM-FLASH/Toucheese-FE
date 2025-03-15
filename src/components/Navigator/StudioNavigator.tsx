@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import styled from '@emotion/styled';
+import { breakPoints, mqMin } from '@styles/BreakPoint';
 import { TypoTitleXsM } from '@styles/Common';
 import variables from '@styles/Variables';
 import { NavLink } from 'react-router-dom';
@@ -50,15 +51,21 @@ const StudioNavigator = ({ _id }: { _id: string }) => {
 };
 
 const NavStyle = styled.nav`
-
+  box-shadow: inset 0 0 10px red;
   position: sticky;
   top: 5.6rem;
   width: calc(100% + 3.2rem);
-    margin: 0 calc(-1 * ${variables.layoutPadding});
+  margin: 0 calc(-1 * ${variables.layoutPadding});
   margin-left: -1.6rem;
-  padding: 0 1.6rem;
   background-color: white;
-  z-index: 5
+  z-index: 5;
+
+  ${mqMin(breakPoints.pc)} {
+    position: static;
+    width: 36rem;
+    margin: unset;
+    padding: unset;
+  }
 `;
 
 const UlStyle = styled.ul`
@@ -73,12 +80,17 @@ const LiStyle = styled.li`
 `;
 
 const NavLinkStyle = styled(NavLink)`
+  box-shadow: inset 0 0 1px black;
   position: relative;
   display: block;
   width: 100%;
-  padding: 1rem 0;
+  padding: 0.7rem 0;
   text-align: center;
   color: ${variables.colors.gray600};
+
+  ${mqMin(breakPoints.pc)} {
+    padding: 1.7rem 0;
+  }
 
   & > span {
     display: inline-block;
