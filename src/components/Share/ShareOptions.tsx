@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
 import KakaoShareButton from '@components/Kakao/KaKaoShare';
+import { css } from '@emotion/react';
 import useToast from '@hooks/useToast';
 
 interface ShareProps {
@@ -50,7 +50,6 @@ export default ShareOptions;
 
 const shareOptionsStyle = css`
   display: flex;
-  justify-content: center;
   align-items: center;
   margin-top: 0.5rem;
   gap: 2rem;

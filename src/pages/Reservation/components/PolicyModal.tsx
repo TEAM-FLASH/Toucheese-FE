@@ -2,7 +2,8 @@
 
 import Modal from '@components/Modal/Modal';
 import styled from '@emotion/styled';
-import { TypoBodySmM, TypoBodySmR, TypoTitleXsSb } from '@styles/Common';
+import { breakPoints, mqMin } from '@styles/BreakPoint';
+import { TypoBodyMdM, TypoBodySmM, TypoBodySmR, TypoTitleXsSb } from '@styles/Common';
 import variables from '@styles/Variables';
 
 const PolicyModal = () => {
@@ -10,10 +11,10 @@ const PolicyModal = () => {
     <Modal type="fullscreen" title="개인정보 수집, 제공 동의" withBtn={false}>
       <section>
         <ContentStyle>
-          <h2 css={TypoTitleXsSb}>개인정보 수집 및 이용 동의</h2>
+          <h2>개인정보 수집 및 이용 동의</h2>
           <div>
-            <h3 css={TypoBodySmM}>개인정보 수집 항목 및 방법</h3>
-            <p css={TypoBodySmR}>
+            <h3>개인정보 수집 항목 및 방법</h3>
+            <p>
               회사는 일반회원 가입 시 아래와 같은 개인정보를 수집하고 있습니다.
               <br />
               1. 회원가입 시: 성명, 이메일 주소(이상 필수적 수집 정보).
@@ -27,11 +28,11 @@ const PolicyModal = () => {
               4. 서비스 이용 과정: IP 주소, 쿠키, 방문 일시, 불량 이용 기록, 기기정보(PC/모바일)
               정보가 자동으로 생성되어 수집됩니다.
             </p>
-            <p css={TypoBodySmR}>
+            <p>
               회사는 회원(일반회원, 파트너회원)에게 전화를 할 경우, 전화 중개 위탁 서비스에 따라
               전화번호를 수집합니다.
             </p>
-            <p css={TypoBodySmR}>
+            <p>
               개인정보의 수집 방법
               <br />
               1. 터치즈 PC/모바일 회원가입, 고객센터를 통한 유선 상담, 이메일을 통한 온라인 상담,
@@ -41,8 +42,8 @@ const PolicyModal = () => {
             </p>
           </div>
           <div>
-            <h3 css={TypoBodySmM}>개인정보 이용 목적</h3>
-            <p css={TypoBodySmR}>
+            <h3>개인정보 이용 목적</h3>
+            <p>
               회사는 다음의 목적으로 서비스 제공을 위한 최소한의 개인정보만을 수집하며, 수집한
               정보를 목적 외로 이용하거나, 회원의 동의 없이 외부에 공개하지 않습니다.
               <br />
@@ -64,16 +65,16 @@ const PolicyModal = () => {
           </div>
         </ContentStyle>
         <ContentStyle>
-          <h2 css={TypoTitleXsSb}>개인정보 제3자 제공 동의</h2>
+          <h2>개인정보 제3자 제공 동의</h2>
           <div>
-            <p css={TypoBodySmR}>
+            <p>
               회사는 회원의 개인정보를 사전 동의 없이 외부에 공개하거나 제공하지 않습니다. 다만,
               회원이 사전에 제공에 동의한 경우 또는 법령에 따라 법원 및 수사기관의 요구가 있는 경우
               예외로 합니다.
             </p>
           </div>
           <div>
-            <p css={TypoBodySmR}>
+            <p>
               일반회원의 촬영 예약 및 이용, 결제 및 환불 처리 과정에서 개인정보가 제공될 수
               있습니다.
               <br />
@@ -99,23 +100,30 @@ const ContentStyle = styled.div`
   padding: 1rem 0;
   box-sizing: border-box;
 
-  & > h2 {
+  & h2 {
     margin-bottom: 0.8rem;
+    ${TypoTitleXsSb}
   }
 
-  & > div {
+  & div {
     margin-bottom: 0.8rem;
     &:last-of-type {
       margin-bottom: unset;
     }
 
-    & > h3 {
+    & h3 {
       margin-bottom: 0.8rem;
+      ${TypoBodySmM}
+
+      ${mqMin(breakPoints.pc)} {
+        ${TypoBodyMdM}
+      }
     }
 
-    & > p {
+    & p {
       color: ${variables.colors.black};
       margin-bottom: 0.8rem;
+      ${TypoBodySmR}
     }
   }
 `;

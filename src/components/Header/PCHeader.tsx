@@ -1,5 +1,4 @@
 /** @jsxImportSource @emotion/react */
-
 import SearchBar from '@components/Search/SearchBar';
 import UserButton from '@components/UserButton/UserButton';
 import { css } from '@emotion/react';
@@ -12,18 +11,23 @@ const PCHeader = () => {
   return (
     <header className="pc" css={HeaderStyle}>
       <div css={HeaderContentsStyle}>
-        <Link css={homeLogoStyle} to="/">
-          <span css={Hidden}>홈으로</span>
-          <img src="/img/logo-pc.svg" alt="터치즈 홈" />
-        </Link>
+        <div css={logoContainerStyle}>
+          <Link css={homeLogoStyle} to="/">
+            <span css={Hidden}>홈으로</span>
+            <img src="/img/logo-pc.svg" alt="터치즈 홈" />
+          </Link>
+        </div>
 
         <div css={inputContainerStyle}>
           <div css={inputStyle}>
             <SearchBar />
           </div>
         </div>
-        <div css={userBtnStyle}>
-          <UserButton />
+
+        <div css={buttonContainerStyle}>
+          <div css={userBtnStyle}>
+            <UserButton />
+          </div>
         </div>
       </div>
     </header>
@@ -50,14 +54,21 @@ const HeaderContentsStyle = css`
     ${PCLayout}
 
     display: flex;
+    gap: 1.6rem;
     align-items: center;
     padding: 1rem ${variables.layoutPadding};
   }
 `;
 
-const homeLogoStyle = css`
-  margin: 1.2rem 0;
+const logoContainerStyle = css`
   flex-shrink: 0;
+  flex-grow: 1;
+`;
+
+const homeLogoStyle = css`
+  display: inline-block;
+  padding: 1.2rem 0;
+  box-sizing: border-box;
 
   & > img {
     width: 13.7rem;
@@ -66,18 +77,22 @@ const homeLogoStyle = css`
 `;
 
 const inputContainerStyle = css`
-  flex-grow: 1;
+  flex-grow: 2;
   display: flex;
   align-items: center;
 `;
 
 const inputStyle = css`
   margin: 0.6rem auto;
-  position: relative;
-  width: 60rem;
+  width: 100%;
+`;
+
+const buttonContainerStyle = css`
+  flex-grow: 1;
+  flex-shrink: 0;
+  display: flex;
 `;
 
 const userBtnStyle = css`
-  flex-shrink: 0;
   margin-left: auto;
 `;

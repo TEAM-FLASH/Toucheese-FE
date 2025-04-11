@@ -10,9 +10,13 @@ import StudioReviewCategories from './components/StudioReviewCategories';
 import { IReviewImages } from 'types/types';
 import { useStudioReviews } from '@hooks/useStudioReviews';
 import Header from '@components/Header/Header';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import variables from '@styles/Variables';
+import { breakPoints, mqMin } from '@styles/BreakPoint';
+import { useGetStudioDetail } from '@hooks/useGetStudioDetail';
+import useStudioDataStore from '@store/useStudioDataStore';
+
 // 리뷰 데이터의 타입 정의
 interface Review {
   content: string;
@@ -35,6 +39,17 @@ const StudioReview = () => {
   const [selectedMenuId, setSelectedMenuId] = useState<number | null>(null);
   const { data } = useStudioReviews(_id, selectedMenuId);
   const [_, setSearchParams] = useSearchParams();
+
+  // 스튜디오 상세 정보 가져오기
+  const { data: studioDetailData } = useGetStudioDetail(`${_id}`);
+  const { studioDetail, setStudioDetail } = useStudioDataStore();
+
+  /** 스튜디오 데이터 session Storage에 저장 */
+  useEffect(() => {
+    if (!studioDetail[`${_id}`] && studioDetailData) {
+      setStudioDetail(`${_id}`, studioDetailData);
+    }
+  }, [studioDetailData, _id, studioDetail, setStudioDetail]);
 
   if (!data) return null;
 
@@ -78,33 +93,44 @@ const StudioReview = () => {
 
       <Header title="리뷰" fixed={true} />
       <StudioNavigator _id={_id || ''} />
-      <div css={studioPaddingTop}>
-        <ReviewPhotosWrapperStyle>
-          <ReviewTitleWrapperStyle>
-            <h1 css={TypoTitleXsM}>리뷰 사진 모아보기</h1>
-            <p css={TypoCapSmR}>{totalImageNum}개</p>
-          </ReviewTitleWrapperStyle>
-          {/* 리뷰 이미지 모아보기 컴포넌트 */}
 
-          <StudioReviewImageList pageId={_id} samplePhotoList={samplePhotoList} />
-        </ReviewPhotosWrapperStyle>
-        {/* 스튜디오 리뷰 카테고리 */}
-        <StudioReviewCategories
-          avgRating={Number(processedAvgRating)}
-          totalReviewNum={totalReviewNum}
-          menuNameList={menuNameList}
-          menuIdList={menuIdList || []}
-          onFilterChange={handleFilterChange}
-        />
-        {/* 리뷰 리스트 렌더링  */}
-        {reviewLists.map((review: Review, index: number) => (
-          <StudioReviewItem
-            showMenuName={true}
-            key={review.id}
-            review={review}
-            isLast={index === reviewLists.length - 1}
+      <div css={boxLayoutStyle}>
+        <div css={studioPaddingTop}>
+          <ReviewPhotosWrapperStyle>
+            <ReviewTitleWrapperStyle>
+              <h1 css={TypoTitleXsM}>리뷰 사진 모아보기</h1>
+              <p css={TypoCapSmR}>{totalImageNum}개</p>
+            </ReviewTitleWrapperStyle>
+            {/* 리뷰 이미지 모아보기 컴포넌트 */}
+            <StudioReviewImageList pageId={_id} samplePhotoList={samplePhotoList} />
+          </ReviewPhotosWrapperStyle>
+
+          {/* 스튜디오 리뷰 카테고리 */}
+          <StudioReviewCategories
+            avgRating={Number(processedAvgRating)}
+            totalReviewNum={totalReviewNum}
+            menuNameList={menuNameList}
+            menuIdList={menuIdList || []}
+            onFilterChange={handleFilterChange}
           />
-        ))}
+
+          {/* 리뷰 리스트가 없는 경우 예외 처리 */}
+          {reviewLists.length === 0 ? (
+            <NoReviewContainerStyle>
+              <NoReviewTextStyle>아직 작성된 리뷰가 없습니다</NoReviewTextStyle>
+            </NoReviewContainerStyle>
+          ) : (
+            /* 리뷰 리스트 렌더링  */
+            reviewLists.map((review: Review, index: number) => (
+              <StudioReviewItem
+                showMenuName={true}
+                key={review.id}
+                review={review}
+                isLast={index === reviewLists.length - 1}
+              />
+            ))
+          )}
+        </div>
       </div>
     </>
   );
@@ -112,9 +138,42 @@ const StudioReview = () => {
 
 export default StudioReview;
 
+const boxLayoutStyle = css`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+
+  ${mqMin(breakPoints.pc)} {
+    flex-direction: row;
+    gap: 2rem;
+    padding: 0 ${variables.layoutPadding};
+    max-width: 1440px;
+    margin: 0 auto;
+
+    & > div:first-of-type {
+      width: 70%;
+      max-width: 70%;
+      box-sizing: border-box;
+    }
+
+    .pc-studio-info {
+      width: 30%;
+      max-width: 30%;
+      position: sticky;
+      top: ${variables.headerHeight};
+      height: fit-content;
+      box-sizing: border-box;
+    }
+  }
+`;
+
 const ReviewPhotosWrapperStyle = styled.div`
   width: 100%;
   margin-top: 2.2rem;
+  box-sizing: border-box;
 `;
 
 const ReviewTitleWrapperStyle = styled.div`
@@ -127,6 +186,29 @@ const ReviewTitleWrapperStyle = styled.div`
     align-items: center;
   }
 `;
+
 const studioPaddingTop = css`
   padding-top: ${variables.headerHeight};
+  width: 100%;
+  box-sizing: border-box;
+
+  ${mqMin(breakPoints.pc)} {
+    padding-top: 0;
+  }
+`;
+
+const NoReviewContainerStyle = styled.div`
+  width: 100%;
+  padding: 3rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${variables.colors.gray100};
+  border-radius: 4px;
+  margin-top: 2rem;
+`;
+
+const NoReviewTextStyle = styled.p`
+  color: ${variables.colors.gray500};
+  ${TypoCapSmR}
 `;

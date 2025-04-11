@@ -122,7 +122,7 @@ const Input = ({
               {initialType === 'password' && (
                 <button type="button" css={iconButtonStyle} onClick={togglePasswordVisibility}>
                   <img
-                    src={showPassword ? '/img/icon-eye-off.svg' : '/img/icon-eye.svg'}
+                    src={showPassword ? '/img/icon-eye.svg' : '/img/icon-eye-off.svg'}
                     alt={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
                     css={iconStyle}
                   />

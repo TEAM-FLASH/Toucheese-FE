@@ -151,7 +151,7 @@ export default Modal;
 
 const ModalStyle = styled.section<IModalStyle>`
   position: fixed;
-  z-index: 99;
+  z-index: 99999;
   inset: 0;
   overflow: hidden auto;
 

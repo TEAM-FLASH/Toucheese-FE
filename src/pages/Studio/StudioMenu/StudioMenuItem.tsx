@@ -22,7 +22,10 @@ const StudioMenuItem = ({
         onClick={() => navigate(`/studio/${StudioId}/menu/${data?.id}`)}
       >
         <div css={MenuCoverStyle}>
-          <img src={`${data?.menuImages[0].url}`} alt="메뉴 대표 사진" />
+          <img
+            src={`${data && data?.menuImages.length > 0 ? data?.menuImages[0].url : '/img/img-menu-nopic.png'}`}
+            alt="메뉴 대표 사진"
+          />
         </div>
         <div css={MenuDescStyle}>
           <div css={MenuHeadStyle}>

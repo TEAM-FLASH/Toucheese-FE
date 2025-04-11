@@ -11,7 +11,7 @@ import useToast from '@hooks/useToast';
 import { useUserStore } from '@store/useUserStore';
 import { breakPoints, mqMin } from '@styles/BreakPoint';
 import { bg100vw, PCLayout } from '@styles/Common';
-import { createPasswordRegex } from 'wj-password-validator';
+import { createEmailRegex, createPasswordRegex } from 'wj-password-validator';
 
 const LoginWithEmailPage = () => {
   const navigate = useNavigate();
@@ -23,10 +23,11 @@ const LoginWithEmailPage = () => {
     formState: { errors },
   } = useForm();
 
+  const emailPattern = createEmailRegex();
   // validation 설정 부분
   const passwordPattern = createPasswordRegex({
     minLength: 8,
-    uppercase: true,
+    // uppercase: true,
     lowercase: true,
     digits: true,
     specialChar: true,
@@ -97,7 +98,7 @@ const LoginWithEmailPage = () => {
               register={register('email', {
                 required: '이메일을 입력해주세요',
                 pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  value: new RegExp(emailPattern),
                   message: '올바른 이메일 주소를 입력해주세요.',
                 },
               })}

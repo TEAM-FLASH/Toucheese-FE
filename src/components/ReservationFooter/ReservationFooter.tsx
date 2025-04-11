@@ -42,6 +42,19 @@ const ReservationFooter = ({
 
 export default ReservationFooter;
 
+export const reservationFooterWrStyle = css`
+  ${mqMin(breakPoints.pc)} {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: calc(100vh - ${variables.headerHeight});
+
+    .content-box {
+      overflow: hidden auto;
+    }
+  }
+`;
+
 const FixedBtnBoxStyle = css`
   display: flex;
   gap: 2rem;
@@ -71,9 +84,6 @@ const FixedBtnBoxStyle = css`
     }
   }
   ${mqMin(breakPoints.pc)} {
-    width: calc(100vw - (509px + 35px));
-    left: auto;
-    right: 0;
-    padding: 1.8rem 2.4rem 3rem;
+    position: inherit;
   }
 `;

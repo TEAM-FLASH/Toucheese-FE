@@ -24,7 +24,7 @@ const StudioOptions = ({ data }: { data: IStudioDetail }) => {
     INDIVIDUAL_EDITING: '/img/icon-photo-edit.svg',
     SUIT_RENTAL_FREE: '/img/icon-suit.svg',
     ORIGINAL_FILES: '/img/icon-original-file.svg',
-    PARKING_AREA: '/img/icon-park.svg',
+    PARKING_AREA: '/img/icon-parking.svg',
   };
 
   return (

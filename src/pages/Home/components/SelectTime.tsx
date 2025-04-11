@@ -7,6 +7,7 @@ import { filterTimes } from '@hooks/useGetAvailableDate';
 import useToast from '@hooks/useToast';
 import { convertToDateFormat, today, useSelectDateStore } from '@store/useSelectDateStore';
 import { useSelectTimeStore } from '@store/useSelectTimeStore';
+import { breakPoints, mqMin } from '@styles/BreakPoint';
 import { DividerStyle, Hidden, TypoBodyMdM, TypoBodySmR } from '@styles/Common';
 import variables from '@styles/Variables';
 import { useMemo } from 'react';
@@ -70,7 +71,7 @@ const SelectTime = ({ type, availableTimeWithDates }: ITimeProp) => {
 
   return (
     <>
-      <section css={[SelectTimeStyle, DividerStyle]}>
+      <section css={[SelectTimeStyle(type), DividerStyle]}>
         <h2 css={Hidden}>시간 선택</h2>
 
         <div css={articleBox}>
@@ -138,8 +139,14 @@ const SelectTime = ({ type, availableTimeWithDates }: ITimeProp) => {
 
 export default SelectTime;
 
-const SelectTimeStyle = css`
+const SelectTimeStyle = (type: string) => css`
   padding-top: 3rem;
+  ${mqMin(breakPoints.pc)} {
+    padding-top: ${type === 'reservation' && '4.6rem'};
+    &::after {
+      width: ${type === 'reservation' && 'calc(100% + 9.6rem) !important'};
+    }
+  }
 
   &::after {
     bottom: auto;

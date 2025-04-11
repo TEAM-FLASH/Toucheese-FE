@@ -2,7 +2,9 @@
 import Button from '@components/Button/Button';
 import styled from '@emotion/styled';
 import { ReservationOption } from '@store/useReservationStore';
+import { breakPoints, mqMin } from '@styles/BreakPoint';
 import {
+  PCLayout,
   TypoBodyMdM,
   TypoBodyMdR,
   TypoBodyMdSb,
@@ -143,10 +145,19 @@ const CompleteMessage = ({
 };
 
 const SectionStyle = styled.section`
-  padding-top: 3.2rem;
+  margin-top: 3.2rem;
+  padding-bottom: 10.6rem;
   display: flex;
   flex-direction: column;
   gap: 2rem;
+
+  ${mqMin(breakPoints.pc)} {
+    ${PCLayout}
+    padding: 0 32.8rem;
+    margin-top: 6.5rem;
+    margin-bottom: 2.4rem;
+    gap: 2.4rem;
+  }
 `;
 
 const MessageStyle = styled.div`
@@ -174,6 +185,16 @@ const MessageStyle = styled.div`
 
     & > span {
       color: ${variables.colors.black};
+    }
+  }
+
+  ${mqMin(breakPoints.pc)} {
+    &::before {
+      margin-bottom: 2.4rem;
+    }
+
+    & > h2 {
+      margin-bottom: 2.4rem;
     }
   }
 `;
@@ -208,6 +229,10 @@ const ProgressStyle = styled.ul`
     left: 50%;
     transform: translateX(-75%) scaleX(0.5);
     z-index: -1;
+  }
+
+  ${mqMin(breakPoints.pc)} {
+    margin: 0 12rem;
   }
 `;
 
@@ -313,6 +338,7 @@ const ReservationInfoStyle = styled.div`
 `;
 
 const FooterButtonStyle = styled.div`
+  box-shadow: inset 0 0 10px blue;
   z-index: 9;
   position: fixed;
   left: 0;
@@ -332,6 +358,17 @@ const FooterButtonStyle = styled.div`
     top: -1rem;
     left: 0;
     right: 0;
+  }
+
+  ${mqMin(breakPoints.pc)} {
+    ${PCLayout}
+    padding: 0 32.8rem;
+    margin-bottom: 5.3rem;
+    box-shadow: inset 0 0 10px red;
+    z-index: unset;
+    position: unset;
+    box-shadow: unset;
+    gap: 1.6rem;
   }
 `;
 

@@ -1,13 +1,11 @@
 /** @jsxImportSource @emotion/react */
 import Header from '@components/Header/Header';
-import Modal from '@components/Modal/Modal';
-import ReservationFooter from '@components/ReservationFooter/ReservationFooter';
+import ReservationFooter, {
+  reservationFooterWrStyle,
+} from '@components/ReservationFooter/ReservationFooter';
 import ImageSwiper from '@components/Swiper/ImageSwiper';
 import { css } from '@emotion/react';
-import useIsMobile from '@hooks/useIsMobile';
-import useModal from '@hooks/useModal';
 import useToast from '@hooks/useToast';
-import ScheduleInner from '@pages/Reservation/components/ScheduleInner';
 import useReservationStore from '@store/useReservationStore';
 import { defaultUserState } from '@store/useUserStore';
 import { breakPoints, mqMin } from '@styles/BreakPoint';
@@ -17,7 +15,7 @@ import { getLocalStorageItem } from '@utils/getLocalStorageItem';
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { IMenuListRes, IUser } from 'types/types';
+import { IMenuListRes, IPortfolio, IUser } from 'types/types';
 import { MenuPCStyle } from './StudioMenu';
 import StudioMenuDetailInfo from './StudioMenuDetailInfo';
 import StudioMenuDetailReview from './StudioMenuDetailReview';
@@ -34,8 +32,6 @@ const StudioMenuDetail = () => {
   const { accessToken: user } = getLocalStorageItem<IUser>('userState', defaultUserState);
   const { pathname } = useLocation();
   const openToast = useToast();
-  const isMobile = useIsMobile();
-  const scheduleModal = useModal();
 
   const fetchMenuDetail = async () => {
     const res = await fetch(`${import.meta.env.VITE_TOUCHEESE_API}/studio/detail/menu/${_menuId}`, {
@@ -92,14 +88,29 @@ const StudioMenuDetail = () => {
     saveReservationDetails(saveData);
 
     if (user) {
-      if (isMobile) navigate(`/studio/${_id}/reservation`);
-      else scheduleModal.open();
+      navigate(`/studio/${_id}/reservation`);
     } else {
       openToast('로그인이 필요합니다!');
       window.sessionStorage.setItem('lastPage', pathname);
       navigate('/user/auth');
     }
   };
+
+  //메뉴 이미지가 존재하지 않을 경우 기본 이미지 데이터
+  const menuImgNopic: IPortfolio[] = [
+    {
+      id: 1,
+      studio: 'nopic-menu-img',
+      vibe: 'nnopic-menu-imgopic',
+      name: 'nopic-menu-img',
+      url: '/img/img-menu-nopic.png',
+      menuId: null,
+      menuName: null,
+      description: 'nopic-menu-img',
+      created_at: null,
+      updated_at: null,
+    },
+  ];
 
   return (
     <>
@@ -128,9 +139,9 @@ const StudioMenuDetail = () => {
 
       <div css={[MenuLayoutPCStyle]}>
         {data && (
-          <div css={MenuCoverPCStyle}>
+          <div css={MenuCoverStyle}>
             <ImageSwiper
-              images={data.menuImages}
+              images={data && data?.menuImages.length > 0 ? data?.menuImages : menuImgNopic}
               slidesPerView={1}
               spaceBetween={0}
               imageStyle={MenuImgPCStyle}
@@ -138,37 +149,35 @@ const StudioMenuDetail = () => {
           </div>
         )}
 
-        <div css={MenuInfoPCStyle}>
-          <div css={MenuDescStyle}>
-            <h2>{data?.name}</h2>
-            <p>{data?.description}</p>
+        <div css={reservationFooterWrStyle}>
+          <div css={MenuInfoPCStyle} className="content-box">
+            <div css={MenuDescStyle}>
+              <h2>{data?.name}</h2>
+              <p>{data?.description}</p>
+            </div>
+            <ul css={TabMenuStyle}>
+              <li
+                onClick={() => setTabMenuState('info')}
+                className={`${tabMenuState === 'info' && 'active'}`}
+              >
+                정보
+              </li>
+              <li
+                onClick={() => setTabMenuState('review')}
+                className={`${tabMenuState === 'review' && 'active'}`}
+              >
+                리뷰 {data?.reviewCount ? data?.reviewCount : '0'}
+              </li>
+            </ul>
+            {data && tabMenuState === 'info' && <StudioMenuDetailInfo infoItem={data} />}
+            {data && tabMenuState === 'review' && (
+              <StudioMenuDetailReview reviewItem={data?.reviews.content} rating={data?.avgScore} />
+            )}
           </div>
 
-          <ul css={TabMenuStyle}>
-            <li
-              onClick={() => setTabMenuState('info')}
-              className={`${tabMenuState === 'info' && 'active'}`}
-            >
-              정보
-            </li>
-            <li
-              onClick={() => setTabMenuState('review')}
-              className={`${tabMenuState === 'review' && 'active'}`}
-            >
-              리뷰 {data?.reviewCount ? data?.reviewCount : '0'}
-            </li>
-          </ul>
-          {data && tabMenuState === 'info' && <StudioMenuDetailInfo infoItem={data} />}
-          {data && tabMenuState === 'review' && (
-            <StudioMenuDetailReview reviewItem={data?.reviews.content} rating={data?.avgScore} />
-          )}
+          <ReservationFooter text="예약하기" type="button" onClick={handleReservartionNext} />
         </div>
       </div>
-      <ReservationFooter text="예약하기" type="button" onClick={handleReservartionNext} />
-
-      <Modal modalId={1} type="fullscreen" title="예약하기">
-        <ScheduleInner _id={_id!} />
-      </Modal>
     </>
   );
 };
@@ -194,21 +203,21 @@ const MenuInfoPCStyle = css`
   }
 `;
 
-const MenuCoverPCStyle = css`
+const MenuCoverStyle = css`
   ${mqMin(breakPoints.pc)} {
     position: sticky;
     left: 0;
-    top: 0;
+    top: 8rem;
     width: 50.9rem;
-    height: calc(100vh - 8rem);
+    height: 64rem;
     z-index: 10;
   }
 `;
 const MenuImgPCStyle = css`
   ${mqMin(breakPoints.pc)} {
     width: 100%;
-    height: calc(100vh - 8rem);
-    object-fit: cover;
+    height: 64rem;
+    object-fit: contain;
   }
 `;
 
@@ -241,9 +250,10 @@ const TabMenuStyle = css`
   display: flex;
   text-align: center;
   background-color: ${variables.colors.white};
-  width: 100vw;
+  width: calc(100% + calc(${variables.layoutPadding} * 2));
   margin-left: calc(-1 * ${variables.layoutPadding});
   padding: 0 ${variables.layoutPadding};
+  box-sizing: border-box;
 
   ${mqMin(breakPoints.pc)} {
     top: 0;

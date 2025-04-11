@@ -82,7 +82,7 @@ export default ImageSwiper;
 
 //단일이미지
 const containerFullStyle = css`
-  width: calc(100vw + ${variables.layoutPadding});
+  width: calc(100% + calc(${variables.layoutPadding} * 2));
   margin-left: calc(-1 * ${variables.layoutPadding});
 
   ${mqMin(breakPoints.pc)} {

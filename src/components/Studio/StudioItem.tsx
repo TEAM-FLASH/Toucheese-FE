@@ -7,8 +7,9 @@ import styled from '@emotion/styled';
 import { breakPoints, mqMin } from '@styles/BreakPoint';
 import { TypoTitleSmS } from '@styles/Common';
 import variables from '@styles/Variables';
+import { useMediaQuery } from 'react-responsive';
 import { useNavigate } from 'react-router-dom';
-import { IMenus, IStudioItem } from 'types/types';
+import { IMenus, IPortfolio, IStudioItem } from 'types/types';
 
 const StudioItem = ({
   item,
@@ -20,6 +21,7 @@ const StudioItem = ({
   isLast: boolean;
 }) => {
   const navigate = useNavigate();
+  const isPc = useMediaQuery({ minWidth: breakPoints.pc });
 
   // 스튜디오 클릭 시 navigate
   const handleClick = () => {
@@ -37,22 +39,57 @@ const StudioItem = ({
     return minPrice.toLocaleString('ko-KR');
   };
 
+  // 이미지 5개 불러오기
+  const getImages = (photos: IPortfolio[]) => {
+    let images: string[] = [];
+    const portfolios = photos.slice(0, 5);
+
+    portfolios.forEach((photo: IPortfolio) => {
+      images.push(photo.url);
+    });
+
+    return images;
+  };
+
   return (
     <DivStyle isFirst={isFirst} isLast={isLast} onClick={handleClick}>
       <ItemImageStyle>
         {item.portfolios.length >= 4 ? (
-          <ImageSwiper
-            images={item.portfolios}
-            imageStyle={css`
-              width: 100%;
-              aspect-ratio: 94 / 118;
-              object-fit: cover;
+          isPc ? (
+            <div
+              css={css`
+                width: 100%;
+                display: flex;
+                align-items: center;
+                gap: 0.2rem;
+              `}
+            >
+              {getImages(item.portfolios).map((image, index) => (
+                <img
+                  key={`${item.id}-image-${index}`}
+                  css={css`
+                    width: 14rem;
+                    aspect-ratio: 140 / 176;
+                  `}
+                  src={image}
+                  alt={`이미지 ${index + 1}`}
+                />
+              ))}
+            </div>
+          ) : (
+            <ImageSwiper
+              images={item.portfolios}
+              imageStyle={css`
+                width: 100%;
+                aspect-ratio: 94 / 118;
+                object-fit: cover;
 
-              ${mqMin(breakPoints.pc)} {
-                aspect-ratio: 141 / 177;
-              }
-            `}
-          />
+                ${mqMin(breakPoints.pc)} {
+                  aspect-ratio: 140 / 176;
+                }
+              `}
+            />
+          )
         ) : (
           <NoPic />
         )}

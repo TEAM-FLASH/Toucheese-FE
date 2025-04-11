@@ -49,7 +49,7 @@ const StudioReviewItem = ({
         <ImageSwiper
           imageStyle={css`
             width: 100%;
-            aspect-ratio: 94 / 118;
+            aspect-ratio: 1 / 1;
             object-fit: cover;
           `}
           images={review.reviewImages}
@@ -74,10 +74,9 @@ const StudioReviewItem = ({
 export default StudioReviewItem;
 
 const StudioReviewItemContainerStyle = styled.div<{ isOpen: boolean; isLast?: boolean }>`
-  width: 100vw;
-  margin-left: calc(-1 * ${variables.layoutPadding});
-  padding: 0 ${variables.layoutPadding};
-  padding-top: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 1rem 0;
   border-bottom: ${({ isLast }) => (isLast ? 'none' : `1px solid ${variables.colors.gray300}`)};
   background-color: ${({ isOpen }) => (isOpen ? variables.colors.gray200 : 'transparent')};
   transition: background-color 0.2s ease;

@@ -10,6 +10,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DateBottomSheet from './DateBottomSheet';
 import LocationBottomSheet from './LocationBottomSheet';
+import { useMediaQuery } from 'react-responsive';
+import { breakPoints } from '@styles/BreakPoint';
+import LocationModal from './LocationModal';
 
 const LocalDateSelectionModal = ({ modalId }: { modalId: number }) => {
   const { time, setTime } = useSelectTimeStore();
@@ -20,11 +23,14 @@ const LocalDateSelectionModal = ({ modalId }: { modalId: number }) => {
   const [selectedLocation, setSelectedLocation] = useState<string | null>(
     paramsSelectedLocation ?? '서울전체',
   );
+
   const { openBottomSheet } = useBottomSheetState();
   const navigate = useNavigate();
+  const isPc = useMediaQuery({ minWidth: breakPoints.pc });
 
   const dateLocationModal = useModal(modalId);
   const dateTimeModal = useModal(2);
+  const locationModal = useModal(3);
   const dateLocationButtons = [
     {
       text: '초기화',
@@ -63,14 +69,19 @@ const LocalDateSelectionModal = ({ modalId }: { modalId: number }) => {
     navigate(`?${newParams.toString()}`);
   };
 
-  const handleOpenLocation = () =>
-    openBottomSheet(
-      <LocationBottomSheet
-        setSelectedLocation={setSelectedLocation}
-        initialSelectedLocation={selectedLocation}
-      />,
-      '지역 선택',
-    );
+  const handleOpenLocation = () => {
+    if (isPc) {
+      locationModal.open();
+    } else {
+      openBottomSheet(
+        <LocationBottomSheet
+          setSelectedLocation={setSelectedLocation}
+          initialSelectedLocation={selectedLocation}
+        />,
+        '지역 선택',
+      );
+    }
+  };
   const handleOpenDate = () => dateTimeModal.open();
 
   return (
@@ -92,8 +103,11 @@ const LocalDateSelectionModal = ({ modalId }: { modalId: number }) => {
           </InputBoxStyle>
         </>
       </Modal>
-
       <DateBottomSheet />
+      <LocationModal
+        setSelectedLocation={setSelectedLocation}
+        initialSelectedLocation={selectedLocation}
+      />
     </>
   );
 };

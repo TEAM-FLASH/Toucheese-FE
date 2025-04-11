@@ -8,6 +8,7 @@ import React, { useState } from 'react';
 type ButtonVariant =
   | 'primary'
   | 'gray'
+  | 'lightGray'
   | 'black'
   | 'white'
   | 'grayWithYellowOutline'
@@ -218,6 +219,24 @@ const Button = ({
       color: ${variables.colors.white};
       border: none;
     `}
+
+
+    // ----------------------------- 밝은 회색 버튼 ----------------------------- 
+    ${variant === 'lightGray' &&
+    css`
+      background-color: ${variables.colors.gray300};
+      color: ${variables.colors.gray800};
+    `}
+
+    ${variant === 'lightGray' &&
+    active &&
+    css`
+      background-color: ${variables.colors.gray900};
+      color: ${variables.colors.white};
+      border: none;
+    `}
+
+
 
 // ----------------------------- 흰색 버튼 ----------------------------- 
     ${variant === 'white' &&

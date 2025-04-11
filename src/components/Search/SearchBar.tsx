@@ -1,11 +1,11 @@
 /** @jsxImportSource @emotion/react */
-import { useEffect, useRef, useState } from 'react';
 import { css } from '@emotion/react';
-import variables from '@styles/Variables';
-import { useNavigate } from 'react-router-dom';
-import { TypoTitleXsM, TypoTitleXsR } from '@styles/Common';
 import { breakPoints, mqMin } from '@styles/BreakPoint';
+import { TypoTitleXsM } from '@styles/Common';
+import variables from '@styles/Variables';
+import { useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
+import { useNavigate } from 'react-router-dom';
 import PCSearchBox from './PCSearchBox';
 
 const SearchBar = () => {
@@ -74,7 +74,7 @@ const SearchBar = () => {
     <div css={wrapperStyle} ref={wrapperRef}>
       <div css={containerStyle}>
         <input
-          css={TypoTitleXsR}
+          css={TypoTitleXsM}
           type="text"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
@@ -102,6 +102,7 @@ const SearchBar = () => {
             <img src="/img/icon-cancel.svg" alt="모두지우기버튼" css={clearsearchStyle} />
           </button>
         )}
+
         {isPc && isFocused && (
           <div css={dropdownWrapper}>
             <PCSearchBox />
@@ -120,6 +121,7 @@ const wrapperStyle = css`
 `;
 
 const containerStyle = css`
+  box-shadow: inset 0 0 20px gold;
   position: relative;
   border-radius: 1rem;
   width: 100%;
@@ -134,23 +136,27 @@ const containerStyle = css`
     background-color: ${variables.colors.gray200};
     border: none;
 
+    &:focus {
+      outline: 0.1rem solid ${variables.colors.gray500};
+    }
+
     ${mqMin(breakPoints.pc)} {
       all: unset;
-      width: 60rem;
+      width: 100%;
       background-color: ${variables.colors.gray200};
       padding: 1.1rem 4.6rem 1.1rem 6.2rem;
       box-sizing: border-box;
       ${TypoTitleXsM}
       color: ${variables.colors.gray500};
-      border-radius: 1rem;
+      border-radius: 0.8rem;
       position: relative;
-    }
 
-    &:focus {
-      outline: 0.1rem solid ${variables.colors.gray500};
+      &:focus {
+        color: ${variables.colors.black};
 
-      ${mqMin(breakPoints.pc)} {
-        outline: none;
+        ${mqMin(breakPoints.pc)} {
+          outline: none;
+        }
       }
     }
   }
@@ -214,5 +220,5 @@ const dropdownWrapper = css`
   border-radius: 1rem;
   z-index: 10;
   padding: 2.4rem;
-  margin-top: 1.6rem; //일단임의
+  margin-top: 1.6rem;
 `;

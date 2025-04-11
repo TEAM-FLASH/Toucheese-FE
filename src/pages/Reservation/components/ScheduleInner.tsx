@@ -7,6 +7,7 @@ import { useGetAvailableDate } from '@hooks/useGetAvailableDate';
 import SelectTime from '@pages/Home/components/SelectTime';
 import { getDay, useSelectDateStore } from '@store/useSelectDateStore';
 import { useSelectTimeStore } from '@store/useSelectTimeStore';
+import { breakPoints, mqMax, mqMin } from '@styles/BreakPoint';
 import { Hidden } from '@styles/Common';
 import variables from '@styles/Variables';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -22,7 +23,7 @@ const ScheduleInner = ({ _id }: { _id: string }) => {
 
   return (
     <>
-      <div css={contentBox}>
+      <div className="content-box">
         <Calendar type="reservation" disableDates={availableDate?.disableDates} />
         <SelectTime
           type="reservation"
@@ -55,17 +56,15 @@ const ScheduleInner = ({ _id }: { _id: string }) => {
 
 export default ScheduleInner;
 
-const contentBox = css`
-  padding-bottom: 8rem;
-`;
-
 const fixedBox = css`
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-top: 1px solid ${variables.colors.gray300};
-  background: #fff;
+  ${mqMax(breakPoints.moMax)} {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-top: 1px solid ${variables.colors.gray300};
+    background: #fff;
+  }
 `;
 
 const finalDate = css`
@@ -73,6 +72,10 @@ const finalDate = css`
   display: flex;
   gap: 1.4rem;
   align-items: center;
+
+  ${mqMin(breakPoints.pc)} {
+    display: none;
+  }
 
   // ReservationFooter
   & + div {

@@ -25,6 +25,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { SortBy } from 'types/types';
 import LocalDateSelectionModal from './components/LocalDateSelectionModal';
 import PCFilterWrapper from './components/PCFilterWrapper';
+import { useMediaQuery } from 'react-responsive';
 
 interface IFixedProps {
   isFixed: boolean;
@@ -47,6 +48,11 @@ const Home = () => {
   const homeRef = useRef<HTMLTableSectionElement | null>(null);
   const navigate = useNavigate();
   const windowWidth = useGetWindowWidth();
+  const isPc = useMediaQuery({ minWidth: breakPoints.pc });
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [isPc]);
 
   useEffect(() => {
     // 로그인 완료 후 예약페이지로 돌아가기
@@ -229,6 +235,7 @@ const NavigatorStyle = styled.div<IFixedProps>`
   ${mqMin(breakPoints.pc)} {
     position: ${(props) => (props.isFixed ? 'fixed' : 'absolute')};
     top: 8rem;
+    z-index: 5;
   }
 `;
 
@@ -301,7 +308,6 @@ const FilterBoxStyle = styled.div`
 `;
 
 const FilterSectionStyle = styled.div<IFixedProps>`
-  z-index: 99999;
   flex-shrink: 0;
   padding-top: 3rem;
   padding-bottom: 8.2rem;

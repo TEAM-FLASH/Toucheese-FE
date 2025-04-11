@@ -8,6 +8,7 @@ import variables from '@styles/Variables';
 import { useEffect, useState } from 'react';
 import createCalendar from './createCalendar';
 import { useSelectTimeStore } from '@store/useSelectTimeStore';
+import { breakPoints, mqMax, mqMin } from '@styles/BreakPoint';
 
 interface CalendarProp {
   type?: string;
@@ -31,6 +32,7 @@ const Calendar = ({ type = 'filter', disableDates }: CalendarProp) => {
   const baseYear = baseDate.getFullYear();
   const baseMonth = baseDate.getMonth();
   const today = new Date();
+  const week = ['일', '월', '화', '수', '목', '금', '토'];
 
   const resetTime = () => setTime('reset');
 
@@ -110,13 +112,11 @@ const Calendar = ({ type = 'filter', disableDates }: CalendarProp) => {
       </TopStyle>
       <CalendarStyle>
         <DayOfWeekStyle>
-          <li>일</li>
-          <li>월</li>
-          <li>화</li>
-          <li>수</li>
-          <li>목</li>
-          <li>금</li>
-          <li>토</li>
+          {week.map((day) => (
+            <li key={day} css={calendarRatio(type)}>
+              {day}
+            </li>
+          ))}
         </DayOfWeekStyle>
         <ul
           onTouchStart={(e) => setStartClientX(e.touches[0].clientX)}
@@ -137,10 +137,15 @@ const Calendar = ({ type = 'filter', disableDates }: CalendarProp) => {
                     ${isNextMonth && nextMonthStyle};
                     ${isPrevToday && disabledStyle}
                     ${isReservationComplete && disabledStyle}
+                    ${calendarRatio(type)}
                   `}
                   key={`${month} - ${date}`}
                 >
-                  <button type="button" onClick={() => handleDateClick(year, month, date)}>
+                  <button
+                    type="button"
+                    css={calendarRatio(type)}
+                    onClick={() => handleDateClick(year, month, date)}
+                  >
                     {date}
                     <span css={Hidden}>일</span>
                   </button>
@@ -158,16 +163,30 @@ const Calendar = ({ type = 'filter', disableDates }: CalendarProp) => {
 
 export default Calendar;
 
+const calendarRatio = (type: string) => css`
+  ${mqMax(breakPoints.moMax)} {
+    aspect-ratio: 1/1;
+  }
+  ${mqMin(breakPoints.pc)} {
+    aspect-ratio: ${type === 'reservation' ? '88/53' : '1/1'};
+  }
+`;
+
 const CalendarWrStyle = styled.article`
-  max-width: 500px;
+  max-width: 620px;
   width: 100%;
   margin: 0 auto 1rem;
+
+  ${mqMin(breakPoints.pc)} {
+    margin: 1.6rem auto 2rem;
+  }
 `;
 
 const TopStyle = styled.div`
   position: relative;
   display: flex;
   justify-content: center;
+  margin-bottom: 0.4rem;
 `;
 
 const TodayStyle = styled.button`
@@ -190,7 +209,6 @@ const TitleStyle = styled.div`
 
   button {
     width: 2.4rem;
-    aspect-ratio: 1/1;
     background: url(/img/icon-chevronright.svg) no-repeat center;
   }
 `;
@@ -202,7 +220,6 @@ const CalendarStyle = styled.div`
     font-size: 1.6rem;
 
     li {
-      aspect-ratio: 1/1;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -210,7 +227,6 @@ const CalendarStyle = styled.div`
 
       button {
         width: 100%;
-        aspect-ratio: 1 / 1;
         text-align: center;
       }
     }

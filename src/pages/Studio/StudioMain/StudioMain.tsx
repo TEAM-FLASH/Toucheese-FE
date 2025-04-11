@@ -7,37 +7,54 @@ import StudioNavigator from '@components/Navigator/StudioNavigator';
 import StudioInfo from '@components/Studio/StudioInfo';
 import StudioOptions from '@components/Studio/StudioOptions';
 import { css } from '@emotion/react';
-import { useGetStudioDetail } from '@hooks/useGetStudioDetail';
-import useStudioDataStore from '@store/useStudioDataStore';
 import { breakPoints, mqMin } from '@styles/BreakPoint';
 import { TypoBodyMdM, TypoBodyMdR, TypoCapSmM, TypoTitleXsM } from '@styles/Common';
 import variables from '@styles/Variables';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useMediaQuery } from 'react-responsive';
 import { useNavigate, useParams } from 'react-router-dom';
+import { IStudioDetail } from 'types/types';
 
 const StudioMain = () => {
   const { _id } = useParams();
-  const { data, error } = useGetStudioDetail(`${_id}`);
   const [isOpened, setIsOpened] = useState(false);
   const [isWebPSupported, setIsWebPSupported] = useState(false);
   const [imageLoadError, setImageLoadError] = useState(false);
   const [scrollY, setScrollY] = useState(false);
   const navigate = useNavigate();
   const handleClick = () => navigate(`/studio/${_id}/menu`);
-  const { studioDetail, setStudioDetail } = useStudioDataStore();
   const isPc = useMediaQuery({ minWidth: breakPoints.pc });
 
-  /** 스튜디오 데이터 session Storage에 저장 */
-  useEffect(() => {
-    if (!studioDetail[`${_id}`] && data) {
-      setStudioDetail(`${_id}`, data);
-    }
-  }, [data, _id, studioDetail, setStudioDetail]);
+  const [studioData, setStudioData] = useState<IStudioDetail>();
 
-  /** 스튜디오 소개 텍스트 길이 */
-  const hasMore: boolean | undefined = data && data.description.length > 100;
+  useEffect(() => {
+    const sessionData = sessionStorage.getItem('studio-storage');
+    if (sessionData) {
+      setStudioData(JSON.parse(sessionData).state.studioDetail[`${_id}`]);
+    }
+  }, [_id]);
+
+  const descRef = useRef<HTMLParagraphElement>(null);
+  const [hasMore, setHasMore] = useState(false);
+
+  const checkOverflow = () => {
+    // p태그 DOM 요소 참조
+    const el = descRef.current;
+    if (el) {
+      // -webkit-line-clamp의 높이와 본문의 길이 크기 비교
+      const isOverflowing = el.scrollHeight > el.clientHeight;
+      // 더보기 필요 여부를 저장
+      setHasMore(isOverflowing);
+    }
+  };
+
+  useEffect(() => {
+    checkOverflow(); // 초기 체크
+
+    window.addEventListener('resize', checkOverflow); // 창 크기 변경 시 재확인
+    return () => window.removeEventListener('resize', checkOverflow);
+  }, [studioData?.description]);
 
   /** 스크롤 이벤트 핸들러 */
   const handleScroll = () => {
@@ -75,10 +92,7 @@ const StudioMain = () => {
       );
   };
 
-  if (error instanceof Error) {
-    return <div>Error: {error.message}</div>;
-  }
-  if (!data) {
+  if (!studioData) {
     return <Loading size="big" phrase="스튜디오를 불러오고 있습니다." />;
   }
 
@@ -92,11 +106,11 @@ const StudioMain = () => {
   ];
 
   /** 대체이미지 개수 정하기 */
-  const missingImgCount = Math.max(5 - data.portfolios.length, 0);
+  const missingImgCount = Math.max(5 - studioData.portfolios.length, 0);
 
   /** placeHolderImageList의 뒤에서부터 배열 채우기 */
   const portfolioWithPlaceHolders = [
-    ...data.portfolios,
+    ...studioData.portfolios,
     ...placeHolderImageList.slice(-missingImgCount).map((url) => ({ url })),
   ];
 
@@ -127,15 +141,13 @@ const StudioMain = () => {
   return (
     <>
       <Helmet>
-        <title>{`${data?.name} - 상세정보`}</title>
+        <title>{`${studioData?.name} - 상세정보`}</title>
         <meta property="og:title" content="스튜디오 상세정보" />
         <meta property="og:url" content={`${window.location.href}`} />
         <meta property="og:description" content="스튜디오의 영업시간과 정보" />
       </Helmet>
-
       {/* 모바일 헤더 */}
-      <Header title={scrollY ? data?.name : ''} fixed={true} scrollEvent={true} />
-
+      <Header title={scrollY ? studioData?.name : ''} fixed={true} scrollEvent={true} />
       <div css={boxLayoutStyle}>
         {/* 이미지 */}
         <div css={portfolioPreviewStyle} onClick={() => navigate(`/studio/${_id}/portfolio`)}>
@@ -151,100 +163,120 @@ const StudioMain = () => {
             <div css={DimOverlayStyle}>
               <img src="/img/icon-morePreview.svg" alt="더보기" />
               <span>
-                {data && data.portfolios.length >= 5 ? `+ ${data.portfolios.length - 5}` : ''}
+                {studioData && studioData.portfolios.length >= 5
+                  ? `+ ${studioData.portfolios.length - 5}`
+                  : ''}
               </span>
             </div>
           </div>
         </div>
 
         <div className="mo">
-          <StudioInfo data={data} id={_id} />
+          <StudioInfo data={studioData} id={_id} />
         </div>
 
         <div css={stickyNavStyle}>
           <StudioNavigator _id={_id || ''} />
         </div>
       </div>
-
       {/* 홈 기본 정보  - 매장소개 */}
       <div css={descriptionStyle(isOpened, hasMore)}>
         <p className="descriptionTitle">매장 소개</p>
-        <p className="textDisplay">{`${data.description}`}</p>
+        <p ref={descRef} className="textDisplay">
+          {studioData?.description}
+        </p>
         {hasMore && (
           <span className="textMore" onClick={() => setIsOpened(!isOpened)}>
             {isOpened ? '접기' : '더보기'}
           </span>
         )}
       </div>
-
-      {/* 홈 기본 정보  - 영업 정보 */}
-      <div css={openingHoursStyle}>
-        <p className="openingHoursTitle">영업 정보</p>
-        {data && data.openingHours.length === 0 ? (
-          <p>수집중</p>
-        ) : (
-          data &&
-          data.openingHours.map((openingHour) => (
-            <dl key={openingHour.id}>
-              <dt>{day[openingHour.dayOfWeek as keyof typeof day]}</dt>
-              <dd>
-                {openingHour.closed ? (
-                  <p>정기 휴무</p>
-                ) : (
-                  <>
-                    <time>{openingHour.openTime.slice(0, 5)}</time>
-                    <span>-</span>
-                    <time>{openingHour.closeTime.slice(0, 5)}</time>
-                  </>
-                )}
-              </dd>
-            </dl>
-          ))
-        )}
-        {data.openingHours.length !== 0 ? (
-          <div css={holidayStyle}>
-            <p className="holidayTitle"> 정기휴무</p>
-            <div className="holidayMonth">
-              {data.holidays.map((holiday) => (
-                <p key={holiday.id}>
-                  {holiday.weekOfMonth === 1
-                    ? '첫'
-                    : holiday.weekOfMonth === 2
-                      ? '둘'
-                      : holiday.weekOfMonth === 3
-                        ? '셋'
-                        : '넷'}
-                  째 주 {day[holiday.dayOfWeek as keyof typeof day]}
-                </p>
-              ))}
-            </div>
-          </div>
-        ) : (
-          ''
-        )}
-      </div>
-
-      {/* 홈 기본정보 - 위치 정보 */}
-      <div css={mapStyle}>
-        <p>위치 정보</p>
-        <KakaoMap addressSi={data.addressSi} addressGu={data.addressGu} address={data.address} />
-      </div>
-
-      {/* 홈 기본정보 - 매장 정보 */}
-      {!isPc && (
+      {studioData && (
         <>
-          <StudioOptions data={data} />
+          {/* 홈 기본 정보  - 영업 정보 */}
+          <div css={openingHoursStyle}>
+            <p className="openingHoursTitle">영업 정보</p>
+            {studioData.openingHours.length === 0 ? (
+              <p>수집중</p>
+            ) : (
+              studioData.openingHours &&
+              studioData.openingHours.map(
+                (openingHour: {
+                  id: number;
+                  dayOfWeek: string;
+                  closed: boolean;
+                  openTime: string;
+                  closeTime: string;
+                }) => (
+                  <dl key={openingHour.id}>
+                    <dt>{day[openingHour.dayOfWeek as keyof typeof day]}</dt>
+                    <dd>
+                      {openingHour.closed ? (
+                        <p>정기 휴무</p>
+                      ) : (
+                        <>
+                          <time>{openingHour.openTime.slice(0, 5)}</time>
+                          <span>-</span>
+                          <time>{openingHour.closeTime.slice(0, 5)}</time>
+                        </>
+                      )}
+                    </dd>
+                  </dl>
+                ),
+              )
+            )}
+            {studioData.holidays.length !== 0 ? (
+              <div css={holidayStyle}>
+                <p className="holidayTitle"> 정기휴무</p>
+                <div className="holidayMonth">
+                  {studioData.holidays.map(
+                    (holiday: { id: number; weekOfMonth: number; dayOfWeek: string }) => (
+                      <p key={holiday.id}>
+                        {holiday.weekOfMonth === 1
+                          ? '첫'
+                          : holiday.weekOfMonth === 2
+                            ? '둘'
+                            : holiday.weekOfMonth === 3
+                              ? '셋'
+                              : '넷'}
+                        째 주 {day[holiday.dayOfWeek as keyof typeof day]}
+                      </p>
+                    ),
+                  )}
+                </div>
+              </div>
+            ) : (
+              ''
+            )}
+          </div>
 
-          <div css={reservationStyle}>
-            <Button
-              type="button"
-              variant="black"
-              text="예약하기"
-              size="large"
-              width="max"
-              onClick={handleClick}
+          {/* 홈 기본정보 - 위치 정보 */}
+          <div css={mapStyle}>
+            <p>위치 정보</p>
+            <KakaoMap
+              addressSi={studioData.addressSi}
+              addressGu={studioData.addressGu}
+              address={studioData.address}
             />
           </div>
+
+          {/* 홈 기본정보 - 매장 정보 */}
+          {!isPc && (
+            <>
+              <StudioOptions data={studioData} />
+
+              <div css={reservationStyle}>
+                <Button
+                  type="button"
+                  variant="black"
+                  text="예약하기"
+                  size="large"
+                  width="max"
+                  onClick={handleClick}
+                />
+              </div>
+            </>
+          )}
         </>
       )}
     </>

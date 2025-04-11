@@ -44,6 +44,7 @@ const variables = {
   borderRadius: '.8rem',
   borderRadiusLarge: '2rem',
   headerHeight: 'var(--headerHeight)',
+  headerBottomPadding: '3rem',
   maxWidth: 'var(--maxWidth)',
 };
 

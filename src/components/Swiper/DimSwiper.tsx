@@ -28,7 +28,7 @@ const DimSwiper = <T extends { id: number }>({ children, data, setSlideSet }: ID
 
   const prevBtnRef = useRef(null);
   const nextBtnRef = useRef(null);
-  // const [lastSwipeDirection, setLastSwipeDirection] = useState('');
+  const [lastSwipeDirection, setLastSwipeDirection] = useState('');
 
   const getNewSlideSet = (clickedId: number) => {
     return data.filter(
@@ -37,9 +37,7 @@ const DimSwiper = <T extends { id: number }>({ children, data, setSlideSet }: ID
   };
 
   const setIndexByPortfolioId = () => {
-    for (let i = 0; i < data.length; i++) {
-      slideIndexMap.set(data[i].id, i + 1);
-    }
+    for (let i = 0; i < data.length; i++) slideIndexMap.set(data[i].id, i + 1);
   };
 
   const handleInitNav = (swiper: SwiperClass) => {
@@ -48,11 +46,10 @@ const DimSwiper = <T extends { id: number }>({ children, data, setSlideSet }: ID
     navigation.nextEl = nextBtnRef.current;
   };
 
-  const handleChange = (swipe: SwiperClass) => {
+  const handleChange = () => {
     if (!swiperRef || !firstSlide || !lastSlide) return null;
-    console.log(swipe, swiperRef.swipeDirection);
-    const toNext = swiperRef.swipeDirection === 'next';
-    // const toNext = swiperRef.activeIndex > swiperRef.previousIndex;
+    const swipeDirection = lastSwipeDirection || swiperRef.swipeDirection;
+    const toNext = swipeDirection === 'next';
     const direction = toNext ? 1 : -1;
 
     // 첫번째, 마지막 슬라이드에서 슬라이드 변경 금지
@@ -68,13 +65,14 @@ const DimSwiper = <T extends { id: number }>({ children, data, setSlideSet }: ID
 
     setSelectedId(selectedId, direction);
     swiperRef.slideTo(1, 0, false);
+    setLastSwipeDirection('');
   };
 
   const swiperOption = {
     modules: [Navigation],
     onSwiper: (e: SwiperClass) => setSwiperRef(e),
     onBeforeInit: (e: SwiperClass) => handleInitNav(e),
-    onTransitionEnd: (e: SwiperClass) => handleChange(e),
+    onTransitionEnd: handleChange,
     slidesPerView: 1,
     initialSlide: selectedId === firstSlide ? 0 : 1,
     centeredSlides: true,
@@ -110,8 +108,16 @@ const DimSwiper = <T extends { id: number }>({ children, data, setSlideSet }: ID
         </p>
         <Swiper {...swiperOption}>{children}</Swiper>
         <div>
-          <button className="swiper-button swiper-button-prev" ref={prevBtnRef}></button>
-          <button className="swiper-button swiper-button-next" ref={nextBtnRef}></button>
+          <button
+            onClick={() => setLastSwipeDirection('prev')}
+            className="swiper-button swiper-button-prev"
+            ref={prevBtnRef}
+          ></button>
+          <button
+            onClick={() => setLastSwipeDirection('next')}
+            className="swiper-button swiper-button-next"
+            ref={nextBtnRef}
+          ></button>
         </div>
       </div>
     )
