@@ -3,20 +3,24 @@ import BackButton from '@components/BackButton/BackButton';
 import Button from '@components/Button/Button';
 import { css } from '@emotion/react';
 import useToast from '@hooks/useToast';
-import { useUserStore } from '@store/useUserStore';
+import { loadUserFromStorage, useUserStore } from '@store/useUserStore';
 import { TypoBodyMdR, TypoTitleXsB, TypoTitleXsM } from '@styles/Common';
 import variables from '@styles/Variables';
 import { useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const Profile = () => {
-  const data = localStorage.getItem('userState');
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const openToast = useToast();
   const hasShownToastRef = useRef(false);
-
   const logout = useUserStore((state) => state.resetUser);
+  const { email, phone, username, registration } = useUserStore();
+
+  // 암호화 된 유저 정보 복호화
+  useEffect(() => {
+    loadUserFromStorage();
+  }, []);
 
   const handleProfileEditPage = () => {
     navigate('/user/profile/edit');
@@ -76,11 +80,11 @@ const Profile = () => {
           <dl css={infoDataBoxStyle}>
             <div>
               <dt>이름</dt>
-              <dd>{data ? JSON.parse(data).state.username : '이름 없음'}</dd>
+              <dd>{username || '이름 없음'}</dd>
             </div>
             <div>
               <dt>휴대폰 번호</dt>
-              <dd>{data ? JSON.parse(data).state.phone : '연락처 없음'}</dd>
+              <dd>{phone || '연락처 없음'}</dd>
             </div>
           </dl>
         </div>
@@ -90,7 +94,7 @@ const Profile = () => {
             <p>계정정보</p>
             {/* 이메일 회원에게만 버튼 노출 */}
 
-            {data && JSON.parse(data).state.registration === 'EMAIL' ? (
+            {registration === 'EMAIL' ? (
               <Button
                 type="button"
                 text="비밀번호 변경하기"
@@ -115,15 +119,11 @@ const Profile = () => {
           <dl css={infoDataBoxStyle}>
             <div>
               <dt>아이디(이메일)</dt>
-              <dd>{data ? JSON.parse(data).state.email : '이메일(아이디) 없음'}</dd>
+              <dd>{email || '이메일(아이디) 없음'}</dd>
             </div>
             <div>
               <dt>로그인 방식</dt>
-              <dd>
-                {data && JSON.parse(data).state.registration === 'EMAIL'
-                  ? 'Email'
-                  : data && `${JSON.parse(data).state.registration}`}
-              </dd>
+              <dd>{registration === 'EMAIL' ? 'Email' : registration}</dd>
             </div>
           </dl>
         </div>

@@ -8,20 +8,25 @@ import { useForm } from 'react-hook-form';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import useToast from '@hooks/useToast';
-import { useUserStore } from '@store/useUserStore';
 import { breakPoints, mqMin } from '@styles/BreakPoint';
 import { bg100vw, PCLayout } from '@styles/Common';
 import { createEmailRegex, createPasswordRegex } from 'wj-password-validator';
+import useLoginMutation from '@hooks/useLoginMutation';
+
+interface loginType {
+  email: string;
+  password: string;
+}
 
 const LoginWithEmailPage = () => {
   const navigate = useNavigate();
   const openToast = useToast();
-  const setUser = useUserStore((state) => state.setUser);
+  const { mutate: loginMutate } = useLoginMutation();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<loginType>();
 
   const emailPattern = createEmailRegex();
   // validation 설정 부분
@@ -33,29 +38,16 @@ const LoginWithEmailPage = () => {
     specialChar: true,
   });
 
-  //TODO - 리액트 쿼리 뮤테이트로 변경 해야함
-  const handleLogin = async (data: any) => {
-    try {
-      const response = await fetch(`${import.meta.env.VITE_TOUCHEESE_API}/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-      const result = await response.json();
-      console.log('로그인 성공:', result);
-      setUser(result);
-      openToast('로그인에 성공했습니다.');
-      navigate('/');
-    } catch (error) {
-      console.error('로그인 에러:', error);
-      openToast('로그인에 실패했습니다. 다시 시도해주세요.');
-    }
+  const handleLogin = (data: loginType) => {
+    loginMutate(data, {
+      onSuccess: () => {
+        openToast('로그인 성공!');
+        navigate('/');
+      },
+      onError: () => {
+        openToast('로그인에 실패했습니다. 다시 시도해주세요.');
+      },
+    });
   };
 
   return (

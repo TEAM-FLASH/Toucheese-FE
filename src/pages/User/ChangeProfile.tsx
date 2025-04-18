@@ -7,6 +7,7 @@ import { css } from '@emotion/react';
 import useToast from '@hooks/useToast';
 import useSignupStore from '@store/useSignupStore';
 import { TypoTitleXsM, TypoTitleXsSb } from '@styles/Common';
+import { encryptUserData } from '@utils/encryptUserData';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useForm } from 'react-hook-form';
@@ -97,19 +98,28 @@ const ChangeProfile = () => {
   const handleSave = (data: any) => {
     // 기존 localStorage 데이터 가져오기
     const storedData = localStorage.getItem('userState');
-    const parsedData = storedData ? JSON.parse(storedData) : {};
+    const parsedData = storedData ? JSON.parse(storedData) : '';
 
-    // 기존 데이터와 변경된 유저 정보 병합
-    const updatedData = {
-      ...parsedData, // 기존 데이터 유지
-      state: {
-        ...parsedData.state, // 기존 state 유지
-        username: data.username,
-        phone: data.phone,
-      },
+    const { encryptedPhone, encryptedUsername } = parsedData.state || '';
+
+    // 변경된 값이 있을 경우 암호화
+    const { encryptedPhone: newEncryptedPhone, encryptedUsername: newEncryptedUsername } =
+      encryptUserData({
+        phone: data.phone || null,
+        username: data.username || null,
+      });
+
+    const updatedState = {
+      ...parsedData.state,
+      encryptedPhone: data.phone ? newEncryptedPhone : encryptedPhone,
+      encryptedUsername: data.username ? newEncryptedUsername : encryptedUsername,
     };
 
-    // 새로운 데이터 저장
+    const updatedData = {
+      ...parsedData,
+      state: updatedState,
+    };
+
     localStorage.setItem('userState', JSON.stringify(updatedData));
   };
 

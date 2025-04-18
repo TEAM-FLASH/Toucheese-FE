@@ -2,6 +2,8 @@
 import Header from '@components/Header/Header';
 import ReservationCard from '@components/ReservationCard/ReservationCard';
 import { css } from '@emotion/react';
+import { loadUserFromStorage, useUserStore } from '@store/useUserStore';
+import { useEffect } from 'react';
 import { useGetReservationList } from '@hooks/useGetReservationList';
 import useToast from '@hooks/useToast';
 import { defaultUserState } from '@store/useUserStore';
@@ -16,9 +18,20 @@ import { Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { IUser } from 'types/types';
 
+
 const MyPage = () => {
-  const { username, email } = getLocalStorageItem<IUser>('userState', defaultUserState);
+  const { username, email } = useUserStore();
   const { pathname } = useLocation();
+
+
+
+  // 암호화 된 유저 정보 복호화
+  useEffect(() => {
+    loadUserFromStorage();
+  }, []);
+
+  //현재 날짜와 예약 날짜 비교 함수
+
   const openToast = useToast();
   const navigate = useNavigate();
 
