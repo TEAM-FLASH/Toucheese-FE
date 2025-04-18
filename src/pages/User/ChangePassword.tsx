@@ -4,6 +4,7 @@ import BackButton from '@components/BackButton/BackButton';
 import Button from '@components/Button/Button';
 import Input from '@components/Input/Input';
 import { css } from '@emotion/react';
+import useToast from '@hooks/useToast';
 import { TypoTitleXsM } from '@styles/Common';
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
@@ -13,7 +14,6 @@ import { useNavigate } from 'react-router-dom';
 const ChangePassword = () => {
   const {
     register,
-    handleSubmit,
     formState: { errors },
     watch,
   } = useForm();
@@ -21,6 +21,7 @@ const ChangePassword = () => {
   const [isActive, setIsActive] = useState(false);
   const [isDisabled, setIsDisabled] = useState(true);
   const navigate = useNavigate();
+  const openToast = useToast();
 
   const email = watch('email');
   const newPassword = watch('newPassword');
@@ -39,10 +40,6 @@ const ChangePassword = () => {
     setIsDisabled(!isFormValid);
   }, [email, newPassword, passwordConfirm]);
 
-  const onSubmit = (data: any) => {
-    console.log('onsubmit :', data);
-  };
-
   const loadSessionStorageData = (key: string) => {
     /** key에 해당하는 데이터 호출 */
     const localData = localStorage.getItem(key);
@@ -55,6 +52,7 @@ const ChangePassword = () => {
       return parsedData;
     } catch (error) {
       console.error('JSON 파싱 오류', error);
+      openToast('데이터를 불러오는 데 문제가 발생했습니다.');
       return null;
     }
   };
@@ -67,6 +65,7 @@ const ChangePassword = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({ newPassword }),
       });
@@ -74,10 +73,11 @@ const ChangePassword = () => {
       if (!response.ok) {
         throw new Error(`서버 오류: ${response.status}`);
       }
-      console.log('모달이 열려야함!');
       navigate('/');
+      openToast('비밀번호 변경을 완료했습니다.');
     } catch (error) {
       console.error('비밀번호 변경 중 오류 발생:', error);
+      openToast('비밀번호 변경 중 오류가 발생했습니다');
     }
   };
 
@@ -94,14 +94,11 @@ const ChangePassword = () => {
       return parsedData;
     } catch (error) {
       console.error('JSON 파싱 오류', error);
+      openToast('서버 응답을 처리하는 데 문제가 발생했습니다.');
       return null;
     }
   };
   const emailData = loadLocalStorageData('userState');
-
-  console.log('보낼 데이터:', { newPassword });
-  console.log('요청 URL:', `${import.meta.env.VITE_TOUCHEESE_API}/user/mypage/changepw`);
-  console.log('Authorization 헤더:', `Bearer ${accessToken}`);
 
   return (
     <>
@@ -117,7 +114,7 @@ const ChangePassword = () => {
         <h1>비밀번호 변경</h1>
       </div>
 
-      <form noValidate css={formStyle} onSubmit={handleSubmit(onSubmit)}>
+      <form noValidate css={formStyle}>
         <div css={containerStyle}>
           {/* 비밀번호 */}
           <Input
@@ -165,8 +162,8 @@ const ChangePassword = () => {
         <div css={buttonStyle}>
           <Button
             onClick={handleVerifyComplete}
-            type="submit"
-            text="가입하기"
+            type="button"
+            text="변경하기"
             size="large"
             variant="gray"
             width="max"

@@ -16,6 +16,7 @@ import { useParams, useSearchParams } from 'react-router-dom';
 import { IPortfolio, IStudioRes } from 'types/types';
 import DimmedModal from '../components/DimmedModal';
 import PortfolioSwiper from './PortfolioSwiper';
+import { breakPoints, mqMin } from '@styles/BreakPoint';
 
 interface IPortfolioResponse {
   menuIdList: number[];
@@ -74,8 +75,8 @@ const StudioPortfolio = () => {
         </Helmet>
       )}
 
-      <Header title={isSuccess ? portfolios.studioName : ''} fixed={true} />
       <StudioNavigator _id={_id} />
+      <Header title={isSuccess ? portfolios.studioName : ''} fixed={true} />
 
       <div css={studioPaddingTop}>
         <h2 css={Hidden}>
@@ -150,4 +151,8 @@ const listStyle = css`
 
 const studioPaddingTop = css`
   padding-top: ${variables.headerHeight};
+
+  ${mqMin(breakPoints.pc)} {
+    padding-top: ${variables.headerBottomPadding};
+  }
 `;

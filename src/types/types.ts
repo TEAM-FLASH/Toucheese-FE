@@ -210,3 +210,25 @@ export interface SortBy {
   RATING: string;
   REVIEW_COUNT: string;
 }
+
+export interface IReservationData {
+  reservationId: number;
+  studioId: number;
+  studioName: string;
+  startTime: string;
+  endTime: string;
+  menuId: number;
+  menuName: string;
+  additionalMenuIds: number[];
+  additionalMenuNames: string[];
+  additionalMenuPrices: number[];
+  userName: string;
+  userPhone: string;
+  note: string;
+  totalPrice: number;
+  status: 'WAITING' | 'RESERVED' | 'COMPLETED' | 'CANCELED';
+  date: string;
+  basicPrice: number;
+  paymentMethod: string;
+  menuImageUrl: string;
+}

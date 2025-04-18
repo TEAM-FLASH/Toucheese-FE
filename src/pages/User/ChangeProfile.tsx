@@ -4,6 +4,7 @@ import BackButton from '@components/BackButton/BackButton';
 import Button from '@components/Button/Button';
 import Input from '@components/Input/Input';
 import { css } from '@emotion/react';
+import useToast from '@hooks/useToast';
 import useSignupStore from '@store/useSignupStore';
 import { TypoTitleXsM, TypoTitleXsSb } from '@styles/Common';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
@@ -37,25 +38,23 @@ const ChangeProfile = () => {
   const storageName = parsedData?.state?.username || '';
   const storagePhone = parsedData?.state?.phone || '';
 
-  // const [username, setUsername] = useState('');
-  // const [phone, setPhone] = useState('');
-  // const [loading, setLoading] = useState(false);
+  const [username] = useState('');
+  const [phone] = useState('');
+  const openToast = useToast();
 
   const handleEditProfile = async () => {
-    // setLoading(true);
-    // try {
-    //   const response = await fetch('/api/user/profile', {
-    //     method: 'PATCH',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify({ username, phone }),
-    //   });
-    //   if (!response.ok) throw new Error('업데이트 실패');
-    //   console.log('회원정보 수정 성공!');
-    // } catch (error) {
-    //   console.error('회원정보 수정 오류:', error);
-    // } finally {
-    //   setLoading(false);
-    // }
+    try {
+      const response = await fetch(`${import.meta.env.VITE_TOUCHEESE_API}/user/mypage/changeph`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, phone }),
+      });
+      if (!response.ok) throw new Error('업데이트 실패');
+      openToast('회원 정보 수정이 완료 되었습니다.');
+    } catch (error) {
+      console.error('회원정보 수정 오류:', error);
+      openToast('알수없는 오류가 발생했습니다.');
+    }
   };
 
   const {

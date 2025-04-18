@@ -194,7 +194,7 @@ const Home = () => {
           css={css`
             ${mqMin(breakPoints.pc)} {
               display: flex;
-              gap: 1.6rem;
+              gap: 3.2rem;
               position: relative;
             }
           `}

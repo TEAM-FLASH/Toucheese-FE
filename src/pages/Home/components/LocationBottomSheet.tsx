@@ -42,7 +42,14 @@ const LocationBottomSheet = ({
       <LocationSelector selectedIndex={selectedIndex} onChange={setSelectedIndex} />
 
       <ButtonBoxStyle>
-        <Button type="button" width="fit" variant="gray" text="초기화" onClick={handleReset} />
+        <Button
+          type="button"
+          width="fit"
+          variant="lightGray"
+          active={false}
+          text="초기화"
+          onClick={handleReset}
+        />
         <Button type="button" width="max" variant="black" text="적용하기" onClick={handleApply} />
       </ButtonBoxStyle>
     </BottomSheetBox>

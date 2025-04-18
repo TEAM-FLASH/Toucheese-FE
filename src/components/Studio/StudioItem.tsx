@@ -42,7 +42,7 @@ const StudioItem = ({
   // 이미지 5개 불러오기
   const getImages = (photos: IPortfolio[]) => {
     let images: string[] = [];
-    const portfolios = photos.slice(0, 5);
+    const portfolios = isPc ? photos.slice(0, 7) : photos.slice(0, 5);
 
     portfolios.forEach((photo: IPortfolio) => {
       images.push(photo.url);

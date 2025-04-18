@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+
 import ReservationFooter from '@components/ReservationFooter/ReservationFooter';
 import { useUserStore } from '@store/useUserStore';
 import { useEffect } from 'react';

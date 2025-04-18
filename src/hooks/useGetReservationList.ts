@@ -9,50 +9,53 @@ export type ResStatus = 'DEFAULT' | 'RESERVED' | 'COMPLETED' | 'CANCELED';
 const fetchReservationList = async (
   status: ResStatus,
   accessToken: string,
-): Promise<IResvRes | null> => {
-  const newStatus = status.toLowerCase();
-  const response = await fetch(
-    `${import.meta.env.VITE_TOUCHEESE_API}/user/mypage/reservation${newStatus !== 'default' ? `/${newStatus}` : ''}`,
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
+): Promise<IResvRes | undefined> => {
+  try {
+    const newStatus = status.toLowerCase();
+    const response = await fetch(
+      `${import.meta.env.VITE_TOUCHEESE_API}/user/mypage/reservation${newStatus !== 'default' ? `/${newStatus}` : ''}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
       },
-    },
-  );
+    );
 
-  if (!response.ok) {
-    throw new Error('Failed to fetch data');
+    if (!response.ok) {
+      if (response.status === 403) {
+        throw new Error('403');
+      }
+
+      throw new Error('Failed: Unknown error');
+    }
+
+    const data = await response.json().catch(() => {
+      return null;
+    });
+
+    return data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
   }
-
-  const data = await response.json().catch(() => null);
-
-  if (!data) {
-    return null;
-  }
-
-  return data;
 };
 
 export const useGetReservationList = (resStatus: ResStatus): UseQueryResult<IResvRes> => {
   const { accessToken } = getLocalStorageItem<IUser>('userState', defaultUserState);
 
   if (!accessToken) {
-    throw new Error('유저 정보가 존재하지 않습니다.');
+    throw new Error('AccessToken이 존재하지 않습니다!');
   }
 
   return useQuery({
-    queryKey: ['reservation', { resStatus, accessToken }],
+    queryKey: ['reservationList', { resStatus, accessToken }],
     queryFn: () => fetchReservationList(resStatus, accessToken),
+    enabled: !!accessToken,
     staleTime: 1000 * 60 * 1,
     refetchOnWindowFocus: false,
-    retry: (failureCount, error) => {
-      if (error instanceof Error && error.message === 'Failed to fetch data') {
-        return false;
-      }
-      return failureCount < 3; // 최대 3번까지 재시도
-    },
-    throwOnError: true,
+    retry: false,
   });
 };

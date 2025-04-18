@@ -21,8 +21,9 @@ const DateBottomSheet = ({}: {}) => {
         setDate('reset');
         setTime('reset', 'filter');
       },
-      variant: 'gray' as 'gray',
+      variant: 'lightGray' as 'lightGray',
       width: 'fit' as 'fit',
+      active: false,
     },
     {
       text: '적용하기',

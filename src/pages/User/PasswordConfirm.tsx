@@ -3,6 +3,7 @@ import BackButton from '@components/BackButton/BackButton';
 import Button from '@components/Button/Button';
 import Input from '@components/Input/Input';
 import { css } from '@emotion/react';
+import useToast from '@hooks/useToast';
 import { TypoTitleXsM, TypoTitleXsSb } from '@styles/Common';
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
@@ -13,10 +14,10 @@ const PasswordConfirm = () => {
   const [isActive, setIsActive] = useState(false);
   const [isDisabled, setIsDisabled] = useState(true);
   const navigate = useNavigate();
+  const openToast = useToast();
 
   const {
     register,
-    handleSubmit,
     formState: { errors },
     watch,
   } = useForm();
@@ -66,11 +67,8 @@ const PasswordConfirm = () => {
       navigate('/user/profile/passwordChange');
     } catch (error) {
       console.error('비밀번호 확인 중 오류 발생:', error);
+      openToast('비밀번호 확인 중 오류가 발생했습니다.');
     }
-  };
-
-  const onSubmit = (data: any) => {
-    console.log('onsubmit : 데이터 확인용', data);
   };
 
   return (
@@ -91,7 +89,7 @@ const PasswordConfirm = () => {
         <br />
         비밀번호를 다시 한 번 입력해주세요
       </h2>
-      <form noValidate css={formStyle} onSubmit={handleSubmit(onSubmit)}>
+      <form noValidate css={formStyle}>
         <div css={containerStyle}>
           {/* 비밀번호 */}
           <Input

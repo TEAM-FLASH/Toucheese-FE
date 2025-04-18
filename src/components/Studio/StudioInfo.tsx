@@ -6,7 +6,6 @@ import { breakPoints, mqMin } from '@styles/BreakPoint';
 import {
   DividerStyle,
   TypoBodyMdR,
-  TypoBodyMdSb,
   TypoBodySmR,
   TypoTitleMdSb,
   TypoTitleXsR,
@@ -34,6 +33,7 @@ const StudioInfo = ({ data, id }: IStudioInfo) => {
           position: sticky;
           top: 13.8rem;
           right: 0;
+          width: 100%;
         }
       `}
     >
@@ -64,7 +64,7 @@ const StudioInfo = ({ data, id }: IStudioInfo) => {
         <dl>
           <div>
             <dt>
-              <img src="/img/icon-clock.svg" alt="영업시간" />
+              <img className="img-time" src="/img/icon-clock.svg" alt="영업시간" />
             </dt>
             <dd>
               <div className="openStatus">
@@ -85,7 +85,7 @@ const StudioInfo = ({ data, id }: IStudioInfo) => {
 
           <div>
             <dt>
-              <img src="/img/icon-location.svg" alt="주소" />
+              <img className="img-address" src="/img/icon-location.svg" alt="주소" />
             </dt>
             <dd>
               <p>
@@ -97,7 +97,7 @@ const StudioInfo = ({ data, id }: IStudioInfo) => {
           </div>
           <div>
             <dt>
-              <img src="/img/icon-call-gray700.svg" alt="연락처" />
+              <img className="img-contact" src="/img/icon-call-gray700.svg" alt="연락처" />
             </dt>
             <dd>
               <p>{`${data.phone}`}</p>
@@ -119,10 +119,21 @@ const StudioInfoTitleStyle = css`
   justify-content: space-between;
   margin-bottom: 1rem;
 
+  ${mqMin(breakPoints.pc)} {
+    padding-top: 2rem;
+  }
+
   & > div {
+    min-width: 0;
+
     & > h2 {
       ${TypoTitleMdSb}
       margin-bottom: 0.4rem;
+
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      word-break: break-all;
     }
 
     & > .rating {
@@ -166,6 +177,7 @@ const StudioInfoTitleStyle = css`
 `;
 
 const SocialActionsStyle = css`
+  flex-shrink: 0;
   display: flex;
   gap: 2.4rem;
 `;
@@ -181,15 +193,31 @@ const StudioInfoStyle = ({ isPc }: { isPc: boolean }) => css`
 
     div {
       display: flex;
-      align-items: center;
+      gap: 0.8rem;
 
       dt {
+        flex-shrink: 0;
+        width: 2.6rem;
+        height: 2.6rem;
         display: flex;
-        margin-right: 1rem;
+        justify-content: center;
+        align-items: center;
 
         img {
-          width: 1.7rem;
-          height: 1.7rem;
+          &.img-time {
+            width: 1.7rem;
+            height: 1.7rem;
+          }
+
+          &.img-address {
+            width: 1.5rem;
+            height: 1.9rem;
+          }
+
+          &.img-contact {
+            width: 1.5rem;
+            height: 1.5rem;
+          }
         }
       }
 
@@ -198,19 +226,19 @@ const StudioInfoStyle = ({ isPc }: { isPc: boolean }) => css`
         align-items: center;
 
         p {
-          ${TypoBodyMdR}
+          ${TypoTitleXsR}
         }
 
         & > .openStatus {
           display: flex;
 
           & > p {
-            ${TypoBodyMdSb}
+            ${TypoTitleXsSb}
             margin-right: 0.8rem;
           }
 
           & > time {
-            ${TypoBodyMdR}
+            ${TypoTitleXsR}
           }
         }
       }

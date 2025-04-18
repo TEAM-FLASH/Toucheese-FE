@@ -14,7 +14,7 @@ const LocationModal = ({ id, modalId }: LocationModalProps) => {
   if (!data) return null;
 
   return (
-    <Modal type="fullscreen" title={`지도 (modal id: ${modalId})`} withBtn={false}>
+    <Modal title={data.name} type="fullscreen" modalId={modalId} withBtn={false}>
       <KakaoMap addressSi={data.addressSi} addressGu={data.addressGu} address={data.address} />
     </Modal>
   );

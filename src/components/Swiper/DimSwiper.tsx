@@ -107,7 +107,7 @@ const DimSwiper = <T extends { id: number }>({ children, data, setSlideSet }: ID
           {data.length}
         </p>
         <Swiper {...swiperOption}>{children}</Swiper>
-        <div>
+        <div className="swiper-buttons">
           <button
             onClick={() => setLastSwipeDirection('prev')}
             className="swiper-button swiper-button-prev"
@@ -127,6 +127,22 @@ const DimSwiper = <T extends { id: number }>({ children, data, setSlideSet }: ID
 export default DimSwiper;
 
 const dimSwiperBox = css`
+  .swiper-buttons {
+    display: none;
+
+    ${mqMin(breakPoints.pc)} {
+      position: absolute;
+      z-index: 9;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: calc(100% + calc(${variables.layoutPadding}*6));
+      height: 4.4rem;
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
   .swiper-button {
     color: ${variables.colors.white};
     width: 4.4rem;
@@ -140,11 +156,9 @@ const dimSwiperBox = css`
 
   .swiper-button-prev {
     left: 0;
-    transform: translateX(calc(-100% - ${variables.layoutPadding}));
   }
   .swiper-button-next {
     right: 0;
-    transform: translateX(calc(100% + ${variables.layoutPadding}));
   }
 `;
 
@@ -175,6 +189,7 @@ export const SlideImgBox = css`
   margin-bottom: 1rem;
 
   img {
+    width: 100%;
     aspect-ratio: 308/340;
     object-fit: scale-down;
 

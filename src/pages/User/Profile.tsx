@@ -1,22 +1,22 @@
 /** @jsxImportSource @emotion/react */
 import BackButton from '@components/BackButton/BackButton';
 import Button from '@components/Button/Button';
-import Modal from '@components/Modal/Modal';
 import { css } from '@emotion/react';
-import { useModalStore } from '@store/useModalStore';
+import useToast from '@hooks/useToast';
 import { useUserStore } from '@store/useUserStore';
 import { TypoBodyMdR, TypoTitleXsB, TypoTitleXsM } from '@styles/Common';
 import variables from '@styles/Variables';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const Profile = () => {
   const data = localStorage.getItem('userState');
-  // const openToast = useToast();
-
   const [searchParams] = useSearchParams();
-
   const navigate = useNavigate();
+  const openToast = useToast();
+  const hasShownToastRef = useRef(false);
+
+  const logout = useUserStore((state) => state.resetUser);
 
   const handleProfileEditPage = () => {
     navigate('/user/profile/edit');
@@ -26,51 +26,20 @@ const Profile = () => {
     navigate('/user/profile/passwordConfirm');
   };
 
-  const logout = useUserStore((state) => state.resetUser);
   const handleLogout = () => {
     logout();
     navigate('/');
   };
 
-  const modals = useModalStore((state) => state.modals);
-  const setOpen = useModalStore((state) => state.setOpen);
-
-  const modalId = 1;
-
-  const openModal = () => {
-    setOpen(modalId, true);
-  };
-
-  const closeModal = () => {
-    setOpen(modalId, false);
-  };
-
   useEffect(() => {
-    if (searchParams.get('success') === 'true') {
-      openModal();
+    if (searchParams.get('success') === 'true' && !hasShownToastRef.current) {
+      openToast('개인정보 변경에 성공했습니다.');
+      hasShownToastRef.current = true;
     }
   }, [searchParams]);
 
   return (
     <>
-      {/* 모달 렌더링 */}
-      {modals[modalId] && (
-        <div className="modal_Test">
-          <Modal type="default" title="개인정보가 성공적으로 변경되었어요" withBtn={false}>
-            <Button
-              text="확인"
-              size="medium"
-              width="fit"
-              type="button"
-              variant="black"
-              fixed={false}
-              style={ButtonStyle}
-              onClick={closeModal}
-            />
-          </Modal>
-        </div>
-      )}
-
       <div css={headerStyle}>
         <BackButton />
         <h1>내정보 관리</h1>
@@ -222,10 +191,10 @@ const accoutStyle = css`
   transform: translateX(-50%);
 `;
 
-const ButtonStyle = css`
-  padding: 0 4.6rem;
-  margin: auto;
-  margin-top: 2.8rem;
-`;
+// const ButtonStyle = css`
+//   padding: 0 4.6rem;
+//   margin: auto;
+//   margin-top: 2.8rem;
+// `;
 
 export default Profile;

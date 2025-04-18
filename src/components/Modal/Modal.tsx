@@ -19,7 +19,7 @@ interface ModalProp {
   buttons?: {
     text: string;
     event: () => void;
-    variant?: 'black' | 'gray';
+    variant?: 'black' | 'gray' | 'lightGray';
     active?: boolean;
     width?: 'max' | 'fit';
     type?: 'button' | 'submit';
@@ -151,7 +151,7 @@ export default Modal;
 
 const ModalStyle = styled.section<IModalStyle>`
   position: fixed;
-  z-index: 99999;
+  z-index: 99;
   inset: 0;
   overflow: hidden auto;
 
@@ -160,6 +160,8 @@ const ModalStyle = styled.section<IModalStyle>`
       props.type === 'fullscreen' ? variables.colors.white : ' rgba(0, 0, 0, 0.85)'};
     padding: 0 ${variables.layoutPadding} 10rem;
     padding-top: ${(props) => props.type === 'dimmed' && variables.headerHeight};
+    padding-bottom: ${(props) => props.type === 'dimmed' && '3rem'};
+    overflow: ${(props) => props.type === 'dimmed' && 'visible'};
     display: flex;
     flex-direction: column;
     justify-content: ${(props) => (props.type !== 'fullscreen' ? '' : 'space-between')};
@@ -167,7 +169,7 @@ const ModalStyle = styled.section<IModalStyle>`
 
   ${mqMin(breakPoints.pc)} {
     &:last-of-type {
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.5);
     }
   }
 `;
@@ -176,35 +178,45 @@ const ModalInner = styled.div<IModalStyle>`
   ${(props) =>
     props.type === 'default' &&
     `
-  width: calc(100% - 6rem);
-  margin: auto;
-  max-width: 30rem;
-  min-height: 18rem;
-  padding: 3rem 2rem 2rem;
-  border-radius: 1.4rem;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  gap: .6rem;
+      width: calc(100% - 6rem);
+      margin: auto;
+      max-width: 30rem;
+      min-height: 18rem;
+      border-radius: 1.4rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+  `}
+  ${(props) =>
+    props.type === 'dimmed' &&
+    `
+      display: flex;
+      flex-direction: column;
+      overflow: auto auto;
   `}
 
   ${mqMax(breakPoints.moMax)} {
     background: ${(props) => props.type !== 'dimmed' && '#fff'};
     height: ${(props) => props.type !== 'default' && '100%'};
+    padding: ${(props) => props.type === 'default' && '3rem 2rem 2rem'};
+    gap: ${(props) => props.type === 'default' && '.6rem'};
   }
 
   ${mqMin(breakPoints.pc)} {
     background: ${(props) => (props.type !== 'dimmed' ? '#fff' : variables.colors.black)};
+    overflow: ${(props) => props.type === 'dimmed' && 'visible'};
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
+    gap: ${(props) => props.type === 'default' && '.8rem'};
+    padding: ${(props) => props.type === 'default' && '3.4rem 2.4rem 2.4rem'};
     width: ${(props) => (props.type !== 'dimmed' ? '100%' : '64vw')};
-    max-width: ${(props) => (props.type === 'default' ? '40rem' : '54rem')};
+    max-width: ${(props) => (props.type === 'default' ? '42rem' : '54rem')};
     max-width: ${(props) => props.type === 'dimmed' && '81.2rem'};
-    min-height: ${(props) => (props.type === 'default' ? '18.6rem' : '40rem')};
+    min-height: ${(props) => (props.type === 'default' ? '20rem' : '40rem')};
     max-height: calc(100vh - 8rem);
     border-radius: 2rem;
   }
@@ -285,9 +297,9 @@ const ContentsStyle = styled.div<IContentStyle>`
   ${(props) => props.type === 'default' && `color: ${variables.colors.gray800}`}
 
   ${mqMin(breakPoints.pc)} {
-    overflow: hidden auto;
     padding: ${variables.layoutPadding};
     padding-top: ${(props) => props.type === 'dimmed' && 0};
+    overflow: ${(props) => (props.type === 'dimmed' ? 'auto auto' : 'hidden auto')};
   }
 `;
 
@@ -297,7 +309,7 @@ const ButtonBoxStyle = styled.div<IModalStyle>`
   ${(props) =>
     props.type === 'default' &&
     `
-    gap: 1.4rem;
+    gap: 1.6rem;
     margin-top: 1rem;
     `}
 
@@ -307,7 +319,7 @@ const ButtonBoxStyle = styled.div<IModalStyle>`
       `
       padding: 2rem 1.6rem 3rem;
       justify-content: space-between;
-      gap: 0.8rem;
+      gap: 1.4rem;
       position: fixed;
       bottom: 0;
       left: 0;
@@ -320,6 +332,6 @@ const ButtonBoxStyle = styled.div<IModalStyle>`
     padding: ${(props) =>
       props.type === 'default' ? `1.8rem 0 0` : `1.8rem ${variables.layoutPadding} 3rem`};
     border-top: ${(props) => props.type !== 'default' && `1px solid ${variables.colors.gray300}`};
-    gap: 0.8rem;
+    gap: ${(props) => props.type !== 'default' && `.8rem`};
   }
 `;

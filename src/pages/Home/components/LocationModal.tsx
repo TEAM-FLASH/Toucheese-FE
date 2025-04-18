@@ -23,8 +23,9 @@ const LocationModal = ({
         setSelectedIndex('서울전체');
         setSelectedLocation('서울전체');
       },
-      variant: 'gray' as 'gray',
+      variant: 'lightGray' as 'lightGray',
       width: 'fit' as 'fit',
+      active: false,
     },
     {
       text: '적용하기',

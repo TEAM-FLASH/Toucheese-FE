@@ -256,7 +256,7 @@ const TabMenuStyle = css`
   box-sizing: border-box;
 
   ${mqMin(breakPoints.pc)} {
-    top: 0;
+    top: -5rem;
     width: calc(100% + (${variables.layoutPadding} * 2));
   }
 

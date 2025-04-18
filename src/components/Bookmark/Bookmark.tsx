@@ -30,7 +30,7 @@ const Bookmark = ({
     count: initialCount,
   });
   const handleBookmark = useBookmark(bookmark.isActive);
-  const userState = getLocalStorageItem<IUser>('userState', defaultUserState);
+  const { accessToken } = getLocalStorageItem<IUser>('userState', defaultUserState);
   const openToast = useToast();
   const navigate = useNavigate();
 
@@ -38,8 +38,8 @@ const Bookmark = ({
   const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
 
-    if (userState.accessToken && userState.user_id) {
-      await handleBookmark(userState.user_id, userState.accessToken, id);
+    if (accessToken) {
+      await handleBookmark(accessToken, id);
       setBookmark((state) => ({
         ...state,
         isActive: !state.isActive,

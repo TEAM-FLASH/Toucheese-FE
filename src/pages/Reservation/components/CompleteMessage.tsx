@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import Button from '@components/Button/Button';
 import styled from '@emotion/styled';
-import { ReservationOption } from '@store/useReservationStore';
+import { changeformatDateForUi, convertToDateFormat } from '@store/useSelectDateStore';
 import { breakPoints, mqMin } from '@styles/BreakPoint';
 import {
   PCLayout,
@@ -14,17 +14,10 @@ import {
 } from '@styles/Common';
 import variables from '@styles/Variables';
 import { useNavigate } from 'react-router-dom';
+import { IReservationData } from 'types/types';
 
 interface IStepStyle {
   type: 'active' | 'inactive';
-}
-
-interface IData {
-  id: number;
-  studio: string | undefined;
-  reservedMenu: string | undefined;
-  reservedDateTime: string | null;
-  options: ReservationOption[];
 }
 
 const CompleteMessage = ({
@@ -33,14 +26,17 @@ const CompleteMessage = ({
   resetInfo,
 }: {
   type: 'reserved' | 'canceled';
-  data: IData;
+  data: IReservationData;
   resetInfo: () => void;
 }) => {
   const navigate = useNavigate();
 
-  const reservedOptions = data.options.map((option, index) => (
+  const date = convertToDateFormat(new Date(data.date));
+  const time = [`${data.startTime.split(':')[0]}:${data.startTime.split(':')[1]}`];
+
+  const reservedOptions = data.additionalMenuNames.map((additionalMenuName, index) => (
     <p key={index} css={TypoBodySmR} className="content-item-options">
-      {option.optionName}
+      {additionalMenuName}
     </p>
   ));
 
@@ -96,7 +92,7 @@ const CompleteMessage = ({
                 매장명
               </p>
               <div css={TypoBodyMdR} className="content-item-desc">
-                <p>{data.studio}</p>
+                <p>{data.studioName}</p>
               </div>
             </div>
             <div className="content-item">
@@ -104,7 +100,7 @@ const CompleteMessage = ({
                 일정
               </p>
               <div css={TypoBodyMdR} className="content-item-desc schedule">
-                <p>{data.reservedDateTime}</p>
+                <p>{changeformatDateForUi({ date, time })}</p>
               </div>
             </div>
             <div className="content-item">
@@ -113,7 +109,7 @@ const CompleteMessage = ({
               </p>
 
               <div css={TypoBodyMdR} className="content-item-desc menu">
-                <p>{data.reservedMenu}</p>
+                <p>{data.menuName}</p>
                 <div className="content-item-extra">{reservedOptions}</div>
               </div>
             </div>
@@ -123,17 +119,15 @@ const CompleteMessage = ({
       <FooterButtonStyle>
         <Button
           text={type === 'reserved' ? '예약 상세' : '취소 상세'}
-          variant="gray"
-          active={true}
+          variant="lightGray"
           onClick={() => {
             resetInfo();
-            navigate(`/reservation/${data.id}`, { replace: true });
+            navigate(`/reservation/${data.reservationId}`, { replace: true });
           }}
         />
         <Button
           text="홈으로"
           variant="black"
-          active={true}
           onClick={() => {
             resetInfo();
             navigate('/', { replace: true });
@@ -145,7 +139,7 @@ const CompleteMessage = ({
 };
 
 const SectionStyle = styled.section`
-  margin-top: 3.2rem;
+  margin-top: 7.2rem;
   padding-bottom: 10.6rem;
   display: flex;
   flex-direction: column;
@@ -153,9 +147,10 @@ const SectionStyle = styled.section`
 
   ${mqMin(breakPoints.pc)} {
     ${PCLayout}
-    padding: 0 32.8rem;
-    margin-top: 6.5rem;
+    width: 60.8rem;
+    margin-top: 6.05rem;
     margin-bottom: 2.4rem;
+    padding: 0 1.6rem;
     gap: 2.4rem;
   }
 `;
@@ -204,6 +199,9 @@ const ProgressStyle = styled.ul`
   align-items: center;
   justify-content: space-between;
   position: relative;
+  width: 100%;
+  max-width: 36.8rem;
+  margin: 0 auto;
 
   &::before {
     content: '';
@@ -232,7 +230,7 @@ const ProgressStyle = styled.ul`
   }
 
   ${mqMin(breakPoints.pc)} {
-    margin: 0 12rem;
+    margin: 0 10.4rem;
   }
 `;
 
@@ -312,6 +310,7 @@ const ReservationInfoStyle = styled.div`
             display: flex;
             flex-wrap: wrap;
             row-gap: 0.2rem;
+            color: ${variables.colors.gray900};
 
             & > .content-item-options {
               margin-right: 0.6rem;
@@ -338,7 +337,6 @@ const ReservationInfoStyle = styled.div`
 `;
 
 const FooterButtonStyle = styled.div`
-  box-shadow: inset 0 0 10px blue;
   z-index: 9;
   position: fixed;
   left: 0;
@@ -362,9 +360,9 @@ const FooterButtonStyle = styled.div`
 
   ${mqMin(breakPoints.pc)} {
     ${PCLayout}
-    padding: 0 32.8rem;
+    width: 60.8rem;
+    padding: 0 1.6rem;
     margin-bottom: 5.3rem;
-    box-shadow: inset 0 0 10px red;
     z-index: unset;
     position: unset;
     box-shadow: unset;

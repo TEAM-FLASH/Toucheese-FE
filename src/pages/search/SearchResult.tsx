@@ -34,14 +34,12 @@ const SearchResults = () => {
         />
         <meta property="og:url" content={`${window.location.href}`} />
       </Helmet>
-      <div css={searchHeaderStyle}>
-        {!isPc && (
-          <>
-            <BackButton to="/search" replace ariaLabel="검색 페이지로 돌아가기" />
-            <SearchBar />
-          </>
-        )}
-      </div>
+      {!isPc && (
+        <div css={searchHeaderStyle}>
+          <BackButton to="/search" replace ariaLabel="검색 페이지로 돌아가기" />
+          <SearchBar />
+        </div>
+      )}
 
       <StudioList
         mode="search/result"
