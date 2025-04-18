@@ -1,14 +1,12 @@
 /** @jsxImportSource @emotion/react */
 import Header from '@components/Header/Header';
-import ReservationFooter, {
-  reservationFooterWrStyle,
-} from '@components/ReservationFooter/ReservationFooter';
+import ReservationFooter from '@components/ReservationFooter/ReservationFooter';
 import ImageSwiper from '@components/Swiper/ImageSwiper';
 import { css } from '@emotion/react';
 import useToast from '@hooks/useToast';
 import useReservationStore from '@store/useReservationStore';
 import { defaultUserState } from '@store/useUserStore';
-import { breakPoints, mqMin } from '@styles/BreakPoint';
+import { breakPoints, mqMax, mqMin } from '@styles/BreakPoint';
 import { TypoBodyMdM, TypoTitleSmS } from '@styles/Common';
 import variables from '@styles/Variables';
 import { getLocalStorageItem } from '@utils/getLocalStorageItem';
@@ -19,6 +17,7 @@ import { IMenuListRes, IPortfolio, IUser } from 'types/types';
 import { MenuPCStyle } from './StudioMenu';
 import StudioMenuDetailInfo from './StudioMenuDetailInfo';
 import StudioMenuDetailReview from './StudioMenuDetailReview';
+import { pcFlexLayout } from '@pages/Reservation/ReservationSchedule';
 
 const StudioMenuDetail = () => {
   const { _menuId, _id } = useParams();
@@ -137,9 +136,9 @@ const StudioMenuDetail = () => {
         />
       </div>
 
-      <div css={[MenuLayoutPCStyle]}>
+      <div css={[pcFlexLayout, menuDetailLayout]}>
         {data && (
-          <div css={MenuCoverStyle}>
+          <div className="left-box">
             <ImageSwiper
               images={data && data?.menuImages.length > 0 ? data?.menuImages : menuImgNopic}
               slidesPerView={1}
@@ -149,8 +148,8 @@ const StudioMenuDetail = () => {
           </div>
         )}
 
-        <div css={reservationFooterWrStyle}>
-          <div css={MenuInfoPCStyle} className="content-box">
+        <div className="right-box">
+          <div className="content-box">
             <div css={MenuDescStyle}>
               <h2>{data?.name}</h2>
               <p>{data?.description}</p>
@@ -184,40 +183,27 @@ const StudioMenuDetail = () => {
 
 export default StudioMenuDetail;
 
-const MenuLayoutPCStyle = css`
+const menuDetailLayout = css`
   ${mqMin(breakPoints.pc)} {
-    width: 100vw;
-    position: relative;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 3.5rem;
+    .left-box {
+      top: ${variables.headerHeight};
+      margin-left: calc(${variables.layoutPadding}*-1);
+      width: calc(40% + ${variables.layoutPadding});
+    }
+    .swiper-pagination.swiper-pagination-horizontal {
+      bottom: 3rem;
+    }
   }
 `;
 
-const MenuInfoPCStyle = css`
-  ${mqMin(breakPoints.pc)} {
-    padding: 5rem 2.4rem;
-    flex-grow: 1;
-  }
-`;
-
-const MenuCoverStyle = css`
-  ${mqMin(breakPoints.pc)} {
-    position: sticky;
-    left: 0;
-    top: 8rem;
-    width: 50.9rem;
-    height: 64rem;
-    z-index: 10;
-  }
-`;
 const MenuImgPCStyle = css`
+  ${mqMax(breakPoints.moMax)} {
+    aspect-ratio: 360/432;
+  }
   ${mqMin(breakPoints.pc)} {
     width: 100%;
-    height: 64rem;
-    object-fit: contain;
+    height: calc(100vh - ${variables.headerHeight});
+    max-height: 64rem;
   }
 `;
 
@@ -258,6 +244,7 @@ const TabMenuStyle = css`
   ${mqMin(breakPoints.pc)} {
     top: -5rem;
     width: calc(100% + (${variables.layoutPadding} * 2));
+    z-index: 1;
   }
 
   & li {

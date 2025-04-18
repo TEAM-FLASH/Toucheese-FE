@@ -24,7 +24,6 @@ import { useUserStore } from '@store/useUserStore';
 import ReservationInfo from './components/ReservationInfo';
 import { breakPoints, mqMax, mqMin } from '@styles/BreakPoint';
 import { pcFlexLayout } from './ReservationSchedule';
-import { reservationFooterWrStyle } from '@components/ReservationFooter/ReservationFooter';
 
 interface FormValues {
   visitorName: string;
@@ -127,7 +126,7 @@ const ReservationCheck = () => {
           <ReservationInfo />
         </div>
 
-        <div className="right-box" css={reservationFooterWrStyle}>
+        <div className="right-box">
           <div className="content-box">
             {' '}
             {/* 예약자정보 */}
@@ -657,7 +656,6 @@ const termsSectionStyle = css`
 
   ${mqMin(breakPoints.pc)} {
     padding-top: 3.4rem;
-    margin-bottom: -6rem;
   }
 
   &::before {

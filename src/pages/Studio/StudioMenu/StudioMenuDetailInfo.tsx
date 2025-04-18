@@ -204,7 +204,7 @@ const AddOptionsListStyle = css`
   gap: 2.4rem;
 
   ${mqMin(breakPoints.pc)} {
-    padding-bottom: 10rem;
+    padding-bottom: 3rem;
   }
 
   & li {

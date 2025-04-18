@@ -143,9 +143,6 @@ const SelectTimeStyle = (type: string) => css`
   padding-top: 3rem;
   ${mqMin(breakPoints.pc)} {
     padding-top: ${type === 'reservation' && '4.6rem'};
-    &::after {
-      width: ${type === 'reservation' && 'calc(100% + 9.6rem) !important'};
-    }
   }
 
   &::after {

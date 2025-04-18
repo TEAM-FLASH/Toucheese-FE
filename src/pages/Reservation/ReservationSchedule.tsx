@@ -11,7 +11,6 @@ import { Helmet } from 'react-helmet-async';
 import { useParams } from 'react-router-dom';
 import ReservationInfo from './components/ReservationInfo';
 import ScheduleInner from './components/ScheduleInner';
-import { reservationFooterWrStyle } from '@components/ReservationFooter/ReservationFooter';
 
 const ReservationSchedule = () => {
   const { _id } = useParams() as { _id: string };
@@ -39,7 +38,7 @@ const ReservationSchedule = () => {
         <div className="left-box">
           <ReservationInfo />
         </div>
-        <div className="right-box" css={reservationFooterWrStyle}>
+        <div className="right-box">
           <ScheduleInner _id={_id} />
         </div>
       </div>
@@ -56,16 +55,18 @@ export const pcFlexLayout = css`
     align-content: flex-start;
 
     .left-box {
-      padding-top: ${variables.headerBottomPadding};
       width: 40%;
       max-width: 50.4rem;
+      position: sticky;
+      height: calc(100vh - ${variables.headerHeight} - ${variables.headerBottomPadding});
+      top: calc(${variables.headerHeight} + ${variables.headerBottomPadding});
     }
     .right-box {
       flex-grow: 1;
-      overflow: hidden;
 
       .content-box {
-        padding: ${variables.headerBottomPadding} ${variables.layoutPadding} 8rem;
+        min-height: calc(100vh - ${variables.headerHeight} - 8.1rem);
+        padding: ${variables.headerBottomPadding} ${variables.layoutPadding};
       }
     }
   }

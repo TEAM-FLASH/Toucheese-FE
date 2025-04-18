@@ -65,6 +65,10 @@ const fixedBox = css`
     border-top: 1px solid ${variables.colors.gray300};
     background: #fff;
   }
+  ${mqMin(breakPoints.pc)} {
+    position: sticky;
+    bottom: 0;
+  }
 `;
 
 const finalDate = css`
@@ -79,8 +83,10 @@ const finalDate = css`
 
   // ReservationFooter
   & + div {
-    position: initial;
-    inset: unset;
+    ${mqMax(breakPoints.moMax)} {
+      position: initial;
+      inset: unset;
+    }
   }
 
   dl {

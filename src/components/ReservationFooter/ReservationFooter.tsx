@@ -42,19 +42,6 @@ const ReservationFooter = ({
 
 export default ReservationFooter;
 
-export const reservationFooterWrStyle = css`
-  ${mqMin(breakPoints.pc)} {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: calc(100vh - ${variables.headerHeight});
-
-    .content-box {
-      overflow: hidden auto;
-    }
-  }
-`;
-
 const FixedBtnBoxStyle = css`
   display: flex;
   gap: 2rem;
@@ -84,6 +71,7 @@ const FixedBtnBoxStyle = css`
     }
   }
   ${mqMin(breakPoints.pc)} {
-    position: inherit;
+    position: sticky;
+    bottom: 0;
   }
 `;
