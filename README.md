@@ -130,15 +130,41 @@ pw: 1q2w3e4r1!
 
 #### 1) 홈
 
+  |PC|모바일|
+  |:--:|:--:|
+  ||<img width="200" src="https://github.com/user-attachments/assets/a2b4ecaa-b910-4986-8948-03cce0399655" />|
+
 #### 2) 메뉴
+
+  |PC|모바일|
+  |:--:|:--:|
+  ||<img width="200" src="https://github.com/user-attachments/assets/12f2db42-82c7-439b-bca8-0cabff449b28" />|
+
+  |PC|모바일|
+  |:--:|:--:|
+  ||<img width="200" src="https://github.com/user-attachments/assets/bb364321-2bf3-464d-bb74-77b65ced7553" />|
 
 #### 3) 포트폴리오
 
+  
+
 #### 4) 리뷰
+
+  |PC|모바일|
+  |:--:|:--:|
+  ||<img width="200" src="https://github.com/user-attachments/assets/989c3db9-3359-4a30-9add-7a4b862fe55a" />|
+
+  |PC|모바일|
+  |:--:|:--:|
+  ||<img width="200" src="https://github.com/user-attachments/assets/83eced3f-37c3-4549-9382-f2e9c4e0a6c1" />|
 
 ### 4. 스튜디오 예약
 
 #### 1) 날짜 및 시간 선택
+
+  |PC|모바일|
+  |:--:|:--:|
+  ||<img width="200" src="https://github.com/user-attachments/assets/9fccd30d-1d54-438a-b783-029477a70033" />|
 
 #### 2) 결제
 
@@ -164,11 +190,18 @@ pw: 1q2w3e4r1!
 
 #### 1) 마이페이지
 
+  |PC|모바일|
+  |:--:|:--:|
+  ||<img width="200" src="https://github.com/user-attachments/assets/8002d394-8a24-4854-bd06-9aa6d8bd266f" />|
+
 #### 2) 예약 내역
 
 #### 3) 내 리뷰
 
 #### 4) 찜한 사진관
+
+#### 5) 내 정보 관리
+
 
 <br />
 
