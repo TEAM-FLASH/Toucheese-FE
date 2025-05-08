@@ -186,6 +186,10 @@ pw : 1q2w3e4r1!
 
 #### 2) 결제
 
+  |PC|모바일|
+  |:--:|:--:|
+  ||<img width="200" src="" />|
+
 #### 3) 예약 상세
 
   |PC|모바일|
@@ -194,15 +198,35 @@ pw : 1q2w3e4r1!
 
 #### 4) 예약 취소
 
+  |PC|모바일|
+  |:--:|:--:|
+  ||<img width="200" src="https://github.com/user-attachments/assets/cbed39ac-7bb4-44bb-beaf-5a562b0a9315" />|
+
 ### 5. 로그인 및 회원가입
 
 #### 1) 이메일 회원가입
 
+  |PC|모바일|
+  |:--:|:--:|
+  ||<img width="200" src="https://github.com/user-attachments/assets/b81cc580-a545-4f8f-8e46-ad1e052d9073" />|
+
 #### 2) 이메일 로그인
+
+  |PC|모바일|
+  |:--:|:--:|
+  ||<img width="200" src="https://github.com/user-attachments/assets/afb8805a-1a7d-45e9-92b8-cd0bed75f327" />|
 
 #### 3) 카카오 로그인
 
+  |PC|모바일|
+  |:--:|:--:|
+  ||<img width="200" src="" />|
+
 #### 4) 구글 로그인
+
+  |PC|모바일|
+  |:--:|:--:|
+  ||<img width="200" src="" />|
 
 ### 6. 마이페이지
 
@@ -214,12 +238,27 @@ pw : 1q2w3e4r1!
 
 #### 2) 예약 내역
 
+  |PC|모바일|
+  |:--:|:--:|
+  ||<img width="200" src="https://github.com/user-attachments/assets/6b0f19ec-4627-4c6f-ab06-9d27c50ae03e" />|
+
 #### 3) 내 리뷰
 
+  |PC|모바일|
+  |:--:|:--:|
+  ||<img width="200" src="https://github.com/user-attachments/assets/a2da6a67-3e70-4996-85e9-c6a4193ed406" />|
+  
 #### 4) 찜한 사진관
+
+  |PC|모바일|
+  |:--:|:--:|
+  ||<img width="200" src="https://github.com/user-attachments/assets/b580b1fd-b181-4186-90ce-449d51f95aa9" />|
 
 #### 5) 내 정보 관리
 
+  |PC|모바일|
+  |:--:|:--:|
+  ||<img width="200" src="" />|
 
 <br />
 
