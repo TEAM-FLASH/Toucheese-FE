@@ -247,14 +247,20 @@ pw : 1q2w3e4r1!
   |PC|모바일|
   |:--:|:--:|
   ||<img width="200" src="https://github.com/user-attachments/assets/a2da6a67-3e70-4996-85e9-c6a4193ed406" />|
-  
-#### 4) 찜한 사진관
+
+#### 4) 리뷰 작성
+
+  |PC|모바일|
+  |:--:|:--:|
+  ||<img width="200" src="" />|
+
+#### 5) 찜한 사진관
 
   |PC|모바일|
   |:--:|:--:|
   ||<img width="200" src="https://github.com/user-attachments/assets/b580b1fd-b181-4186-90ce-449d51f95aa9" />|
 
-#### 5) 내 정보 관리
+#### 6) 내 정보 관리
 
   |PC|모바일|
   |:--:|:--:|
