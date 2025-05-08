@@ -10,7 +10,7 @@
 
 ```
 id : toucheese@gmail.com
-pw: 1q2w3e4r1!
+pw : 1q2w3e4r1!
 ```
 
 ---
@@ -63,18 +63,24 @@ pw: 1q2w3e4r1!
   - **How?**
     - 스프린트별 마일스톤을 생성하고, 이슈 번호로 branch를 생성해 개발 진행, 스토리 별 명확한 이슈 템플릿과 라벨링으로 작업 우선순위 설정 및 가시성 확보
     - 스토리별 명확한 이슈 템플릿과 라벨링으로 작업 우선순위 설정 및 가시성 확보
+  
   - **Why?**
-    해당 이슈가 어떤 스프린트에 진행된 작업인지 명시, 각 이슈별 작업이 어떻게 진행되고 있는지 파악하기 용이
+    - 해당 이슈가 어떤 스프린트에 진행된 작업인지 명시, 각 이슈별 작업이 어떻게 진행되고 있는지 파악하기 용이
+  
   - **Result?**
-    작업 진행 상황을 빠르게 팔로우하고, 팀원별 작업 내용을 세부적으로 파악할 수 있었음
+    - 작업 진행 상황을 빠르게 팔로우하고, 팀원별 작업 내용을 세부적으로 파악할 수 있었음
+<br />
 
 - `GitHub Pull Requests`를 활용하여 모든 코드에 대해 동료 간 상호 코드 리뷰 진행
+  
   - **How?**
-    `Pull Request` 템플릿을 생성하여 작업 내용에 대해 상세한 설명 작성, 팀원 모두 `Pull Request`에 대한 리뷰를 승인해야 dev 브랜치로 병합할 수 있도록 branch 조건 설정
+    - `Pull Request` 템플릿을 생성하여 작업 내용에 대해 상세한 설명 작성, 팀원 모두 `Pull Request`에 대한 리뷰를 승인해야 dev 브랜치로 병합할 수 있도록 branch 조건 설정
+  
   - **Why?**
-    코드 리뷰를 통해 불필요한 코드나 성능 개선이 필요한 부분을 발견하기 용이, 코드의 일관성이나 컨벤션 유지
+    - 코드 리뷰를 통해 불필요한 코드나 성능 개선이 필요한 부분을 발견하기 용이, 코드의 일관성이나 컨벤션 유지
+  
   - **Result?**
-    본인 담당 작업이 아니더라도 전체적으로 내용에 대해 이해하고, 새롭게 적용된 기술을 파악할 수 있었음, 좀 더 나은 코드에 대해 함께 고민할 수 있었음
+    - 본인 담당 작업이 아니더라도 전체적으로 내용에 대해 이해하고, 새롭게 적용된 기술을 파악할 수 있었음, 좀 더 나은 코드에 대해 함께 고민할 수 있었음
 
 ### 4. AWS 배포 환경 구축 및 관리
 
@@ -120,6 +126,24 @@ pw: 1q2w3e4r1!
 
 ### 1. 홈
 
+#### 1) 홈
+
+  |PC|모바일|
+  |:--:|:--:|
+  ||<img width="200" src="https://github.com/user-attachments/assets/3608fbca-2bf0-4294-a3b6-13f5f4fd1a9e" />|
+
+#### 2) 지역/날짜 필터링
+
+  |PC|모바일|
+  |:--:|:--:|
+  ||<img width="200" src="https://github.com/user-attachments/assets/9ebf5f83-0b19-45fc-8cb8-befde20a39c0" />|
+
+#### 3) 정렬 및 가격/매장옵션 필터링
+
+  |PC|모바일|
+  |:--:|:--:|
+  ||<img width="200" src="https://github.com/user-attachments/assets/99efcf7d-73c2-43e0-94b4-e513dc7df9ab" />|
+
 ### 2. 스튜디오 검색
 
   |PC|모바일|
@@ -134,29 +158,23 @@ pw: 1q2w3e4r1!
   |:--:|:--:|
   ||<img width="200" src="https://github.com/user-attachments/assets/a2b4ecaa-b910-4986-8948-03cce0399655" />|
 
-#### 2) 메뉴
+#### 2) 메뉴 및 메뉴 상세
 
   |PC|모바일|
   |:--:|:--:|
-  ||<img width="200" src="https://github.com/user-attachments/assets/12f2db42-82c7-439b-bca8-0cabff449b28" />|
-
-  |PC|모바일|
-  |:--:|:--:|
-  ||<img width="200" src="https://github.com/user-attachments/assets/bb364321-2bf3-464d-bb74-77b65ced7553" />|
+  ||<img width="200" src="https://github.com/user-attachments/assets/c34c66fb-10d8-4700-a0e1-80326d63139a" />|
 
 #### 3) 포트폴리오
 
-  
+  |PC|모바일|
+  |:--:|:--:|
+  ||<img width="200" src="https://github.com/user-attachments/assets/88fd287a-18b4-415b-92f4-34f21a812273" />|
 
-#### 4) 리뷰
+#### 4) 리뷰 및 리뷰 모아보기
 
   |PC|모바일|
   |:--:|:--:|
-  ||<img width="200" src="https://github.com/user-attachments/assets/989c3db9-3359-4a30-9add-7a4b862fe55a" />|
-
-  |PC|모바일|
-  |:--:|:--:|
-  ||<img width="200" src="https://github.com/user-attachments/assets/83eced3f-37c3-4549-9382-f2e9c4e0a6c1" />|
+  ||<img width="200" src="https://github.com/user-attachments/assets/d4a6be6e-fa46-4796-b8a7-954bab4ce63d" />|
 
 ### 4. 스튜디오 예약
 
