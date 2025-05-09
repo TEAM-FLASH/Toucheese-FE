@@ -170,7 +170,7 @@ export const MyPageHeaderContainerStyle = styled.div`
 
 export const MyPageSectionStyle = styled.section`
   ${bg100vw(variables.colors.gray100)}
-  margin: 10rem calc(-1 * ${variables.layoutPadding}) calc(-1 * (4rem + ${variables.headerHeight}));
+  margin: 10rem auto calc(-1 * (4rem + ${variables.headerHeight}));
   padding: 0 0 3rem;
   min-height: calc(100vh - 10rem);
 
