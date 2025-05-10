@@ -184,7 +184,10 @@ const StudioMenuDetail = () => {
 export default StudioMenuDetail;
 
 const menuDetailLayout = css`
+  margin-top: calc(-1 * ${variables.headerHeight});
+
   ${mqMin(breakPoints.pc)} {
+    margin-top: unset;
     .left-box {
       top: ${variables.headerHeight};
       margin-left: calc(${variables.layoutPadding}*-1);
