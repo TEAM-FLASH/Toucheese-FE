@@ -6,11 +6,13 @@ import Input from '@components/Input/Input';
 import { css } from '@emotion/react';
 import useToast from '@hooks/useToast';
 import { useTempStore } from '@store/useTempStore';
+import { useUserStore } from '@store/useUserStore';
 import { breakPoints, mqMin } from '@styles/BreakPoint';
 import { PCLayout, TypoTitleMdSb, TypoTitleXsM, TypoTitleXsSb } from '@styles/Common';
 import variables from '@styles/Variables';
 import { encryptUserData } from '@utils/encryptUserData';
-import { useLayoutEffect, useState } from 'react';
+import { createSafeUserObject } from '@utils/userDataHelper';
+import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -32,7 +34,6 @@ const ChangeProfile = () => {
 
   const [isActive, setIsActive] = useState(false);
   const [isDisabled, setIsDisabled] = useState(true);
-  const [isVerified, setIsVerified] = useState(false);
   const openToast = useToast();
   const navigate = useNavigate();
 
@@ -44,18 +45,23 @@ const ChangeProfile = () => {
     formState: { errors },
     getValues,
   } = useForm();
+  const setUser = useUserStore((state) => state.setUser);
+  const tempUserEmail = useTempStore((state) => state.tempUserEmail);
+  const tempUserPhone = useTempStore((state) => state.tempUserPhone);
+  const tempUsername = useTempStore((state) => state.tempUsername);
 
-  const { tempUsername, tempUserPhone } = useTempStore();
-
-  const formValues = getValues();
-  const formUserName = formValues.username;
-  const formUserPhone = formValues.phone;
+  useEffect(() => {
+    if (tempUsername && tempUserPhone) {
+      setIsActive(true);
+      setIsDisabled(false);
+      reset();
+    }
+  }, []);
 
   const handleEditProfile = async () => {
-    if (!isVerified && !tempUsername) {
-      openToast('본인인증을 먼저 진행해주세요.');
-      return;
-    }
+    const formValues = getValues();
+    const formUserName = formValues.username?.trim();
+    const formUserPhone = formValues.phone?.trim();
 
     const loadLocalStorageData = (key: string) => {
       try {
@@ -69,38 +75,27 @@ const ChangeProfile = () => {
     const userData = loadLocalStorageData('userState');
     const accessToken = userData.state.accessToken;
 
+    //TODO - tmepUserData == formUserData ? POST : error
     try {
       const response = await fetch(`${import.meta.env.VITE_TOUCHEESE_API}/user/mypage/changeph`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
         body: JSON.stringify({
-          newName: formUserName,
-          newPhone: formUserPhone,
+          ...(formUserName && { newName: formUserName }),
+          ...(formUserPhone && { newPhone: formUserPhone }),
         }),
       });
 
       if (!response.ok) throw new Error('업데이트 실패');
 
-      const { encryptedPhone, encryptedUsername } = encryptUserData({
-        phone: tempUserPhone || '',
-        username: tempUsername || '',
+      // 유저 객체 생성
+      const updatedUser = createSafeUserObject({
+        username: tempUsername,
+        phone: tempUserPhone,
+        email: tempUserEmail,
       });
-
-      // 기존 userState 데이터에서 필요한 정보 업데이트
-      const updatedState = {
-        ...userData.state,
-        encryptedPhone,
-        encryptedUsername,
-        newName: tempUsername,
-        newPhone: tempUserPhone,
-      };
-
-      const updatedData = {
-        ...userData,
-        state: updatedState,
-      };
-
-      localStorage.setItem('userState', JSON.stringify(updatedData));
+      // Zustand 상태 업데이트
+      setUser(updatedUser);
       navigate('/user/profile', {
         state: { showSuccessProfileModal: true },
       });
@@ -110,25 +105,32 @@ const ChangeProfile = () => {
     }
   };
 
-  useLayoutEffect(() => {
-    if (tempUsername && tempUserPhone) {
-      setIsActive(true);
-      setIsDisabled(false);
-      reset();
-    }
-  }, []);
-
   /** 간편 본인인증 실행 함수 */
   const handleAuth = () => {
+    // IMP 객체가 없는 경우를 확인
+    if (!window.IMP) {
+      console.error('본인인증이 실행되지 않았습니다.');
+      openToast('본인인증 로드에 실패했습니다. 잠시 후 다시 시도해주세요.');
+      return;
+    }
+
     const { IMP } = window;
     IMP.init(IMPCode);
     const setTempData = useTempStore.getState().setTempData;
     const formValues = getValues();
-
-    const encryptedData = encryptUserData({
-      username: formValues.username,
-      phone: formValues.phone,
-    });
+    const userStore = useUserStore.getState();
+    const encryptedData = encryptUserData(
+      {
+        username: formValues.username,
+        phone: formValues.phone,
+        email: formValues.email,
+      },
+      {
+        encryptedEmail: userStore.encryptedEmail,
+        encryptedPhone: userStore.encryptedPhone,
+        encryptedUsername: userStore.encryptedUsername,
+      },
+    );
 
     // 모바일 환경일 경우에만 localStorage에 저장
     if (/Mobi|Android/i.test(navigator.userAgent)) {
@@ -144,7 +146,6 @@ const ChangeProfile = () => {
       async (res: AuthVerificationType) => {
         try {
           if (res.success) {
-            setIsVerified(true);
             const formValues = getValues();
 
             if (!formValues.username || !formValues.phone) {
@@ -156,6 +157,7 @@ const ChangeProfile = () => {
             setTempData({
               username: formValues.username,
               phone: formValues.phone,
+              email: formValues.email,
             });
 
             // 인증 후 바로 화면 초기화
@@ -167,6 +169,7 @@ const ChangeProfile = () => {
               reset({
                 username: formValues.username,
                 phone: formValues.phone,
+                email: formValues.email,
               });
             }, 0); // 화면 리렌더링 후 reset을 비동기적으로 호출
           } else {

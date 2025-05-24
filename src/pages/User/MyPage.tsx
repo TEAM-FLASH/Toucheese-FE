@@ -8,17 +8,22 @@ import { loadUserFromStorage, useUserStore } from '@store/useUserStore';
 import { breakPoints, mqMin } from '@styles/BreakPoint';
 import { DividerStyle, TypoBodyMdR, TypoTitleMdSb, TypoTitleXsR } from '@styles/Common';
 import variables from '@styles/Variables';
-import { useEffect } from 'react';
+import { sortReservations } from '@utils/sortReservations';
+import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { useMediaQuery } from 'react-responsive';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { IResvRes } from 'types/types';
 
 const MyPage = () => {
   const { username, email } = useUserStore();
   const { pathname } = useLocation();
+  const [filteredData, setFilteredData] = useState<IResvRes | null>(null);
+  const isPc = useMediaQuery({ minWidth: breakPoints.pc });
 
   // 암호화 된 유저 정보 복호화
   useEffect(() => {
@@ -43,15 +48,27 @@ const MyPage = () => {
   }, [error]);
 
   // 현재 날짜와 예약 날짜 비교 함수
-  const filterReservations = data?.filter((item) => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+  const filterReservations = (data: IResvRes | undefined) => {
+    if (data) {
+      return data.filter((item) => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
 
-    const reservationDate = new Date(item.date);
-    reservationDate.setHours(0, 0, 0, 0);
+        const reservationDate = new Date(item.date);
+        reservationDate.setHours(0, 0, 0, 0);
 
-    return reservationDate >= today;
-  });
+        return reservationDate.getTime() >= today.getTime();
+      });
+    }
+
+    return null;
+  };
+
+  useEffect(() => {
+    if (data) {
+      setFilteredData(filterReservations(data));
+    }
+  }, [data]);
 
   return (
     <>
@@ -75,22 +92,15 @@ const MyPage = () => {
         <Swiper
           className="mypageSwiper"
           modules={[Pagination]}
-          centeredSlides={true}
-          spaceBetween={10}
-          slidesPerView={1.08}
-          breakpoints={{
-            1024: {
-              slidesPerView: filterReservations?.length ? 3 : 1,
-              slidesPerGroup: 3,
-              centeredSlides: false,
-              spaceBetween: 16,
-            },
-          }}
+          centeredSlides={!isPc && true}
+          spaceBetween={isPc ? 16 : 8}
+          slidesPerGroup={isPc ? (filteredData && filteredData.length ? 3 : 1) : 1}
+          slidesPerView={isPc ? (filteredData && filteredData.length ? 3 : 1) : 1.08}
           pagination={{
             clickable: true,
           }}
         >
-          {(filterReservations?.length ? filterReservations : [null]).map((item, i) => (
+          {(filteredData?.length ? sortReservations(filteredData) : [null]).map((item, i) => (
             <SwiperSlide key={`${item ? item.reservationId : i}`}>
               <ReservationCard isMyPage={pathname.includes('mypage')} data={item} />
             </SwiperSlide>
@@ -116,12 +126,14 @@ const MyPage = () => {
 export default MyPage;
 
 const CustomDividerStyle = css`
+  padding-bottom: 2.6rem;
+
   &::after {
     width: 100%;
-    max-width: calc(100vw + (${variables.layoutPadding} * 2));
-    ${mqMin(breakPoints.pc)} {
-      margin-top: 5rem;
-    }
+  }
+
+  ${mqMin(breakPoints.pc)} {
+    padding-bottom: 4rem;
   }
 `;
 
@@ -132,8 +144,7 @@ const MyInfoStyle = css`
   padding: 1.6rem 0;
   align-items: flex-start;
   ${mqMin(breakPoints.pc)} {
-    padding: 4rem 2.4rem;
-    margin-top: 0;
+    padding: 4rem 0;
   }
 
   & a {
@@ -168,9 +179,6 @@ const MyPageMenuStyle = css`
       display: flex;
       gap: 1.6rem;
       align-items: center;
-      ${mqMin(breakPoints.pc)} {
-        padding: 1.6rem 2.4rem;
-      }
 
       &::after {
         content: '';
@@ -208,49 +216,103 @@ const MyPageMenuStyle = css`
   }
 `;
 
+// const ReservationCardSwiperStyle = (data: boolean) => css`
+//   box-shadow: inset 0 0 10px red;
+//   width: calc(100% + calc(${variables.layoutPadding} * 2));
+//   margin-left: calc(-1 * ${variables.layoutPadding});
+
+//   ${mqMin(breakPoints.pc)} {
+//     padding: 0 ${variables.layoutPadding};
+//   }
+
+//   .mypageSwiper {
+//     padding-bottom: 1.6rem;
+
+//     ${mqMin(breakPoints.pc)} {
+//       padding-bottom: 4rem;
+//     }
+//   }
+
+//   .mypageSwiper .swiper-wrapper {
+//     ${mqMin(breakPoints.pc)} {
+//       box-sizing: border-box;
+//     }
+
+//     ${data &&
+//     ` padding-bottom: 1.6rem;
+//     ${mqMin(breakPoints.pc)} {
+//       padding-bottom: 2.4rem;
+//     };`}
+//   }
+
+//   .mypageSwiper .swiper-pagination {
+//     position: absolute;
+//     z-index: 10;
+//     width: 8rem;
+//     bottom: 0;
+//     left: 50%;
+//     transform: translateX(-50%);
+//     display: flex;
+//     justify-content: center;
+//     background-color: ${variables.colors.gray400};
+//   }
+
+//   .mypageSwiper .swiper-pagination-bullet {
+//     width: 100%;
+//     height: 0.2rem;
+//     border-radius: 0;
+//     margin: 0 !important;
+//     cursor: pointer;
+//   }
+
+//   .mypageSwiper .swiper-pagination-bullet-active {
+//     background-color: ${variables.colors.primary600};
+//   }
+// `;
+
 const ReservationCardSwiperStyle = (data: boolean) => css`
   width: calc(100% + calc(${variables.layoutPadding} * 2));
   margin-left: calc(-1 * ${variables.layoutPadding});
 
-  ${mqMin(breakPoints.pc)} {
-    margin-left: 0;
-    padding-left: 2.4rem;
-    padding-right: 2.4rem;
-  }
+  .mypageSwiper {
+    position: relative;
 
-  .mypageSwiper .swiper-wrapper {
-    ${mqMin(breakPoints.pc)} {
-      box-sizing: border-box;
+    .swiper-wrapper {
+      ${data && ` padding-bottom: 1.6rem;`}
     }
 
-    ${data &&
-    ` padding-bottom: 1.6rem;   
-    ${mqMin(breakPoints.pc)} {
-      padding-bottom: 2.4rem;
-    };`}
+    .swiper-pagination {
+      position: absolute;
+      z-index: 10;
+      width: 8rem;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      justify-content: center;
+      background-color: ${variables.colors.gray400};
+    }
+
+    .swiper-pagination-bullet {
+      width: 100%;
+      height: 0.2rem;
+      border-radius: 0;
+      margin: 0 !important;
+      cursor: pointer;
+    }
+
+    .swiper-pagination-bullet-active {
+      background-color: ${variables.colors.primary600};
+    }
   }
 
-  .mypageSwiper .swiper-pagination {
-    position: absolute;
-    z-index: 10;
-    width: 8rem;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    justify-content: center;
-    background-color: ${variables.colors.gray400};
-  }
+  ${mqMin(breakPoints.pc)} {
+    padding: 0 ${variables.layoutPadding};
 
-  .mypageSwiper .swiper-pagination-bullet {
-    width: 100%;
-    height: 0.2rem;
-    border-radius: 0;
-    margin: 0 !important;
-    cursor: pointer;
-  }
-
-  .mypageSwiper .swiper-pagination-bullet-active {
-    background-color: ${variables.colors.primary600};
+    .mypageSwiper {
+      .swiper-wrapper {
+        ${data && ` padding-bottom: 2.4rem;`}
+      }
+    }
   }
 `;

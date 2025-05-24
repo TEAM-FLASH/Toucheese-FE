@@ -10,7 +10,7 @@
 
 ```
 id : toucheese@gmail.com
-pw: 1q2w3e4r1!
+pw : 1q2w3e4r1!
 ```
 
 ---
@@ -61,20 +61,25 @@ pw: 1q2w3e4r1!
 - `GitHub Issues`를 통해 개발 이슈와 기능 단위의 작업 현황을 관리
 
   - **How?**
+
     - 스프린트별 마일스톤을 생성하고, 이슈 번호로 branch를 생성해 개발 진행, 스토리 별 명확한 이슈 템플릿과 라벨링으로 작업 우선순위 설정 및 가시성 확보
     - 스토리별 명확한 이슈 템플릿과 라벨링으로 작업 우선순위 설정 및 가시성 확보
+
   - **Why?**
-    해당 이슈가 어떤 스프린트에 진행된 작업인지 명시, 각 이슈별 작업이 어떻게 진행되고 있는지 파악하기 용이
-  - **Result?**
-    작업 진행 상황을 빠르게 팔로우하고, 팀원별 작업 내용을 세부적으로 파악할 수 있었음
+
+    - 해당 이슈가 어떤 스프린트에 진행된 작업인지 명시, 각 이슈별 작업이 어떻게 진행되고 있는지 파악하기 용이
+
+  - **Result?** - 작업 진행 상황을 빠르게 팔로우하고, 팀원별 작업 내용을 세부적으로 파악할 수 있었음
+    <br />
 
 - `GitHub Pull Requests`를 활용하여 모든 코드에 대해 동료 간 상호 코드 리뷰 진행
+
   - **How?**
-    `Pull Request` 템플릿을 생성하여 작업 내용에 대해 상세한 설명 작성, 팀원 모두 `Pull Request`에 대한 리뷰를 승인해야 dev 브랜치로 병합할 수 있도록 branch 조건 설정
+    - `Pull Request` 템플릿을 생성하여 작업 내용에 대해 상세한 설명 작성, 팀원 모두 `Pull Request`에 대한 리뷰를 승인해야 dev 브랜치로 병합할 수 있도록 branch 조건 설정
   - **Why?**
-    코드 리뷰를 통해 불필요한 코드나 성능 개선이 필요한 부분을 발견하기 용이, 코드의 일관성이나 컨벤션 유지
+    - 코드 리뷰를 통해 불필요한 코드나 성능 개선이 필요한 부분을 발견하기 용이, 코드의 일관성이나 컨벤션 유지
   - **Result?**
-    본인 담당 작업이 아니더라도 전체적으로 내용에 대해 이해하고, 새롭게 적용된 기술을 파악할 수 있었음, 좀 더 나은 코드에 대해 함께 고민할 수 있었음
+    - 본인 담당 작업이 아니더라도 전체적으로 내용에 대해 이해하고, 새롭게 적용된 기술을 파악할 수 있었음, 좀 더 나은 코드에 대해 함께 고민할 수 있었음
 
 ### 4. AWS 배포 환경 구축 및 관리
 
@@ -103,22 +108,176 @@ pw: 1q2w3e4r1!
 
 ## 역할분담
 
-|          | View                                                                                                              | Components                                                                                                                         |
-| :------: | ----------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| **지민** | 스튜디오 검색<br />스튜디오 예약 - 결제<br />마이페이지 - 예약 상세                                               | 카카오 지도 및 공유<br />이미지 스와이퍼<br />모바일 헤더                                                                          |
-| **우중** | 스튜디오 상세 - 리뷰<br />스튜디오 상세 - 이미지 모아보기<br />이메일 / 카카오 로그인<br />마이페이지 - 리뷰 작성 | 리뷰 컴포넌트<br />가격 필터링 컴포넌트<br />매장 옵션 컴포넌트<br />별점 입력 컴포넌트<br />인풋 컴포넌트                         |
-| **경민** | 스튜디오 상세 - 메뉴<br />스튜디오 상세 - 메뉴 상세<br />마이페이지                                               | 바텀시트<br />스튜디오 예약 하단 고정 버튼<br />예약 카드                                                                          |
-| **소정** | 스튜디오 상세 - 포트폴리오<br />스튜디오 예약 - 시간 조회 및 선택<br />마이페이지 - 예약 취소                     | masonry 레이아웃<br />모달<br />딤 모달 내 스와이퍼<br />캘린더 및 시간 선택<br />로딩 컴포넌트<br />에러 컴포넌트                 |
-| **희선** | 스튜디오 상세 - 스튜디오 정보 메인<br />이메일 회원가입<br />간편 본인인증<br />유저 정보 및 계정 정보 변경       | 버튼 컴포넌트<br />필터 컴포넌트<br />정렬 및 지역 필터링 컴포넌트                                                                 |
-| **진욱** | 홈<br />마이페이지 - 예약 내역                                                                                    | 스튜디오 목록<br />토스트 메시지<br />PC 헤더<br />북마크<br />스튜디오 상세 / 예약 상세 탭<br />스튜디오 조회 / 검색 결과 없음 UI |
+|                                                                                                                                                           | View                                                                                                              | Components                                                                                                                         |
+| :-------------------------------------------------------------------------------------------------------------------------------------------------------: | ----------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| [**지민**](https://github.com/TEAM-FLASH/Toucheese-FE/wiki/%EC%A7%80%EB%AF%BC-%E2%80%90-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EC%9D%B4%EB%AF%B8%EC%A7%80) | 스튜디오 검색<br />스튜디오 예약 - 결제<br />마이페이지 - 예약 상세                                               | 카카오 지도 및 공유<br />이미지 스와이퍼<br />모바일 헤더                                                                          |
+| [**우중**](https://github.com/TEAM-FLASH/Toucheese-FE/wiki/%EC%9A%B0%EC%A4%91-%E2%80%90-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EC%9D%B4%EB%AF%B8%EC%A7%80) | 스튜디오 상세 - 리뷰<br />스튜디오 상세 - 이미지 모아보기<br />이메일 / 카카오 로그인<br />마이페이지 - 리뷰 작성 | 리뷰 컴포넌트<br />가격 필터링 컴포넌트<br />매장 옵션 컴포넌트<br />별점 입력 컴포넌트<br />인풋 컴포넌트                         |
+| [**경민**](https://github.com/TEAM-FLASH/Toucheese-FE/wiki/%EA%B2%BD%EB%AF%BC-%E2%80%90-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EC%9D%B4%EB%AF%B8%EC%A7%80) | 스튜디오 상세 - 메뉴<br />스튜디오 상세 - 메뉴 상세<br />마이페이지                                               | 바텀시트<br />스튜디오 예약 하단 고정 버튼<br />예약 카드                                                                          |
+| [**소정**](https://github.com/TEAM-FLASH/Toucheese-FE/wiki/%EC%86%8C%EC%A0%95-%E2%80%90-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EC%9D%B4%EB%AF%B8%EC%A7%80) | 스튜디오 상세 - 포트폴리오<br />스튜디오 예약 - 시간 조회 및 선택<br />마이페이지 - 예약 취소                     | masonry 레이아웃<br />모달<br />딤 모달 내 스와이퍼<br />캘린더 및 시간 선택<br />로딩 컴포넌트<br />에러 컴포넌트                 |
+| [**희선**](https://github.com/TEAM-FLASH/Toucheese-FE/wiki/%ED%9D%AC%EC%84%A0-%E2%80%90-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EC%9D%B4%EB%AF%B8%EC%A7%80) | 스튜디오 상세 - 스튜디오 정보 메인<br />이메일 회원가입<br />간편 본인인증<br />유저 정보 및 계정 정보 변경       | 버튼 컴포넌트<br />필터 컴포넌트<br />정렬 및 지역 필터링 컴포넌트                                                                 |
+| [**진욱**](https://github.com/TEAM-FLASH/Toucheese-FE/wiki/%EC%A7%84%EC%9A%B1-%E2%80%90-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EC%9D%B4%EB%AF%B8%EC%A7%80) | 홈<br />마이페이지 - 예약 내역                                                                                    | 스튜디오 목록<br />토스트 메시지<br />PC 헤더<br />북마크<br />스튜디오 상세 / 예약 상세 탭<br />스튜디오 조회 / 검색 결과 없음 UI |
 
 <br />
 
 ---
 
-## 컴포넌트 및 화면구성
+## 화면 구성
 
-(캡처해서 넣기)
+### 1. 홈
+
+#### 1) 홈
+
+| PC  |                                                  모바일                                                   |
+| :-: | :-------------------------------------------------------------------------------------------------------: |
+|<img width="500" alt="image" src="https://github.com/user-attachments/assets/b998a6e2-17a5-40fa-8669-43cf16d11f23" />|<img width="200" src="https://github.com/user-attachments/assets/3608fbca-2bf0-4294-a3b6-13f5f4fd1a9e" /> |
+
+#### 2) 지역/날짜 필터링
+
+<table>
+  <tr>
+    <th align="center" colspan="2">PC</th>
+    <th align="center">모바일</th>
+  </tr>
+  <tr>
+    <td align="center">지역 선택</td>
+    <td align="center">날짜 선택</td>
+    <td align="center"rowspan="2"><img width="160" src="https://github.com/user-attachments/assets/9ebf5f83-0b19-45fc-8cb8-befde20a39c0" /></td>
+  </tr>
+  <tr>
+    <td align="center"><img width="400" alt="image" src="https://github.com/user-attachments/assets/f9b5a976-406e-4e98-92e4-5060b914a002" /></td>
+    <td align="center"><img width="400" alt="image" src="https://github.com/user-attachments/assets/29f71b82-441d-4762-9c23-025fc271b10a" /></td>
+  </tr>
+</table>
+
+#### 3) 정렬 및 가격/매장옵션 필터링
+
+| PC  |                                                  모바일                                                   |
+| :-: | :-------------------------------------------------------------------------------------------------------: |
+|<img width="500" alt="image" src="https://github.com/user-attachments/assets/a83e63f9-30e1-4da0-a284-70f7be7a46ca" />| <img width="200" src="https://github.com/user-attachments/assets/99efcf7d-73c2-43e0-94b4-e513dc7df9ab" /> |
+
+
+### 2. 스튜디오 검색
+
+| PC  |                                                  모바일                                                   |
+| :-: | :-------------------------------------------------------------------------------------------------------: |
+|<img width="500" alt="image" src="https://github.com/user-attachments/assets/9d09f748-cf58-49e6-a4e9-a1cb1200378e" />| <img width="200" src="https://github.com/user-attachments/assets/d2d84e1b-6229-4bc1-ae8a-a0405c9f57bf" /> |
+
+### 3. 스튜디오 상세
+
+#### 1) 홈
+
+| PC  |                                                  모바일                                                   |
+| :-: | :-------------------------------------------------------------------------------------------------------: |
+|<img width="500" alt="image" src="https://github.com/user-attachments/assets/dc13657c-f287-4328-b93b-baaf39a03387" />| <img width="200" src="https://github.com/user-attachments/assets/a2b4ecaa-b910-4986-8948-03cce0399655" /> |
+
+#### 2) 메뉴 및 메뉴 상세
+
+| PC  |                                                  모바일                                                   |
+| :-: | :-------------------------------------------------------------------------------------------------------: |
+|<img width="500" alt="image" src="https://github.com/user-attachments/assets/ad491350-7616-4d15-aa29-36941d0958d0" />| <img width="200" src="https://github.com/user-attachments/assets/c34c66fb-10d8-4700-a0e1-80326d63139a" /> |
+
+#### 3) 포트폴리오
+
+| PC  |                                                  모바일                                                   |
+| :-: | :-------------------------------------------------------------------------------------------------------: |
+|<img width="500" alt="image" src="https://github.com/user-attachments/assets/a0149d59-e4bf-4557-8b52-66754879284c" />| <img width="200" src="https://github.com/user-attachments/assets/88fd287a-18b4-415b-92f4-34f21a812273" /> |
+
+#### 4) 리뷰 및 리뷰 모아보기
+
+| PC  |                                                  모바일                                                   |
+| :-: | :-------------------------------------------------------------------------------------------------------: |
+|<img width="500" alt="image" src="https://github.com/user-attachments/assets/fccf7935-bbe6-4dcd-adbe-c3965127fe3a" />| <img width="200" src="https://github.com/user-attachments/assets/d4a6be6e-fa46-4796-b8a7-954bab4ce63d" /> |
+
+### 4. 스튜디오 예약
+
+#### 1) 날짜 및 시간 선택
+
+| PC  |                                                  모바일                                                   |
+| :-: | :-------------------------------------------------------------------------------------------------------: |
+|<img width="500" alt="image" src="https://github.com/user-attachments/assets/61e54482-e514-4782-b80c-766774f48d35" />| <img width="200" src="https://github.com/user-attachments/assets/9fccd30d-1d54-438a-b783-029477a70033" /> |
+
+#### 2) 결제
+
+| PC  |           모바일           |
+| :-: | :------------------------: |
+|<img width="500" alt="image" src="https://github.com/user-attachments/assets/28688ceb-954a-4f4b-b29c-6cfdadfd0d0b" />| <img width="200" src="" /> |
+
+#### 3) 예약 상세
+
+| PC  |                                                  모바일                                                   |
+| :-: | :-------------------------------------------------------------------------------------------------------: |
+|<img width="500" alt="image" src="https://github.com/user-attachments/assets/66540d9c-0fe9-47ab-bc26-4a02e9f5e5d8" />| <img width="200" src="https://github.com/user-attachments/assets/b81cc580-a545-4f8f-8e46-ad1e052d9073" /> |
+
+#### 4) 예약 취소
+
+| PC  |                                                  모바일                                                   |
+| :-: | :-------------------------------------------------------------------------------------------------------: |
+|<img width="500" alt="image" src="https://github.com/user-attachments/assets/b3d2de98-9a04-4515-ad1d-f9dc1bf0d705" />| <img width="200" src="https://github.com/user-attachments/assets/cbed39ac-7bb4-44bb-beaf-5a562b0a9315" /> |
+
+### 5. 로그인 및 회원가입
+
+#### 1) 이메일 회원가입
+
+| PC  |                                                  모바일                                                   |
+| :-: | :-------------------------------------------------------------------------------------------------------: |
+|<img width="500" alt="image" src="" />| <img width="200" src="https://github.com/user-attachments/assets/b81cc580-a545-4f8f-8e46-ad1e052d9073" /> |
+
+#### 2) 이메일 로그인
+
+| PC  |                                                  모바일                                                   |
+| :-: | :-------------------------------------------------------------------------------------------------------: |
+|<img width="500" alt="image" src="https://github.com/user-attachments/assets/0ca3ebc4-5e4c-431a-9b49-7679ec25345d" />| <img width="200" src="https://github.com/user-attachments/assets/afb8805a-1a7d-45e9-92b8-cd0bed75f327" /> |
+
+#### 3) 카카오 로그인
+
+| PC  |           모바일           |
+| :-: | :------------------------: |
+|<img width="500" alt="image" src="" />| <img width="200" src="https://github.com/user-attachments/assets/6a3e7fc0-a983-4925-b3d4-69e06c6d36be" /> |
+
+#### 4) 구글 로그인
+
+| PC  |           모바일           |
+| :-: | :------------------------: |
+|<img width="500" alt="image" src="" />| <img width="200" src="https://github.com/user-attachments/assets/b3297812-23a8-4697-8fc1-1830c491c4c2" /> |
+
+### 6. 마이페이지
+
+#### 1) 마이페이지
+
+| PC  |                                                  모바일                                                   |
+| :-: | :-------------------------------------------------------------------------------------------------------: |
+|<img width="500" alt="image" src="https://github.com/user-attachments/assets/2c08bb5e-4e96-4c5e-8f11-db353755350d" />| <img width="200" src="https://github.com/user-attachments/assets/8002d394-8a24-4854-bd06-9aa6d8bd266f" /> |
+
+#### 2) 예약 내역
+
+| PC  |                                                  모바일                                                   |
+| :-: | :-------------------------------------------------------------------------------------------------------: |
+|<img width="500" alt="image" src="https://github.com/user-attachments/assets/a9f51cb1-26e3-47d8-afd8-704458a16f8d" />| <img width="200" src="https://github.com/user-attachments/assets/6b0f19ec-4627-4c6f-ab06-9d27c50ae03e" /> |
+
+#### 3) 내 리뷰
+
+| PC  |                                                  모바일                                                   |
+| :-: | :-------------------------------------------------------------------------------------------------------: |
+|<img width="500" alt="image" src="https://github.com/user-attachments/assets/8c7abcba-df79-414f-90d8-a8c73e41eb23" />| <img width="200" src="https://github.com/user-attachments/assets/a2da6a67-3e70-4996-85e9-c6a4193ed406" /> |
+
+#### 4) 리뷰 작성
+
+| PC  |           모바일           |
+| :-: | :------------------------: |
+|<img width="500" alt="image" src="" />| <img width="200" src="" /> |
+
+#### 5) 찜한 사진관
+
+| PC  |                                                  모바일                                                   |
+| :-: | :-------------------------------------------------------------------------------------------------------: |
+|<img width="500" alt="image" src="https://github.com/user-attachments/assets/a85fdc8e-367d-4679-a5e7-0d1d524cea04" />| <img width="200" src="https://github.com/user-attachments/assets/b580b1fd-b181-4186-90ce-449d51f95aa9" /> |
+
+#### 6) 내 정보 관리
+
+| PC  |           모바일           |
+| :-: | :------------------------: |
+|<img width="500" alt="image" src="" />| <img width="200" src="" /> |
+
 <br />
 
 ---

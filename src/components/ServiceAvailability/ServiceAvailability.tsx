@@ -154,8 +154,8 @@ const ServiceAvailability = ({ isPc = false }: ServiceAvailabilityProps) => {
         />
         <Button
           icon={<img src="img/icon-powder.svg" alt="파우더룸" />}
-          iconSizeWidth="1.4rem"
-          iconSizeHeight="1.4rem"
+          iconSizeWidth="1.6rem"
+          iconSizeHeight="1.6rem"
           iconPosition="left"
           size="medium"
           text={`파우더룸`}

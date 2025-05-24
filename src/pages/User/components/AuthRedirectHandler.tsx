@@ -11,17 +11,20 @@ const AuthRedirectHandler = () => {
     const encryptedUser = stored ? JSON.parse(stored) : null;
 
     if (encryptedUser) {
-      const { phone, username } = decryptUserData({
-        encryptedPhone: encryptedUser.encryptedPhone ?? null,
-        encryptedUsername: encryptedUser.encryptedUsername ?? null,
-        encryptedEmail: encryptedUser.encryptedEmail ?? null,
+      const { phone, username, email } = decryptUserData({
+        encryptedPhone: encryptedUser.encryptedPhone || null,
+        encryptedUsername: encryptedUser.encryptedUsername || null,
+        encryptedEmail: encryptedUser.encryptedEmail || null,
       });
 
       const setTempData = useTempStore.getState().setTempData;
+
       setTempData({
-        username: username ?? '',
-        phone: phone ?? '',
+        username: username ?? null,
+        phone: phone ?? null,
+        email: email ?? null,
       });
+
       localStorage.removeItem('temp-user-data');
       navigate('/user/profile/edit');
     } else {

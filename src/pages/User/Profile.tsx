@@ -16,8 +16,8 @@ import { decryptUserData } from '@utils/encryptUserData';
 const Profile = () => {
   const navigate = useNavigate();
   const logout = useUserStore((state) => state.resetUser);
-  const { registration } = useUserStore();
-  const modal = useModal(5);
+  const { registration, encryptedEmail, encryptedPhone, encryptedUsername } = useUserStore();
+  const passwordModal = useModal(5);
   const profileModal = useModal(6);
   const location = useLocation();
 
@@ -28,25 +28,42 @@ const Profile = () => {
     username: '',
   });
 
-  useEffect(() => {
+  // 유저 정보를 복호화하는 함수
+  const decryptUserInfo = () => {
     try {
-      const stored = localStorage.getItem('userState');
-      if (!stored) return;
+      // Zustand store에서 직접 암호화된 값을 가져옴
+      const currentState = useUserStore.getState();
+      const { encryptedEmail, encryptedPhone, encryptedUsername } = currentState;
 
-      const parsed = JSON.parse(stored);
-      const { encryptedEmail, encryptedPhone, encryptedUsername } = parsed.state;
+      if (encryptedEmail || encryptedPhone || encryptedUsername) {
+        const decrypted = decryptUserData({
+          encryptedEmail,
+          encryptedPhone,
+          encryptedUsername,
+        });
 
-      const decrypted = decryptUserData({
-        encryptedEmail,
-        encryptedPhone,
-        encryptedUsername,
-      });
-
-      setDecryptedUser(decrypted);
+        setDecryptedUser(decrypted);
+      }
     } catch (error) {
       console.error('복호화 중 오류 발생:', error);
     }
-  }, []);
+  };
+
+  // 초기 마운트, location, encryptedEmail, encryptedPhone, encryptedUsername 변경 시 복호화 실행
+  useEffect(() => {
+    decryptUserInfo();
+  }, [location.key, encryptedEmail, encryptedPhone, encryptedUsername]);
+
+  // 모달 상태에 따른 처리
+  useEffect(() => {
+    if (location.state?.showSuccessModal) {
+      passwordModal.open();
+    } else if (location.state?.showSuccessProfileModal) {
+      profileModal.open();
+      // 프로필 변경 성공 시 데이터 다시 복호화
+      decryptUserInfo();
+    }
+  }, [location.state]);
 
   const handleProfileEditPage = () => {
     navigate('/user/profile/edit');
@@ -61,22 +78,13 @@ const Profile = () => {
     navigate('/');
   };
 
-  useEffect(() => {
-    if (location.state?.showSuccessModal) {
-      modal.open();
-    } else if (location.state?.showSuccessProfileModal) {
-      profileModal.open();
-    }
-  }, [location.state]);
-
   return (
     <>
       {/* 비밀번호 변경 모달 */}
       <PasswordChangeSuccessModal />
       {/* 유저 정보 변경 모달 */}
       <UserProfileChangeSuccessModal />
-      {/* queryparmas 삭제 */}
-      {/* <RemoveQueryParams /> */}
+
       <div css={profileWrapper}>
         <div
           css={css`

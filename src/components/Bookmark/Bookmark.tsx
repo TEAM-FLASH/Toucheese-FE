@@ -41,39 +41,14 @@ const Bookmark = ({
   const isPc = useMediaQuery({ minWidth: breakPoints.pc });
 
   // 북마크 설정/해제 api 호출
-  const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    e.preventDefault();
-
+  const handleBookmarkEvent = async () => {
     if (accessToken) {
-      await handleBookmark(accessToken, id);
-      setBookmark((state) => ({
-        ...state,
-        isActive: !state.isActive,
-        count: state.isActive ? state.count - 1 : state.count + 1,
-      }));
+      const status = await handleBookmark(accessToken, id);
 
-      if (handleUnbookmark) {
-        handleUnbookmark();
-      }
-    }
-    // 로그인 되지 않은 상태면 로그인 페이지로 이동
-    else {
-      openToast('좋아요를 누르시려면 로그인이 필요합니다!');
-      navigate('/user/auth');
-    }
-  };
-
-  const handleKeyDown = async (e: KeyboardEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-
-    if (!isPc) return;
-
-    if (e.code === 'Enter') {
-      e.preventDefault();
-
-      if (accessToken) {
-        await handleBookmark(accessToken, id);
+      if (status === 403) {
+        openToast('로그인 세션이 만료되었습니다. 다시 로그인 해주세요!');
+        navigate('/user/auth');
+      } else {
         setBookmark((state) => ({
           ...state,
           isActive: !state.isActive,
@@ -84,11 +59,30 @@ const Bookmark = ({
           handleUnbookmark();
         }
       }
-      // 로그인 되지 않은 상태면 로그인 페이지로 이동
-      else {
-        openToast('좋아요를 누르시려면 로그인이 필요합니다!');
-        navigate('/user/auth');
-      }
+    }
+    // 로그인 되지 않은 상태면 로그인 페이지로 이동
+    else {
+      openToast('좋아요를 누르시려면 로그인이 필요합니다!');
+      navigate('/user/auth');
+    }
+  };
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    handleBookmarkEvent();
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+
+    if (!isPc) return;
+
+    if (e.code === 'Enter') {
+      e.preventDefault();
+
+      handleBookmarkEvent();
     }
   };
 

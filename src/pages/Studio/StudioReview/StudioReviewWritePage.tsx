@@ -22,25 +22,32 @@ const StudioReviewWritePage = () => {
 
   // 로컬 스토리지에서 액세스 토큰 가져오기
   useEffect(() => {
-    try {
-      // 직접 토큰을 가져오는 방식으로 변경
+    const getToken = () => {
       const token = localStorage.getItem('accessToken');
       if (token) {
         setAccessToken(token);
-      } else {
-        // userState에서 토큰 찾기 시도
-        const userStateData = localStorage.getItem('userState');
-        if (userStateData) {
+        return;
+      }
+
+      const userStateData = localStorage.getItem('userState');
+      if (userStateData) {
+        try {
           const parsedData = JSON.parse(userStateData);
-          if (parsedData.state && parsedData.state.accessToken) {
+          if (parsedData.state?.accessToken) {
             setAccessToken(parsedData.state.accessToken);
+            return;
           }
+        } catch (error) {
+          console.error('userState 파싱 오류:', error);
         }
       }
-    } catch (error) {
-      console.error('토큰 가져오기 오류:', error);
-    }
-  }, []);
+
+      // 토큰이 없는 경우 로그인 페이지로 리다이렉트
+      navigate('/user/Auth');
+    };
+
+    getToken();
+  }, [navigate]);
 
   // 별점 변경
   const handleRatingChange = (newRating: number) => {
@@ -55,29 +62,29 @@ const StudioReviewWritePage = () => {
   // 리뷰 제출 핸들러
   const handleSubmit = async () => {
     if (rating === 0) {
-      console.warn('별점을 선택해주세요.');
+      alert('별점을 선택해주세요.');
       return;
     }
 
     if (textArea.trim() === '') {
-      console.warn('리뷰 내용을 입력해주세요.');
+      alert('리뷰 내용을 입력해주세요.');
       return;
     }
 
     if (!accessToken) {
-      console.error('인증 토큰이 없습니다. 로그인이 필요합니다.');
+      alert('로그인이 필요합니다.');
+      navigate('/user/Auth');
       return;
     }
 
     if (!_id) {
-      console.error('스튜디오 ID가 없습니다.');
+      alert('스튜디오 정보를 찾을 수 없습니다.');
       return;
     }
 
     setIsSubmitting(true);
 
     try {
-      // FormData 객체 생성
       const formData = new FormData();
 
       // 이미지 파일 추가
@@ -100,7 +107,6 @@ const StudioReviewWritePage = () => {
       formData.append('menuId', '0');
       formData.append('additionalOptionIds', '[]');
 
-      // API 요청
       const response = await fetch(`${import.meta.env.VITE_TOUCHEESE_API}/review/file`, {
         method: 'POST',
         headers: {
@@ -109,17 +115,23 @@ const StudioReviewWritePage = () => {
         body: formData,
       });
 
+      if (response.status === 403) {
+        alert('로그인이 만료되었습니다. 다시 로그인해주세요.');
+        navigate('/user/Auth');
+        return;
+      }
+
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error(`HTTP 오류! 상태: ${response.status}, 응답: ${errorText}`);
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
-      console.log('리뷰 등록 성공:', data);
+      console.log(data);
+      alert('리뷰가 등록되었습니다.');
       navigate(`/studio/${_id}/review`);
     } catch (error) {
       console.error('리뷰 제출 오류:', error);
+      alert('리뷰 등록에 실패했습니다. 다시 시도해주세요.');
     } finally {
       setIsSubmitting(false);
     }

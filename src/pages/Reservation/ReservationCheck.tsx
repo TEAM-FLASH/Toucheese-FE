@@ -14,13 +14,13 @@ import {
   TypoTitleXsSb,
 } from '@styles/Common';
 import variables from '@styles/Variables';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Payment from './components/Payment';
 import useReservationStore from '@store/useReservationStore';
 import { useSelectTimeStore } from '@store/useSelectTimeStore';
 import { useSelectDateStore } from '@store/useSelectDateStore';
-import { useUserStore } from '@store/useUserStore';
+import { useUserStore, loadUserFromStorage } from '@store/useUserStore';
 import ReservationInfo from './components/ReservationInfo';
 import { breakPoints, mqMax, mqMin } from '@styles/BreakPoint';
 import { pcFlexLayout } from './ReservationSchedule';
@@ -34,6 +34,11 @@ interface FormValues {
 }
 
 const ReservationCheck = () => {
+  // 암호화 된 유저 정보 복호화
+  useEffect(() => {
+    loadUserFromStorage();
+  }, []);
+
   const navigate = useNavigate();
   const [paymentMethod, setPaymentMethod] = useState('카카오페이');
   const [isAgreed, setIsAgreed] = useState(false);

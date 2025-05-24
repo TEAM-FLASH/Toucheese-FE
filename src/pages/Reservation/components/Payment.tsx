@@ -1,9 +1,10 @@
 /** @jsxImportSource @emotion/react */
-
 import ReservationFooter from '@components/ReservationFooter/ReservationFooter';
-import { useUserStore } from '@store/useUserStore';
+import { defaultUserState, useUserStore } from '@store/useUserStore';
+import { getLocalStorageItem } from '@utils/getLocalStorageItem';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { IUser } from 'types/types';
 
 declare global {
   interface Window {
@@ -63,13 +64,11 @@ const Payment = ({
   time,
 }: PaymentProps) => {
   const { _id } = useParams<{ _id: string }>();
-
   const baseUrl = import.meta.env.VITE_BASE_URL;
   const returnUrl = `${baseUrl}/studio/${_id}/reservation/complete`;
-
   const optionIds = options.map((option) => option.option_id);
-
   const { username, phone, email } = useUserStore();
+  const { accessToken } = getLocalStorageItem<IUser>('userState', defaultUserState);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.IMP) {
@@ -142,6 +141,7 @@ const Payment = ({
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
+              Authorization: `Bearer ${accessToken}`,
             },
             body: JSON.stringify({
               imp_uid: rsp.imp_uid, // 포트원 결제 고유 ID
@@ -183,8 +183,8 @@ const Payment = ({
   const requestKakaoPay = () => {
     window.IMP.request_pay(
       {
-        pg: 'kakaopay',
         channelKey: import.meta.env.VITE_PORTONE_KAKAO_CHANNEL_KEY,
+        pg: 'kakaopay',
         pay_method: 'EASY_PAY',
         merchant_uid: 'order_' + new Date().getTime(),
         name: menuName,
@@ -201,6 +201,7 @@ const Payment = ({
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
+              Authorization: `Bearer ${accessToken}`,
             },
             body: JSON.stringify({
               imp_uid: rsp.imp_uid, // 포트원 결제 고유 ID
@@ -274,6 +275,7 @@ const Payment = ({
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
           },
 
           body: JSON.stringify({
@@ -313,8 +315,8 @@ const Payment = ({
       text="결제하기"
       type="button"
       onClick={() => {
-        onClick();
         handlePayment();
+        onClick();
       }}
       disabled={!isAgreed}
     />

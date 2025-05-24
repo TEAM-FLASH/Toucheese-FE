@@ -1,4 +1,3 @@
-// userId === 1 => 로그인/회원가입 시 변경 예정
 const postBookmark = async (accessToken: string, studioId: number) => {
   const response = await fetch(`${import.meta.env.VITE_TOUCHEESE_API}/user/bookmark/${studioId}`, {
     method: 'POST',
@@ -9,8 +8,11 @@ const postBookmark = async (accessToken: string, studioId: number) => {
   });
 
   if (!response.ok) {
-    throw new Error('Failed to add bookmark');
+    console.error(response.status);
+    return response.status;
   }
+
+  return null;
 };
 
 const deleteBookmark = async (accessToken: string, studioId: number) => {
@@ -23,8 +25,11 @@ const deleteBookmark = async (accessToken: string, studioId: number) => {
   });
 
   if (!response.ok) {
-    throw new Error('Failed to delete bookmark');
+    console.error(response.status);
+    return response.status;
   }
+
+  return null;
 };
 
 const useBookmark = (isBookmarked: boolean) => {

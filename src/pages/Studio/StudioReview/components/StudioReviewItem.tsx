@@ -104,18 +104,6 @@ const MainTitle = styled.h3`
   display: flex;
   align-items: center;
   margin-bottom: 0.6rem;
-
-  &::after {
-    content: '';
-    display: block;
-    width: 1.6rem;
-    height: 1.6rem;
-    box-sizing: border-box;
-    background-image: url('/img/icon-chevronright.svg');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 0.6rem 1.1rem;
-  }
 `;
 
 const SubTitle = styled.h4`

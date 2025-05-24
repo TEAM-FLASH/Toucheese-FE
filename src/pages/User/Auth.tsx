@@ -99,8 +99,22 @@ export const LeftImageStyle = css`
   display: none;
 
   ${mqMin(breakPoints.pc)} {
+    display: block;
+    width: 70%;
+    height: 100vh;
+    position: relative;
+    transform: translateX(-8rem);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  ${mqMin(breakPoints.pc)} {
     display: unset;
-    width: 50%;
+    width: 70%;
     flex-grow: 1;
     margin-left: calc(-1 * ${variables.layoutPadding});
     background-color: ${variables.colors.primary50};

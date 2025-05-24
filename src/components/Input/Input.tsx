@@ -131,7 +131,7 @@ const Input = ({
             </div>
           </div>
           {hasCheckButton && (
-            <button css={isActive ? buttonActive : buttonUnActive} onClick={onCheck}>
+            <button type="button" css={isActive ? buttonActive : buttonUnActive} onClick={onCheck}>
               {checkButtonText}
             </button>
           )}

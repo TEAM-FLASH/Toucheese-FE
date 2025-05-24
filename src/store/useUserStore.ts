@@ -54,12 +54,18 @@ export const useUserStore = create(
       },
       resetUser: () => {
         localStorage.removeItem('userState');
-        set(defaultUserState);
+        set((state) => ({
+          ...defaultUserState,
+          setUser: state.setUser,
+          resetUser: state.resetUser,
+        }));
       },
     }),
     {
       name: 'userState',
       storage: createJSONStorage(() => localStorage),
+
+      // localStorage 자동으로 업데이트
       partialize: (state) =>
         ({
           encryptedEmail: state.encryptedEmail,

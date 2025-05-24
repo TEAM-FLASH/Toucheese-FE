@@ -91,7 +91,7 @@ const StudioReview = () => {
         </Helmet>
       )}
 
-      <Header title="리뷰" fixed={true} />
+      <Header title={studioDetailData?.name} fixed={true} />
       <StudioNavigator _id={_id || ''} />
 
       <div css={boxLayoutStyle}>

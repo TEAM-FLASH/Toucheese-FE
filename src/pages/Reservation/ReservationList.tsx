@@ -84,6 +84,16 @@ const ReservationList = () => {
       break;
   }
 
+  const compareDate = (date: string) => {
+    const itemDate = new Date(date);
+    const today = new Date();
+
+    itemDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+
+    return itemDate.getTime() >= today.getTime();
+  };
+
   return (
     <>
       <Helmet>
@@ -121,7 +131,11 @@ const ReservationList = () => {
             <MyPageContentStyle>
               <h2 css={TypoBodyMdM}>총 {items.length}건</h2>
               <div className="content-box">
-                {sortReservations<IResvItem>(items).map((item) => (
+                {sortReservations<IResvItem>(
+                  resStatus.statusEng === 'DEFAULT'
+                    ? items.filter((item) => compareDate(item.date))
+                    : items,
+                ).map((item) => (
                   <ReservationCard key={item.reservationId} data={item} />
                 ))}
               </div>

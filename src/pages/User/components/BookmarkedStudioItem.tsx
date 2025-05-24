@@ -53,7 +53,7 @@ const BookmarkedStudioItem = ({
                 <div>
                   <img src="/img/icon-star-filled.svg" alt="평점" />
                 </div>
-                <p>{item.rating}</p>
+                <p>{item.rating.toFixed(1)}</p>
                 <p className="info-rating-review">({item.review_count}개 평가)</p>
               </div>
             </div>
