@@ -77,6 +77,7 @@ const Button = ({
   style,
   iconResetSize,
   dataTab,
+  ...restProps
 }: ButtonProps) => {
   const isIconReset = type === 'reset' && iconResetSize;
 
@@ -344,6 +345,7 @@ ${width === 'fit' &&
       disabled={disabled}
       onClick={handleButtonClick}
       data-tab={dataTab}
+      {...restProps}
     >
       <div css={iconWrapperStyles}>
         {isIconReset ? (

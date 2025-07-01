@@ -11,6 +11,7 @@ interface IReservationButton {
   type: 'button' | 'submit';
   onClick: () => void;
   disabled?: boolean;
+  testId?: string;
 }
 
 const ReservationFooter = ({
@@ -18,6 +19,7 @@ const ReservationFooter = ({
   type = 'button',
   onClick,
   disabled = false,
+  testId = '',
 }: IReservationButton) => {
   const { totalPrice } = useReservationStore();
 
@@ -35,6 +37,7 @@ const ReservationFooter = ({
         type={type}
         onClick={onClick}
         disabled={disabled}
+        data-testid={testId}
       />
     </div>
   );

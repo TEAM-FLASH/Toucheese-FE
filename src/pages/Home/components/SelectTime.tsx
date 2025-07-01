@@ -74,7 +74,7 @@ const SelectTime = ({ type, availableTimeWithDates }: ITimeProp) => {
       <section css={[SelectTimeStyle(type), DividerStyle]}>
         <h2 css={Hidden}>시간 선택</h2>
 
-        <div css={articleBox}>
+        <div css={articleBox} data-testid="timeBox">
           {morningTimes?.length ? (
             <article>
               <h3 css={timeZoneTitle}>오전</h3>
