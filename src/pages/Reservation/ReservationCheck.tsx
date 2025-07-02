@@ -316,7 +316,12 @@ const ReservationCheck = () => {
               {' '}
               <div css={termsContainerStyle}>
                 <div css={[termsCheckStyle, TypoBodyMdR]}>
-                  <input type="checkbox" id="agree" onChange={handleCheckboxChange} />
+                  <input
+                    type="checkbox"
+                    id="agree"
+                    onChange={handleCheckboxChange}
+                    data-testid="paymentAgree"
+                  />
                   <label htmlFor="agree" css={termsCheckBoxStyle(isAgreed)}>
                     <img src="/img/icon-checkbox-empty.svg" alt="빈 체크박스" />
                     <img src="/img/icon-checkbox-done.svg" alt="체크된 체크박스" />
