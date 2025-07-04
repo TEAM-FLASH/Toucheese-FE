@@ -9,7 +9,7 @@ import userEvent from '@testing-library/user-event';
 import { ReactNode } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { afterAll, describe, vi } from 'vitest';
+import { afterAll, beforeEach, describe, vi } from 'vitest';
 import { mockAvailableDateData } from '../__mocks__/mockAvailableDateData';
 import { mockReservationData } from '../__mocks__/mockReservationData';
 import { reservationStorage } from '../__mocks__/mockReservationStorage';
@@ -38,6 +38,10 @@ describe('예약 통합 테스트', () => {
       JSON.stringify({ state: { accessToken: 'mockAccessToken' } }),
     );
     setupModalPortal();
+  });
+
+  beforeEach(() => {
+    vi.resetAllMocks();
   });
 
   afterAll(() => {
