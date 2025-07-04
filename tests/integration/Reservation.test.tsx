@@ -89,9 +89,7 @@ describe('예약 통합 테스트', () => {
     await userEvent.click(enabledTimes[0]);
 
     // 4. '결제 페이지로' 버튼 활성화
-    const toNextPageBtn = screen.findByTestId('toPaymentBtn');
-    const isAvailable = await toNextPageBtn;
-    expect(isAvailable).toBeEnabled();
+    expect(await screen.findByTestId('toPaymentBtn')).toBeEnabled();
   });
 
   test('결제 동의에 체크하면 "결제하기" 버튼이 활성화 된다.', async () => {
@@ -106,8 +104,7 @@ describe('예약 통합 테스트', () => {
     await userEvent.click(checkbox);
 
     // 2. 버튼(결제하기) 활성화
-    const paymentBtn = screen.getByTestId('paymentBtn') as HTMLButtonElement;
-    expect(paymentBtn).toBeEnabled();
+    expect(screen.getByTestId('paymentBtn')).toBeEnabled();
   });
 
   test('예약된 정보를 확인할 수 있다.', async () => {
