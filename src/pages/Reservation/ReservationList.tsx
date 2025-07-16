@@ -58,7 +58,10 @@ const ReservationList = () => {
 
   useEffect(() => {
     if (data) {
-      setItems(data);
+      const validData = sortReservations<IResvItem>(
+        resStatus.statusEng === 'DEFAULT' ? data.filter((item) => compareDate(item.date)) : data,
+      );
+      setItems(validData);
     }
   }, [data]);
 
@@ -131,11 +134,7 @@ const ReservationList = () => {
             <MyPageContentStyle>
               <h2 css={TypoBodyMdM}>총 {items.length}건</h2>
               <div className="content-box">
-                {sortReservations<IResvItem>(
-                  resStatus.statusEng === 'DEFAULT'
-                    ? items.filter((item) => compareDate(item.date))
-                    : items,
-                ).map((item) => (
+                {items.map((item) => (
                   <ReservationCard key={item.reservationId} data={item} />
                 ))}
               </div>
