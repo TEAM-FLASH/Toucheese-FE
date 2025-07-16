@@ -121,6 +121,7 @@ const Calendar = ({ type = 'filter', disableDates }: CalendarProp) => {
         <ul
           onTouchStart={(e) => setStartClientX(e.touches[0].clientX)}
           onTouchEnd={(e) => setEndClientX(e.changedTouches[0].clientX)}
+          data-testid="dateBox"
         >
           {calendar &&
             calendar.map(({ year, month, date }) => {

@@ -26,7 +26,9 @@ const ReservationInfo = () => {
         <dl>
           <dt>사진관 이름</dt>
           <dd>
-            <h3 css={studioNameStyle}>{studioName}</h3>
+            <h3 data-testid="studioName" css={studioNameStyle}>
+              {studioName}
+            </h3>
           </dd>
           <dt css={marginTop}>예약 일시</dt>
           <dd>

@@ -319,6 +319,7 @@ const Payment = ({
         onClick();
       }}
       disabled={!isAgreed}
+      testId="paymentBtn"
     />
   );
 };

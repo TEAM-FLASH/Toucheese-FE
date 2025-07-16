@@ -48,6 +48,7 @@ const ScheduleInner = ({ _id }: { _id: string }) => {
           type="button"
           onClick={() => navigate(`${pathname}/payment`)}
           disabled={!(time.length > 0)}
+          testId="toPaymentBtn"
         />
       </div>
     </>
