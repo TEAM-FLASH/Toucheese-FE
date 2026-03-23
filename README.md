@@ -6,7 +6,7 @@
 
 <br />
 
-[터치즈 방문하기](https://toucheese-flash.store/)
+[터치즈 방문하기](https://www.toucheese-flash.shop/)
 
 ```
 id : toucheese@gmail.com
